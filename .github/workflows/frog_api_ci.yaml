@@ -1,0 +1,29 @@
+name: CI/CD for frog_api
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "packages/frog_api/**"
+      - ".github/workflows/frog_api_ci.yaml"
+      - ".github/workflows/frog_api_cd.yaml"
+
+jobs:
+  ci:
+    name: CI
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/frog_api
+      buildRunner: false
+      unitTestPaths: ""
+
+  # cd:
+  #   name: CD
+  #   uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
+  #   needs:
+  #     - ci
+  #   with:
+  #     workingDirectory: packages/frog_api
+  #     tagPrefix: frog_api-v
+  #   secrets:
+  #     githubToken: ${{ secrets.GH_PAT }}

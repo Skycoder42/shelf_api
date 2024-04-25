@@ -1,0 +1,17 @@
+name: CD - Publish frog_api to pub.dev
+
+on:
+  push:
+    tags:
+      - "frog_api-v*"
+
+jobs:
+  publish:
+    name: Publish
+    uses: Skycoder42/dart_test_tools/.github/workflows/publish.yml@main
+    permissions:
+      id-token: write
+    with:
+      tagPrefix: frog_api-v
+      workingDirectory: packages/frog_api
+      buildRunner: false
