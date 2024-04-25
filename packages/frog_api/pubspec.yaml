@@ -1,15 +1,26 @@
 name: frog_api
-description: A starting point for Dart libraries or applications.
+description: A code generation based API package to make dart_frog even more awesome.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+homepage: https://github.com/Skycoder42/frog_api
 
 environment:
-  sdk: ^3.3.4
+  sdk: ^3.3.0
 
-# Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  meta: ^1.11.0
 
 dev_dependencies:
-  lints: ^3.0.0
-  test: ^1.24.0
+  custom_lint: ^0.6.4
+  dart_pre_commit: ^5.3.0
+  dart_test_tools: ^5.10.1
+  test: ^1.25.4
+
+cider:
+  link_template:
+    tag: https://github.com/Skycoder42/frog_api/releases/tag/frog_api-v%tag%
+    diff: https://github.com/Skycoder42/frog_api/compare/frog_api-v%from%...frog_api-v%to%
+
+dart_pre_commit:
+  pull-up-dependencies:
+    allowed:
+      - meta

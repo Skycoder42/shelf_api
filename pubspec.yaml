@@ -1,0 +1,8 @@
+name: frog_api_melos
+publish_to: none
+
+environment:
+  sdk: ^3.3.0
+
+dev_dependencies:
+  melos:
