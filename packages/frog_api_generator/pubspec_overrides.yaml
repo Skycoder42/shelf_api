@@ -1,0 +1,3 @@
+dependency_overrides:
+  frog_api:
+    path: ../frog_api
