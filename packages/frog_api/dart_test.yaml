@@ -1,0 +1,4 @@
+presets:
+  unit:
+    paths:
+      - test/unit

@@ -17,6 +17,7 @@ dev_dependencies:
   custom_lint: ^0.6.4
   dart_pre_commit: ^5.3.0
   dart_test_tools: ^5.10.1
+  mockito: ^5.4.4
   riverpod_generator: ^2.4.0
   test: ^1.25.4
 

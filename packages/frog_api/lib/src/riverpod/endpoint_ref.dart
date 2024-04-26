@@ -26,18 +26,20 @@ RequestContext requestContext(RequestContextRef ref) => throw StateError(
 
 /// An object that allows frog endpoints to interact with providers.
 class EndpointRef {
-  final ProviderContainer _container;
+  /// @nodoc
+  @visibleForTesting
+  final ProviderContainer container;
 
   final _keepAliveSubs = <ProviderListenable, ProviderSubscription>{};
 
   /// @nodoc
   @internal
-  EndpointRef(this._container);
+  EndpointRef(this.container);
 
   /// Determines whether a provider is initialized or not.
   ///
   /// See [Ref.exists] for more details.
-  bool exists(ProviderBase<Object?> provider) => _container.exists(provider);
+  bool exists(ProviderBase<Object?> provider) => container.exists(provider);
 
   /// Reads a provider without listening to it.
   ///
@@ -49,7 +51,7 @@ class EndpointRef {
   T read<T>(ProviderListenable<T> provider) {
     final subscription = _keepAliveSubs.putIfAbsent(
       provider,
-      () => _container.listen(provider, (_, __) {}),
+      () => container.listen(provider, (_, __) {}),
     ) as ProviderSubscription<T>;
     return subscription.read();
   }
@@ -60,12 +62,12 @@ class EndpointRef {
   /// See [Ref.refresh] for more details.
   @useResult
   State refresh<State>(Refreshable<State> provider) =>
-      _container.refresh(provider);
+      container.refresh(provider);
 
   /// Invalidates the state of the provider, causing it to refresh.
   ///
   /// See [Ref.invalidate] for more details.
-  void invalidate(ProviderOrFamily provider) => _container.invalidate(provider);
+  void invalidate(ProviderOrFamily provider) => container.invalidate(provider);
 
   /// @nodoc
   @internal

@@ -15,7 +15,7 @@ jobs:
     with:
       workingDirectory: packages/frog_api
       buildRunner: true
-      unitTestPaths: ""
+      unitTestPaths: -P unit
 
   # cd:
   #   name: CD
