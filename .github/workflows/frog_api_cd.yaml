@@ -14,4 +14,4 @@ jobs:
     with:
       tagPrefix: frog_api-v
       workingDirectory: packages/frog_api
-      buildRunner: false
+      buildRunner: true

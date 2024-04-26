@@ -26,6 +26,12 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 
+# Generated build files
+*.g.dart
+
 # Intellij files
 .idea/
 *.iml
+
+# Others
+custom_lint.log
