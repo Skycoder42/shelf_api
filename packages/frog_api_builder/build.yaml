@@ -1,0 +1,17 @@
+builders:
+  frog_api_builder:
+    import: "package:frog_api_builder/frog_api_builder.dart"
+    builder_factories: ["frogApiBuilder"]
+    build_extensions: { ".dart": ["frog_api.g.part"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+    # runs_before: ["retrofit|retrofit_generator"]
+    defaults:
+      generate_for: ["routes/**"]
+
+targets:
+  $default:
+    builders:
+      frog_api_builder:
+        enabled: true

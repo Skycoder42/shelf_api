@@ -1,16 +1,16 @@
-name: CD - Publish frog_api_generator to pub.dev
+name: CD - Publish frog_api_builder to pub.dev
 
 on:
   push:
     tags:
-      - "frog_api_generator-v*"
+      - "frog_api_builder-v*"
 
 jobs:
   publish_ci:
     name: CI
     uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
     with:
-      workingDirectory: packages/frog_api_generator
+      workingDirectory: packages/frog_api_builder
       buildRunner: false
       unitTestPaths: ""
 
@@ -22,6 +22,6 @@ jobs:
     permissions:
       id-token: write
     with:
-      tagPrefix: frog_api_generator-v
-      workingDirectory: packages/frog_api_generator
+      tagPrefix: frog_api_builder-v
+      workingDirectory: packages/frog_api_builder
       buildRunner: false

@@ -1,4 +1,4 @@
-name: frog_api_generator
+name: frog_api_builder
 description: The code generator for the frog_api package. Check it out for more details.
 version: 1.0.0
 homepage: https://github.com/Skycoder42/frog_api
@@ -12,18 +12,26 @@ platforms:
   windows:
 
 dependencies:
+  analyzer: ^6.4.1
+  build: ^2.4.1
+  build_config: ^1.1.1
+  code_builder: ^4.10.0
   frog_api: ^1.0.0
+  meta: ^1.11.0
+  source_gen: ^1.5.0
 
 dev_dependencies:
+  build_runner: ^2.4.9
+  build_test: ^2.2.2
   custom_lint: ^0.6.4
   dart_pre_commit: ^5.3.0
   dart_test_tools: ^5.10.1
-  test: ^1.25.4
+  source_gen_test: ^1.0.6
 
 cider:
   link_template:
-    tag: https://github.com/Skycoder42/frog_api/releases/tag/frog_api_generator-v%tag%
-    diff: https://github.com/Skycoder42/frog_api/compare/frog_api_generator-v%from%...frog_api_generator-v%to%
+    tag: https://github.com/Skycoder42/frog_api/releases/tag/frog_api_builder-v%tag%
+    diff: https://github.com/Skycoder42/frog_api/compare/frog_api_builder-v%from%...frog_api_builder-v%to%
 
 dart_pre_commit:
   flutter-compat: false # TODO enable again after release

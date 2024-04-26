@@ -12,7 +12,6 @@ platforms:
 dependencies:
   dart_frog: ^1.1.0
   frog_api:
-    path: ../frog_api
   riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
 
@@ -21,7 +20,14 @@ dev_dependencies:
   custom_lint: ^0.6.4
   dart_pre_commit: ^5.3.0
   dart_test_tools: ^5.10.1
+  frog_api_builder:
   riverpod_generator: ^2.4.0
+
+dependency_overrides:
+  frog_api:
+    path: ../frog_api
+  frog_api_builder:
+    path: ../frog_api_builder
 
 dart_pre_commit:
   flutter-compat: false
