@@ -16,12 +16,14 @@ jobs:
       workingDirectory: packages/frog_api
       buildRunner: true
       unitTestPaths: -P unit
+      coverageExclude: >-
+        "**/*.g.dart"
       integrationTestPaths: -P integration
       integrationTestSetup: >-
         {
-          "linux": "bash packages/frog_api_example/tool/build-integration.sh",
-          "macos": "bash packages/frog_api_example/tool/build-integration.sh",
-          "windows": "bash packages/frog_api_example/tool/build-integration.sh"
+          "linux": "bash ../frog_api_example/tool/build-integration.sh",
+          "macos": "bash ../frog_api_example/tool/build-integration.sh",
+          "windows": "bash ../frog_api_example/tool/build-integration.sh"
         }
 
   # cd:

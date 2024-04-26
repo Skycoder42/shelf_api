@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dart_test_tools/tools.dart';
 import 'package:test/test.dart';
 
 class ExampleServer {
@@ -19,9 +20,10 @@ class ExampleServer {
         _client = HttpClient();
 
   static Future<ExampleServer> start() async {
-    final port = 8000 + Random.secure().nextInt(99);
+    final runnerTemp = Github.env.runnerTemp;
+    final port = 8000 + Random.secure().nextInt(999);
     final process = await Process.start(
-      '../frog_api_example/build/bin/server.exe',
+      runnerTemp.uri.resolve('frog-api-example-server.exe').toFilePath(),
       const [],
       environment: {
         'PORT': port.toString(),
@@ -52,18 +54,3 @@ class ExampleServer {
     );
   }
 }
-
-Matcher isAfter(DateTime dateTime) => predicate<DateTime>(
-      (value) => value.isAfter(dateTime),
-      'is after $dateTime',
-    );
-
-Matcher isBefore(DateTime dateTime) => predicate<DateTime>(
-      (value) => value.isBefore(dateTime),
-      'is before $dateTime',
-    );
-
-Matcher isBetween(DateTime begin, DateTime end) => allOf(
-      isAfter(begin),
-      isBefore(end),
-    );

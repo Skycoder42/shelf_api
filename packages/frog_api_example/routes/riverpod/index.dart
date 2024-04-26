@@ -16,7 +16,7 @@ Future<Response> onRequest(RequestContext context) async {
     _ => null,
   };
 
-  await Future.delayed(Duration(seconds: delay));
+  await Future.delayed(Duration(milliseconds: delay));
 
   return Response(
     statusCode: timestamp == null ? HttpStatus.badRequest : HttpStatus.ok,

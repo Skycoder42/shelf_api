@@ -7,10 +7,20 @@ import 'endpoint_ref.dart';
 /// A middleware to make riverpod available for route handlers.
 ///
 /// To obtain an [EndpointRef], which must be used to actually access the
-/// [providerContainer], you can simply use the
+/// [ProviderContainer], you can simply use the
 /// [RequestContextRiverfrogExtension.ref] extension: `context.ref`
-Middleware riverfrog(ProviderContainer providerContainer) =>
-    RiverfrogMiddleware(providerContainer).call;
+///
+/// The
+Middleware riverfrog({
+  ProviderContainer? parent,
+  List<Override> overrides = const [],
+  List<ProviderObserver>? observers,
+}) =>
+    RiverfrogMiddleware(
+      parent: parent,
+      overrides: overrides,
+      observers: observers,
+    ).call;
 
 /// An extension on [RequestContext] to access the [EndpointRef].
 extension RequestContextRiverfrogExtension on RequestContext {
@@ -25,7 +35,15 @@ extension RequestContextRiverfrogExtension on RequestContext {
 class RiverfrogMiddleware {
   final ProviderContainer _providerContainer;
 
-  RiverfrogMiddleware(this._providerContainer);
+  RiverfrogMiddleware({
+    ProviderContainer? parent,
+    List<Override> overrides = const [],
+    List<ProviderObserver>? observers,
+  }) : _providerContainer = ProviderContainer(
+          parent: parent,
+          overrides: overrides,
+          observers: observers,
+        );
 
   Handler call(Handler next) => (context) async {
         final container = ProviderContainer(

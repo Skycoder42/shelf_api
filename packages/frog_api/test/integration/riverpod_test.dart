@@ -4,9 +4,9 @@ import 'test_helper.dart';
 
 enum _Mode {
   singleton,
-  // factory,
-  // requestSingleton,
-  // requestFactory,
+  factory,
+  requestSingleton,
+  requestFactory,
 }
 
 void main() {
@@ -20,13 +20,13 @@ void main() {
     await server.stop();
   });
 
-  Future<DateTime> getRiverpod(_Mode mode, [int? delaySeconds]) async {
+  Future<DateTime> getRiverpod(_Mode mode, [Duration? delay]) async {
     final timestamp = await server.get(
       Uri(
         path: '/riverpod',
         queryParameters: {
           'mode': mode.name,
-          if (delaySeconds != null) 'delay': delaySeconds,
+          if (delay != null) 'delay': delay.inMilliseconds.toString(),
         },
       ),
     );
@@ -34,10 +34,62 @@ void main() {
   }
 
   test('singleton returns constant timestamp value', () async {
-    final now = DateTime.now();
+    final firstTimestamp = await getRiverpod(_Mode.singleton);
+    await Future.delayed(const Duration(milliseconds: 100));
+    final secondTimestamp = await getRiverpod(_Mode.singleton);
 
-    final timestamp = await getRiverpod(_Mode.singleton);
+    expect(secondTimestamp, firstTimestamp);
+  });
 
-    expect(timestamp, isBetween(now, now.add(const Duration(seconds: 1))));
+  group('factory', () {
+    test('returns new timestamp for every request', () async {
+      final firstTimestamp = await getRiverpod(_Mode.factory);
+      await Future.delayed(const Duration(milliseconds: 100));
+      final secondTimestamp = await getRiverpod(_Mode.factory);
+
+      expect(secondTimestamp, isNot(firstTimestamp));
+    });
+
+    test('returns same timestamp if requests are run in parallel', () async {
+      final [firstTimestamp, secondTimestamp, thirdTimestamp] =
+          await Future.wait([
+        getRiverpod(_Mode.factory, const Duration(milliseconds: 200)),
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () => getRiverpod(_Mode.factory, const Duration(milliseconds: 300)),
+        ),
+        Future.delayed(
+          const Duration(milliseconds: 300),
+          () => getRiverpod(_Mode.factory),
+        ),
+      ]);
+
+      expect(secondTimestamp, firstTimestamp);
+      expect(thirdTimestamp, firstTimestamp);
+    });
+  });
+
+  test('requestSingleton returns new timestamp for every request', () async {
+    final [firstTimestamp, secondTimestamp] = await Future.wait([
+      getRiverpod(_Mode.requestSingleton, const Duration(milliseconds: 200)),
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => getRiverpod(_Mode.requestSingleton),
+      ),
+    ]);
+
+    expect(secondTimestamp, isNot(firstTimestamp));
+  });
+
+  test('requestFactory returns new timestamp for every request', () async {
+    final [firstTimestamp, secondTimestamp] = await Future.wait([
+      getRiverpod(_Mode.requestFactory, const Duration(milliseconds: 200)),
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => getRiverpod(_Mode.requestFactory),
+      ),
+    ]);
+
+    expect(secondTimestamp, isNot(firstTimestamp));
   });
 }

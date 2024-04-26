@@ -31,7 +31,7 @@ void main() {
 
       when(mockRequestContext.request).thenReturn(mockRequest);
 
-      sut = RiverfrogMiddleware(testProviderContainer);
+      sut = RiverfrogMiddleware(parent: testProviderContainer);
     });
 
     tearDown(() {
@@ -79,7 +79,7 @@ void main() {
 
       final container = factory().container;
       expect(container, isNot(testProviderContainer));
-      expect(container.depth, 1);
+      expect(container.depth, 2);
 
       expect(
         () => testProviderContainer.read(requestContextProvider),
