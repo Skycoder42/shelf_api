@@ -37,9 +37,8 @@ class RiverfrogMiddleware {
         final endpointRef = EndpointRef(container);
 
         try {
-          final containerContext = context.provide<EndpointRef>(
-            () => EndpointRef(container),
-          );
+          final containerContext =
+              context.provide<EndpointRef>(() => endpointRef);
           return await next(containerContext);
         } finally {
           endpointRef.dispose();

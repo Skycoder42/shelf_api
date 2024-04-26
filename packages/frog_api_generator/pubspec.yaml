@@ -6,6 +6,11 @@ homepage: https://github.com/Skycoder42/frog_api
 environment:
   sdk: ^3.3.0
 
+platforms:
+  linux:
+  macos:
+  windows:
+
 dependencies:
   frog_api: ^1.0.0
 
