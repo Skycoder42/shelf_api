@@ -3,4 +3,10 @@ targets:
     sources:
       - $package$
       - lib/**
+  frog:
+    sources:
       - routes/**
+    auto_apply_builders: false
+    builders:
+      frog_api_builder:
+        enabled: true
