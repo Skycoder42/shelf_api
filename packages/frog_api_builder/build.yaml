@@ -9,9 +9,3 @@ builders:
     # runs_before: ["retrofit|retrofit_generator"]
     defaults:
       generate_for: ["routes/**"]
-
-targets:
-  $default:
-    builders:
-      frog_api_builder:
-        enabled: true
