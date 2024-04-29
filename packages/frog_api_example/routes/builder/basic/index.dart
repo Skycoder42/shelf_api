@@ -6,5 +6,15 @@ part 'index.g.dart';
 final class BasicEndpoint extends _$BasicEndpoint {
   BasicEndpoint(super.context);
 
-  String get() => 'Hello, World!';
+  String get({
+    required String sValue,
+    int? oValue,
+    double dValue = 42.0,
+    required Uri uValue,
+    DateTime? dtValue,
+    String s2Value = 's2',
+  }) =>
+      'Hello, World!';
+
+  void post(String value) {}
 }

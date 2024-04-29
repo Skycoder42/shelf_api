@@ -3,6 +3,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
 import '../readers/endpoint_methods_reader.dart';
+import '../util/code/if.dart';
 import '../util/code/switch.dart';
 import '../util/constants.dart';
 import '../util/types.dart';
@@ -14,8 +15,9 @@ class _AsyncRef {
 
 @internal
 final class OnRequestBuilder extends SpecBuilder<Method> {
-  static const _contextRef = Reference('context');
+  static const _contextRef = Reference(r'$context');
   static const _endpointRef = Reference(r'$endpoint');
+  static const _queryRef = Reference(r'$query');
 
   final EndpointMethodsReader _endpointMethodsReader =
       const EndpointMethodsReader();
@@ -75,11 +77,6 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
       switchCase.addCase(
         Types.httpMethod.property(httpMethod.name),
         Block.of(_buildInvocation(endpointMethod, asyncRef)),
-        // _endpointRef
-        //     .property(endpointMethod.element.name)
-        //     .call(const [])
-        //     .returned
-        //     .statement,
       );
     }
 
@@ -90,26 +87,114 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     EndpointMethod method,
     _AsyncRef asyncRef,
   ) sync* {
-    var invocation = _endpointRef.property(method.element.name).call(const []);
+    yield* _buildParamVariables(method);
+
+    var invocation = _endpointRef.property(method.element.name).call(
+      const [],
+      Map.fromEntries(_buildParams(method)),
+    );
     if (method.isAsync) {
       asyncRef.isAsync = true;
       invocation = invocation.awaited;
     }
 
+    yield* _buildReturn(method, invocation);
+  }
+
+  Iterable<Code> _buildParamVariables(EndpointMethod method) sync* {
+    if (method.queryParameters.isEmpty) {
+      return;
+    }
+
+    yield declareFinal(_queryRef.symbol!)
+        .assign(
+          _contextRef
+              .property('request')
+              .property('url')
+              .property('queryParameters'),
+        )
+        .statement;
+
+    for (final param in method.queryParameters) {
+      final paramName = '\$\$${param.name}';
+      yield declareFinal(paramName)
+          .assign(_queryRef.index(literalString(param.name, raw: true)))
+          .statement;
+
+      if (!param.optional) {
+        yield If(
+          refer(paramName).equalTo(literalNull),
+          Types.response
+              .newInstance(const [], {
+                'statusCode': Types.httpStatus.property('badRequest'),
+                'body': literalString(
+                  'Missing required query parameter ${param.name}',
+                  raw: true,
+                ),
+              })
+              .returned
+              .statement,
+        );
+      }
+    }
+  }
+
+  Iterable<MapEntry<String, Expression>> _buildParams(
+    EndpointMethod method,
+  ) sync* {
+    for (final param in method.queryParameters) {
+      final paramRef = refer('\$\$${param.name}');
+      final convertExpression = param.type.isDartCoreString
+          ? paramRef
+          : Types.fromDartType(param.type, isNull: false)
+              .newInstanceNamed('parse', [paramRef]);
+
+      if (param.optional) {
+        if (param.defaultValue case final String code) {
+          yield MapEntry(
+            param.name,
+            paramRef
+                .notEqualTo(literalNull)
+                .conditional(convertExpression, CodeExpression(Code(code))),
+          );
+        } else {
+          yield MapEntry(
+            param.name,
+            paramRef
+                .notEqualTo(literalNull)
+                .conditional(convertExpression, literalNull),
+          );
+        }
+      } else {
+        yield MapEntry(param.name, convertExpression);
+      }
+    }
+  }
+
+  Iterable<Code> _buildReturn(
+    EndpointMethod method,
+    Expression invocation,
+  ) sync* {
     switch (method.returnType) {
       case EndpointReturnType.noContent:
         yield invocation.statement;
-      case EndpointReturnType.string:
+        yield Types.response
+            .newInstance(const [], {
+              'statusCode': Types.httpStatus.property('noContent'),
+            })
+            .returned
+            .statement;
+      case EndpointReturnType.text:
         yield Types.response
             .newInstance([], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.bytes:
+      case EndpointReturnType.binary:
         yield Types.response
             .newInstanceNamed('bytes', [], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.stringStream:
+      case EndpointReturnType.textStream:
         yield Types.response
             .newInstanceNamed('stream', [], {
               'body': invocation
@@ -118,7 +203,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
             })
             .returned
             .statement;
-      case EndpointReturnType.byteStream:
+      case EndpointReturnType.binaryStream:
         yield Types.response
             .newInstanceNamed('stream', [], {'body': invocation})
             .returned

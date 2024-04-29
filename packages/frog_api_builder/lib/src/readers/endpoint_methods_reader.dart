@@ -12,25 +12,47 @@ import 'frog_method_reader.dart';
 @internal
 enum EndpointReturnType {
   noContent,
-  string,
-  bytes,
-  stringStream,
-  byteStream,
+  text,
+  binary,
+  textStream,
+  binaryStream,
   json,
   response,
 }
 
-@immutable
 @internal
+enum EndpointBodyType {
+  text,
+  binary,
+  formData,
+  json,
+}
+
+@internal
+@immutable
+class EndpointMethodBody {
+  final DartType paramType;
+  final EndpointBodyType bodyType;
+
+  const EndpointMethodBody({
+    required this.paramType,
+    required this.bodyType,
+  });
+}
+
+@internal
+@immutable
 class EndpointMethodParameter {
   final String name;
   final DartType type;
   final bool optional;
+  final String? defaultValue;
 
   const EndpointMethodParameter({
     required this.name,
     required this.type,
     required this.optional,
+    required this.defaultValue,
   });
 }
 
@@ -40,12 +62,14 @@ class EndpointMethod {
   final MethodElement element;
   final EndpointReturnType returnType;
   final bool isAsync;
+  final EndpointMethodBody? body;
   final List<EndpointMethodParameter> queryParameters;
 
   const EndpointMethod({
     required this.element,
     required this.returnType,
     required this.isAsync,
+    required this.body,
     required this.queryParameters,
   });
 }
@@ -81,9 +105,6 @@ class EndpointMethodsReader {
       if (namedMethod != null) {
         namedMethods[namedMethod] = _parseMethod(method);
       }
-
-      namedMethods.addAll(annotatedMethods);
-      return namedMethods;
     }
 
     return <HttpMethod, EndpointMethod>{}
@@ -101,12 +122,78 @@ class EndpointMethodsReader {
   EndpointMethod _parseMethod(MethodElement method) {
     // detect return type
     final (returnType, isAsync) = _findReturnType(method, method.returnType);
+    final body = _getMethodBody(method);
     return EndpointMethod(
       element: method,
       returnType: returnType,
       isAsync: isAsync,
-      queryParameters: const [],
+      body: body,
+      queryParameters: _findParameters(method, body != null).toList(),
     );
+  }
+
+  EndpointMethodBody? _getMethodBody(MethodElement method) {
+    final bodyParam = method.parameters.firstOrNull;
+    if (bodyParam == null || !bodyParam.isRequiredPositional) {
+      return null;
+    }
+
+    final paramType = bodyParam.type;
+    if (paramType.isDartCoreString) {
+      return EndpointMethodBody(
+        paramType: bodyParam.type,
+        bodyType: EndpointBodyType.text,
+      );
+    } else if (const TypeChecker.fromRuntime(Uint8List)
+        .isAssignableFrom(paramType.element!)) {
+      return EndpointMethodBody(
+        paramType: bodyParam.type,
+        bodyType: EndpointBodyType.binary,
+      );
+    } else if (const TypeChecker.fromRuntime(FormData)
+        .isExactly(paramType.element!)) {
+      return EndpointMethodBody(
+        paramType: bodyParam.type,
+        bodyType: EndpointBodyType.formData,
+      );
+    } else {
+      return EndpointMethodBody(
+        paramType: paramType,
+        bodyType: EndpointBodyType.json,
+      );
+    }
+  }
+
+  Iterable<EndpointMethodParameter> _findParameters(
+    MethodElement method,
+    bool hasBodyParam,
+  ) sync* {
+    final parameters =
+        hasBodyParam ? method.parameters.skip(1) : method.parameters;
+
+    for (final param in parameters) {
+      if (param.isPositional) {
+        throw InvalidGenerationSource(
+          'Only named parameters can be used',
+          element: method,
+        );
+      }
+
+      if (param.type.isNullableType &&
+          (param.isRequired || param.hasDefaultValue)) {
+        throw InvalidGenerationSource(
+          'Nullable parameters can neither be required nor have a default value',
+          element: method,
+        );
+      }
+
+      yield EndpointMethodParameter(
+        name: param.name,
+        type: param.type,
+        optional: param.isOptional,
+        defaultValue: param.defaultValueCode,
+      );
+    }
   }
 
   (EndpointReturnType, bool) _findReturnType(
@@ -140,10 +227,10 @@ class EndpointMethodsReader {
           .typeArgumentsOf(const TypeChecker.fromRuntime(Stream))!
           .single;
       if (streamType.isDartCoreString) {
-        return (EndpointReturnType.stringStream, false);
+        return (EndpointReturnType.textStream, false);
       } else if (const TypeChecker.fromRuntime(List<int>)
           .isAssignableFrom(streamType.element!)) {
-        return (EndpointReturnType.byteStream, false);
+        return (EndpointReturnType.binaryStream, false);
       } else {
         throw InvalidGenerationSource(
           'Can only process streams of String or List<int>',
@@ -155,10 +242,10 @@ class EndpointMethodsReader {
     if (returnType is VoidType) {
       return (EndpointReturnType.noContent, false);
     } else if (returnType.isDartCoreString) {
-      return (EndpointReturnType.string, false);
+      return (EndpointReturnType.text, false);
     } else if (const TypeChecker.fromRuntime(Uint8List)
         .isExactly(returnType.element!)) {
-      return (EndpointReturnType.bytes, false);
+      return (EndpointReturnType.binary, false);
     } else if (const TypeChecker.fromRuntime(Response)
         .isAssignableFrom(returnType.element!)) {
       return (EndpointReturnType.response, false);

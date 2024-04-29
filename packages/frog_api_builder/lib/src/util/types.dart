@@ -52,7 +52,7 @@ abstract base class Types {
           ..types.add(type),
       );
 
-  static Reference fromDartType(
+  static TypeReference fromDartType(
     DartType dartType, {
     bool? isNull,
   }) {
@@ -73,7 +73,7 @@ abstract base class Types {
     }
   }
 
-  static Reference fromClass(
+  static TypeReference fromClass(
     ClassElement clazz, {
     bool? isNull,
   }) =>
