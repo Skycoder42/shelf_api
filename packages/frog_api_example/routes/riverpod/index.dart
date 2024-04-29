@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dart_frog/dart_frog.dart';
 import 'package:frog_api/frog_api.dart';
 import 'package:frog_api_example/src/date_time_provider.dart';
 

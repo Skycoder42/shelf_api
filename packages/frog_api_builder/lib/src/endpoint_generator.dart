@@ -1,15 +1,17 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:code_builder/code_builder.dart' hide MixinBuilder;
+import 'package:code_builder/code_builder.dart';
 import 'package:frog_api/frog_api.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'builders/mixin_builder.dart';
+import 'builders/base_class_builder.dart';
+import 'builders/on_request_builder.dart';
 import 'readers/frog_endpoint_reader.dart';
 
 @internal
 class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
+  // ignore: unused_field
   final BuilderOptions _options;
 
   EndpointGenerator(this._options);
@@ -20,15 +22,17 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (element is! ClassElement) {
+    if (element is! ClassElement || !element.isFinal) {
       throw InvalidGenerationSourceError(
-        'The $FrogEndpoint annotation can only be used on classes',
+        'The $FrogEndpoint annotation can only be used on final classes',
         element: element,
       );
     }
 
+    // ignore: unused_local_variable
     final frogEndpoint = FrogEndpointReader(annotation);
-    final mixinBuilder = MixinBuilder(element, frogEndpoint);
+    final baseClassBuilder = BaseClassBuilder(element);
+    final onRequestBuilder = OnRequestBuilder();
 
     final emitter = DartEmitter(
       orderDirectives: true,
@@ -36,7 +40,8 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     );
 
     final buffer = StringBuffer();
-    mixinBuilder.accept(emitter, buffer);
+    baseClassBuilder.accept(emitter, buffer);
+    onRequestBuilder.accept(emitter, buffer);
     return buffer.toString();
   }
 }

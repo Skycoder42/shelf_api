@@ -3,6 +3,8 @@ import 'package:frog_api/frog_api.dart';
 part 'index.g.dart';
 
 @FrogEndpoint()
-class BasicEndpoint with _$BasicEndpoint {
+final class BasicEndpoint extends _$BasicEndpoint {
+  BasicEndpoint(super.context);
+
   String get() => 'Hello, World!';
 }
