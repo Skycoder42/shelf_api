@@ -21,9 +21,9 @@ class TResponse<T> extends Response {
             headers: headers,
             encoding: encoding,
           ),
-        final Stream<List<int>> stream => TResponse._stream(
+        final Stream<String> stream => TResponse._stream(
             statusCode: statusCode ?? HttpStatus.ok,
-            body: stream,
+            body: stream.transform((encoding ?? utf8).encoder),
             headers: headers,
             bufferOutput: bufferOutput,
           ),
@@ -31,6 +31,12 @@ class TResponse<T> extends Response {
             statusCode: statusCode ?? HttpStatus.ok,
             body: bytes,
             headers: headers,
+          ),
+        final Stream<List<int>> stream => TResponse._stream(
+            statusCode: statusCode ?? HttpStatus.ok,
+            body: stream,
+            headers: headers,
+            bufferOutput: bufferOutput,
           ),
         final object => TResponse._json(
             statusCode: statusCode ?? HttpStatus.ok,

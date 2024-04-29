@@ -32,7 +32,14 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     // ignore: unused_local_variable
     final frogEndpoint = FrogEndpointReader(annotation);
     final baseClassBuilder = BaseClassBuilder(element);
-    final onRequestBuilder = OnRequestBuilder();
+    final onRequestBuilder = OnRequestBuilder(element);
+
+    final library = Library(
+      (b) => b
+        ..ignoreForFile.add('no_default_cases')
+        ..body.add(baseClassBuilder)
+        ..body.add(onRequestBuilder),
+    );
 
     final emitter = DartEmitter(
       orderDirectives: true,
@@ -40,8 +47,7 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     );
 
     final buffer = StringBuffer();
-    baseClassBuilder.accept(emitter, buffer);
-    onRequestBuilder.accept(emitter, buffer);
+    library.accept(emitter, buffer);
     return buffer.toString();
   }
 }

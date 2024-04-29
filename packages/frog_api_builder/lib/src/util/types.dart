@@ -1,9 +1,26 @@
+import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
+import 'package:source_helper/source_helper.dart';
 
 @internal
 abstract base class Types {
   Types._();
+
+  static final void$ = TypeReference((b) => b..symbol = 'void');
+
+  static final TypeReference httpStatus = TypeReference(
+    (b) => b
+      ..symbol = 'HttpStatus'
+      ..url = 'dart:io',
+  );
+
+  static final TypeReference httpMethod = TypeReference(
+    (b) => b
+      ..symbol = 'HttpMethod'
+      ..url = 'package:dart_frog/dart_frog.dart',
+  );
 
   static final TypeReference requestContext = TypeReference(
     (b) => b
@@ -33,6 +50,39 @@ abstract base class Types {
         (b) => b
           ..symbol = 'Future'
           ..types.add(type),
+      );
+
+  static Reference fromDartType(
+    DartType dartType, {
+    bool? isNull,
+  }) {
+    if (dartType is VoidType || dartType.isDartCoreNull) {
+      return void$;
+    } else {
+      return TypeReference(
+        (b) {
+          b
+            ..symbol = dartType.element!.name
+            ..isNullable = isNull ?? dartType.isNullableType;
+
+          if (dartType is InterfaceType) {
+            b.types.addAll(dartType.typeArguments.map(fromDartType));
+          }
+        },
+      );
+    }
+  }
+
+  static Reference fromClass(
+    ClassElement clazz, {
+    bool? isNull,
+  }) =>
+      TypeReference(
+        (b) {
+          b
+            ..symbol = clazz.name
+            ..isNullable = isNull;
+        },
       );
 }
 
