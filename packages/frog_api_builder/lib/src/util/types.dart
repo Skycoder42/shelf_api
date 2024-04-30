@@ -8,7 +8,11 @@ import 'package:source_helper/source_helper.dart';
 abstract base class Types {
   Types._();
 
+  static final dynamic$ = TypeReference((b) => b..symbol = 'dynamic');
+
   static final void$ = TypeReference((b) => b..symbol = 'void');
+
+  static final String$ = TypeReference((b) => b..symbol = 'String');
 
   static final TypeReference httpStatus = TypeReference(
     (b) => b
@@ -46,10 +50,25 @@ abstract base class Types {
       ..url = 'package:frog_api/frog_api.dart',
   );
 
-  static TypeReference future(TypeReference type) => TypeReference(
+  static TypeReference list([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'List'
+          ..types.add(type ?? Types.dynamic$),
+      );
+
+  static TypeReference map(
+          {TypeReference? keyType, TypeReference? valueType}) =>
+      TypeReference(
+        (b) => b
+          ..symbol = 'Map'
+          ..types.add(keyType ?? Types.dynamic$)
+          ..types.add(valueType ?? Types.dynamic$),
+      );
+
+  static TypeReference future([TypeReference? type]) => TypeReference(
         (b) => b
           ..symbol = 'Future'
-          ..types.add(type),
+          ..types.add(type ?? Types.dynamic$),
       );
 
   static TypeReference fromDartType(

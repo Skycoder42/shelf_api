@@ -10,4 +10,5 @@ export 'src/annotations/t_response.dart';
 export 'src/riverpod/endpoint_ref.dart';
 export 'src/riverpod/riverfrog.dart' hide RiverfrogMiddleware;
 
+export 'src/util/map_extensions.dart';
 export 'src/util/stream_extensions.dart';

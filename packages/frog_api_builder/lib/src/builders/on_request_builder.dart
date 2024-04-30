@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
@@ -92,9 +93,9 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     yield* _buildQueryParamVariables(method.queryParameters);
 
     var invocation = _endpointRef.property(method.name).call(
-      const [],
-      Map.fromEntries(_buildQueryParams(method)),
-    );
+          _buildBodyParam(method.body),
+          Map.fromEntries(_buildQueryParams(method)),
+        );
     if (method.isAsync) {
       asyncRef.isAsync = true;
       invocation = invocation.awaited;
@@ -141,6 +142,62 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     };
 
     yield declareFinal(_bodyRef.symbol!).assign(bodyExpr).statement;
+  }
+
+  List<Expression> _buildBodyParam(EndpointMethodBody? methodBody) {
+    if (methodBody == null) {
+      return const [];
+    }
+
+    if (!methodBody.bodyType.isJson) {
+      return [_bodyRef];
+    }
+
+    final bodyType = Types.fromDartType(methodBody.paramType);
+    final jsonType = switch (methodBody.jsonType) {
+      final DartType jsonType => Types.fromDartType(jsonType),
+      _ => null,
+    };
+    switch (methodBody.bodyType) {
+      case EndpointBodyType.json:
+        return [
+          if (jsonType == null)
+            _bodyRef.asA(bodyType)
+          else
+            bodyType.newInstanceNamed('fromJson', [_bodyRef.asA(jsonType)]),
+        ];
+      case EndpointBodyType.jsonList:
+        return [
+          if (jsonType == null)
+            _bodyRef.asA(Types.list(bodyType))
+          else
+            _bodyRef
+                .asA(Types.list())
+                .property('cast')
+                .call(const [], const {}, [jsonType])
+                .property('map')
+                .call([bodyType.property('fromJson')])
+                .property('toList')
+                .call(const []),
+        ];
+      case EndpointBodyType.jsonMap:
+        return [
+          if (jsonType == null)
+            _bodyRef.asA(Types.map(keyType: Types.String$, valueType: bodyType))
+          else
+            _bodyRef
+                .asA(Types.map())
+                .property('cast')
+                .call(const [], const {}, [Types.String$, jsonType])
+                .property('mapValue')
+                .call([bodyType.property('fromJson')]),
+        ];
+      // ignore: no_default_cases
+      default:
+        throw StateError(
+          'Impossible value for bodyType: ${methodBody.bodyType}',
+        );
+    }
   }
 
   Iterable<Code> _buildQueryParamVariables(

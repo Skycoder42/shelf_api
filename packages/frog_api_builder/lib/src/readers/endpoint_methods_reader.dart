@@ -35,6 +35,14 @@ enum EndpointBodyType {
         EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
         _ => false,
       };
+
+  bool get isJson => switch (this) {
+        EndpointBodyType.json ||
+        EndpointBodyType.jsonList ||
+        EndpointBodyType.jsonMap =>
+          true,
+        _ => false,
+      };
 }
 
 @internal
@@ -177,7 +185,7 @@ class EndpointMethodsReader {
           bodyType: EndpointBodyType.textStream,
         );
       } else if (const TypeChecker.fromRuntime(List<int>)
-          .isAssignableFrom(streamType.element!)) {
+          .isExactly(streamType.element!)) {
         return EndpointMethodBody(
           paramType: bodyParam.type,
           bodyType: EndpointBodyType.binaryStream,
@@ -189,25 +197,14 @@ class EndpointMethodsReader {
           element: bodyParam,
         );
       }
-    } else if (paramType.isDartCoreBool ||
-        paramType.isDartCoreDouble ||
-        paramType.isDartCoreInt ||
-        paramType.isDartCoreNum ||
-        paramType.isDartCoreNull) {
-      return EndpointMethodBody(
-        paramType: paramType,
-        bodyType: EndpointBodyType.json,
-      );
     } else if (paramType.isDartCoreList) {
+      final listType = paramType
+          .typeArgumentsOf(const TypeChecker.fromRuntime(List))!
+          .single;
       return EndpointMethodBody(
-        paramType: paramType,
+        paramType: listType,
         bodyType: EndpointBodyType.jsonList,
-        jsonType: _fromJsonType(
-          bodyParam,
-          paramType
-              .typeArgumentsOf(const TypeChecker.fromRuntime(List))!
-              .single,
-        ),
+        jsonType: _fromJsonType(bodyParam, listType),
       );
     } else if (paramType.isDartCoreMap) {
       final [keyType, valueType] =
@@ -221,7 +218,7 @@ class EndpointMethodsReader {
         );
       }
       return EndpointMethodBody(
-        paramType: paramType,
+        paramType: valueType,
         bodyType: EndpointBodyType.jsonMap,
         jsonType: _fromJsonType(bodyParam, valueType),
       );
@@ -234,7 +231,15 @@ class EndpointMethodsReader {
     }
   }
 
-  DartType _fromJsonType(ParameterElement param, DartType paramType) {
+  DartType? _fromJsonType(ParameterElement param, DartType paramType) {
+    if (paramType.isDartCoreBool ||
+        paramType.isDartCoreDouble ||
+        paramType.isDartCoreInt ||
+        paramType.isDartCoreNum ||
+        paramType.isDartCoreNull) {
+      return null;
+    }
+
     final element = paramType.element;
     if (element is! ClassElement) {
       throw InvalidGenerationSource(

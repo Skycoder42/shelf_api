@@ -3,7 +3,8 @@ import 'package:frog_api/frog_api.dart';
 part 'index.g.dart';
 
 class XXX {
-  XXX.fromJson(dynamic t);
+  // ignore: avoid_unused_constructor_parameters
+  XXX.fromJson(Map<String, int> t);
 }
 
 @FrogEndpoint()
@@ -20,5 +21,5 @@ final class BasicEndpoint extends _$BasicEndpoint {
   }) =>
       'Hello, World!';
 
-  void post(String value) {}
+  void post(XXX value) {}
 }

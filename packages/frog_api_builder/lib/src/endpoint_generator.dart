@@ -36,7 +36,7 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
 
     final library = Library(
       (b) => b
-        ..ignoreForFile.add('no_default_cases')
+        ..ignoreForFile.add('type=lint')
         ..body.add(baseClassBuilder)
         ..body.add(onRequestBuilder),
     );
