@@ -24,9 +24,11 @@ extension FrogApiStreamX on Stream<List<int>> {
             );
           }
 
-          bytes.setRange(offset, block.length, block);
+          bytes.setAll(offset, block);
           offset += block.length;
         }
+
+        return bytes;
       }
     }
 

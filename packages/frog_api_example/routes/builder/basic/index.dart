@@ -2,9 +2,9 @@ import 'package:frog_api/frog_api.dart';
 
 part 'index.g.dart';
 
-class XXX {
+class BasicModel {
   // ignore: avoid_unused_constructor_parameters
-  XXX.fromJson(Map<String, int> t);
+  BasicModel.fromJson(Map<String, int> t);
 }
 
 @FrogEndpoint()
@@ -21,5 +21,5 @@ final class BasicEndpoint extends _$BasicEndpoint {
   }) =>
       'Hello, World!';
 
-  void post(XXX value) {}
+  void post(BasicModel value) {}
 }

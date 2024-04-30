@@ -1,12 +1,16 @@
-import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
-import '../readers/endpoint_methods_reader.dart';
+import '../models/endpoint.dart';
+import '../models/endpoint_body.dart';
+import '../models/endpoint_method.dart';
+import '../models/endpoint_query_parameter.dart';
+import '../models/endpoint_response_type.dart';
+import '../models/opaque_type.dart';
 import '../util/code/if.dart';
 import '../util/code/switch.dart';
 import '../util/constants.dart';
+import '../util/extensions/code_builder_extensions.dart';
 import '../util/types.dart';
 import 'spec_builder.dart';
 
@@ -21,12 +25,9 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
   static const _bodyRef = Reference(r'$body');
   static const _queryRef = Reference(r'$query');
 
-  final EndpointMethodsReader _endpointMethodsReader =
-      const EndpointMethodsReader();
+  final Endpoint _endpoint;
 
-  final ClassElement _class;
-
-  OnRequestBuilder(this._class);
+  const OnRequestBuilder(this._endpoint);
 
   @override
   Method build() => Method(
@@ -50,8 +51,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
       );
 
   Iterable<Code> _buildBody(_AsyncRef asyncRef) sync* {
-    final methods = _endpointMethodsReader.readMethods(_class);
-    if (methods.isEmpty) {
+    if (_endpoint.methods.isEmpty) {
       yield Types.response
           .newInstance(const [], {
             'statusCode': Types.httpStatus.property('notImplemented'),
@@ -62,7 +62,9 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     }
 
     yield declareFinal(_endpointRef.symbol!)
-        .assign(Types.fromClass(_class).newInstance([_contextRef]))
+        .assign(
+          Types.fromType(_endpoint.endpointType).newInstance([_contextRef]),
+        )
         .statement;
 
     final switchCase = Switch(
@@ -75,7 +77,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
         .statement;
 
     for (final MapEntry(key: httpMethod, value: endpointMethod)
-        in methods.entries) {
+        in _endpoint.methods.entries) {
       switchCase.addCase(
         Types.httpMethod.property(httpMethod.name),
         Block.of(_buildInvocation(endpointMethod, asyncRef)),
@@ -96,7 +98,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
           _buildBodyParam(method.body),
           Map.fromEntries(_buildQueryParams(method)),
         );
-    if (method.isAsync) {
+    if (method.response.isAsync) {
       asyncRef.isAsync = true;
       invocation = invocation.awaited;
     }
@@ -105,7 +107,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
   }
 
   Iterable<Code> _buildBodyParamVariables(
-    EndpointMethodBody? methodBody,
+    EndpointBody? methodBody,
     _AsyncRef asyncRef,
   ) sync* {
     if (methodBody == null) {
@@ -144,7 +146,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     yield declareFinal(_bodyRef.symbol!).assign(bodyExpr).statement;
   }
 
-  List<Expression> _buildBodyParam(EndpointMethodBody? methodBody) {
+  List<Expression> _buildBodyParam(EndpointBody? methodBody) {
     if (methodBody == null) {
       return const [];
     }
@@ -153,9 +155,9 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
       return [_bodyRef];
     }
 
-    final bodyType = Types.fromDartType(methodBody.paramType);
+    final bodyType = Types.fromType(methodBody.paramType);
     final jsonType = switch (methodBody.jsonType) {
-      final DartType jsonType => Types.fromDartType(jsonType),
+      final OpaqueType jsonType => Types.fromType(jsonType),
       _ => null,
     };
     switch (methodBody.bodyType) {
@@ -163,17 +165,26 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
         return [
           if (jsonType == null)
             _bodyRef.asA(bodyType)
+          else if (methodBody.isNullable)
+            _bodyRef.notEqualTo(literalNull).conditional(
+                  bodyType
+                      .withNullable(false)
+                      .newInstanceNamed('fromJson', [_bodyRef.asA(jsonType)]),
+                  literalNull,
+                )
           else
             bodyType.newInstanceNamed('fromJson', [_bodyRef.asA(jsonType)]),
         ];
       case EndpointBodyType.jsonList:
         return [
           if (jsonType == null)
-            _bodyRef.asA(Types.list(bodyType))
+            _bodyRef.asA(
+              Types.list(bodyType).withNullable(methodBody.isNullable),
+            )
           else
             _bodyRef
-                .asA(Types.list())
-                .property('cast')
+                .asA(Types.list().withNullable(methodBody.isNullable))
+                .autoProperty('cast', methodBody.isNullable)
                 .call(const [], const {}, [jsonType])
                 .property('map')
                 .call([bodyType.property('fromJson')])
@@ -183,11 +194,14 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
       case EndpointBodyType.jsonMap:
         return [
           if (jsonType == null)
-            _bodyRef.asA(Types.map(keyType: Types.string, valueType: bodyType))
+            _bodyRef.asA(
+              Types.map(keyType: Types.string, valueType: bodyType)
+                  .withNullable(methodBody.isNullable),
+            )
           else
             _bodyRef
-                .asA(Types.map())
-                .property('cast')
+                .asA(Types.map().withNullable(methodBody.isNullable))
+                .autoProperty('cast', methodBody.isNullable)
                 .call(const [], const {}, [Types.string, jsonType])
                 .property('mapValue')
                 .call([bodyType.property('fromJson')]),
@@ -201,7 +215,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
   }
 
   Iterable<Code> _buildQueryParamVariables(
-    List<EndpointMethodParameter> queryParameters,
+    List<EndpointQueryParameter> queryParameters,
   ) sync* {
     if (queryParameters.isEmpty) {
       return;
@@ -222,7 +236,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
           .assign(_queryRef.index(literalString(param.name, raw: true)))
           .statement;
 
-      if (!param.optional) {
+      if (!param.isOptional) {
         yield If(
           refer(paramName).equalTo(literalNull),
           Types.response
@@ -245,12 +259,12 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
   ) sync* {
     for (final param in method.queryParameters) {
       final paramRef = refer('\$\$${param.name}');
-      final convertExpression = param.type.isDartCoreString
+      final convertExpression = param.isString
           ? paramRef
-          : Types.fromDartType(param.type, isNull: false)
+          : Types.fromType(param.type, isNull: false)
               .newInstanceNamed('parse', [paramRef]);
 
-      if (param.optional) {
+      if (param.isOptional) {
         if (param.defaultValue case final String code) {
           yield MapEntry(
             param.name,
@@ -276,8 +290,8 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     EndpointMethod method,
     Expression invocation,
   ) sync* {
-    switch (method.returnType) {
-      case EndpointReturnType.noContent:
+    switch (method.response.responseType) {
+      case EndpointResponseType.noContent:
         yield invocation.statement;
         yield Types.response
             .newInstance(const [], {
@@ -285,17 +299,17 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
             })
             .returned
             .statement;
-      case EndpointReturnType.text:
+      case EndpointResponseType.text:
         yield Types.response
             .newInstance([], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.binary:
+      case EndpointResponseType.binary:
         yield Types.response
             .newInstanceNamed('bytes', [], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.textStream:
+      case EndpointResponseType.textStream:
         yield Types.response
             .newInstanceNamed('stream', [], {
               'body': invocation
@@ -304,17 +318,17 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
             })
             .returned
             .statement;
-      case EndpointReturnType.binaryStream:
+      case EndpointResponseType.binaryStream:
         yield Types.response
             .newInstanceNamed('stream', [], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.json:
+      case EndpointResponseType.json:
         yield Types.response
             .newInstanceNamed('json', [], {'body': invocation})
             .returned
             .statement;
-      case EndpointReturnType.response:
+      case EndpointResponseType.response:
         yield invocation.returned.statement;
     }
   }

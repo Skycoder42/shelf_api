@@ -1,0 +1,44 @@
+import 'package:meta/meta.dart';
+
+import 'opaque_type.dart';
+
+@internal
+enum EndpointBodyType {
+  text,
+  binary,
+  textStream,
+  binaryStream,
+  formData,
+  json,
+  jsonList,
+  jsonMap;
+
+  bool get isStream => switch (this) {
+        EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
+        _ => false,
+      };
+
+  bool get isJson => switch (this) {
+        EndpointBodyType.json ||
+        EndpointBodyType.jsonList ||
+        EndpointBodyType.jsonMap =>
+          true,
+        _ => false,
+      };
+}
+
+@internal
+@immutable
+class EndpointBody {
+  final OpaqueType paramType;
+  final EndpointBodyType bodyType;
+  final bool isNullable;
+  final OpaqueType? jsonType;
+
+  const EndpointBody({
+    required this.paramType,
+    required this.bodyType,
+    this.isNullable = false,
+    this.jsonType,
+  });
+}

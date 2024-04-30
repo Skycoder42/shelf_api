@@ -5,6 +5,7 @@ import 'package:frog_api/frog_api.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'analyzers/endpoint_analyzer.dart';
 import 'builders/base_class_builder.dart';
 import 'builders/on_request_builder.dart';
 import 'readers/frog_endpoint_reader.dart';
@@ -31,14 +32,16 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
 
     // ignore: unused_local_variable
     final frogEndpoint = FrogEndpointReader(annotation);
-    final baseClassBuilder = BaseClassBuilder(element);
-    final onRequestBuilder = OnRequestBuilder(element);
+
+    // analyzer
+    const endpointAnalyzer = EndpointAnalyzer();
+    final endpoint = endpointAnalyzer.analyzeEndpoint(element);
 
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..body.add(baseClassBuilder)
-        ..body.add(onRequestBuilder),
+        ..body.add(BaseClassBuilder(endpoint))
+        ..body.add(OnRequestBuilder(endpoint)),
     );
 
     final emitter = DartEmitter(

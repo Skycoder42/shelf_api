@@ -4,6 +4,8 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 import 'package:source_helper/source_helper.dart';
 
+import '../models/opaque_type.dart';
+
 @internal
 abstract base class Types {
   Types._();
@@ -73,10 +75,17 @@ abstract base class Types {
           ..types.add(type ?? Types.dynamic$),
       );
 
-  static TypeReference fromDartType(
-    DartType dartType, {
+  static TypeReference fromType(
+    OpaqueType type, {
     bool? isNull,
-  }) {
+  }) =>
+      switch (type) {
+        OpaqueDartType(dartType: final dartType) =>
+          _fromDartType(dartType, isNull),
+        OpaqueClassType(element: final element) => _fromClass(element, isNull),
+      };
+
+  static TypeReference _fromDartType(DartType dartType, [bool? isNull]) {
     if (dartType is VoidType || dartType.isDartCoreNull) {
       return void$;
     } else {
@@ -87,17 +96,14 @@ abstract base class Types {
             ..isNullable = isNull ?? dartType.isNullableType;
 
           if (dartType is InterfaceType) {
-            b.types.addAll(dartType.typeArguments.map(fromDartType));
+            b.types.addAll(dartType.typeArguments.map(_fromDartType));
           }
         },
       );
     }
   }
 
-  static TypeReference fromClass(
-    ClassElement clazz, {
-    bool? isNull,
-  }) =>
+  static TypeReference _fromClass(ClassElement clazz, bool? isNull) =>
       TypeReference(
         (b) {
           b
@@ -109,9 +115,9 @@ abstract base class Types {
 
 @internal
 extension TypesX on TypeReference {
-  TypeReference get nullable => TypeReference(
+  TypeReference withNullable(bool isNullable) => TypeReference(
         (b) => b
           ..replace(this)
-          ..isNullable = true,
+          ..isNullable = isNullable,
       );
 }

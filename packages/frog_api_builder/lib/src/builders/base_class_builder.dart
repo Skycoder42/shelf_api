@@ -1,7 +1,7 @@
-import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
+import '../models/endpoint.dart';
 import '../util/types.dart';
 import 'spec_builder.dart';
 
@@ -10,14 +10,14 @@ final class BaseClassBuilder extends SpecBuilder<Class> {
   static const _contextRef = Reference('context');
   static const _refRef = Reference('ref');
 
-  final ClassElement _class;
+  final Endpoint _endpoint;
 
-  const BaseClassBuilder(this._class);
+  const BaseClassBuilder(this._endpoint);
 
   @override
   Class build() => Class(
         (b) => b
-          ..name = '_\$${_class.name}'
+          ..name = '_\$${_endpoint.name}'
           ..abstract = true
           ..modifier = ClassModifier.base
           ..fields.add(
@@ -51,7 +51,7 @@ final class BaseClassBuilder extends SpecBuilder<Class> {
                     (b) => b
                       ..name = _refRef.symbol!
                       ..named = true
-                      ..type = Types.endpointRef.nullable,
+                      ..type = Types.endpointRef.withNullable(true),
                   ),
                 )
                 ..initializers.add(
