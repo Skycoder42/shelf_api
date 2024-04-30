@@ -6,18 +6,28 @@ import 'package:source_helper/source_helper.dart';
 
 import '../models/endpoint_body.dart';
 import '../models/opaque_type.dart';
+import '../readers/frog_method_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
 class BodyAnalyzer {
   const BodyAnalyzer();
 
-  EndpointBody? analyzeBody(MethodElement method) {
-    // TODO use fromJson in annotation
-
+  EndpointBody? analyzeBody(
+    MethodElement method, [
+    FrogMethodReader? methodAnnotation,
+  ]) {
     final bodyParam = method.parameters.firstOrNull;
     if (bodyParam == null || !bodyParam.isRequiredPositional) {
       return null;
+    }
+
+    if (methodAnnotation?.bodyFromJson case final String bodyFromJson) {
+      return EndpointBody(
+        paramType: OpaqueDartType(bodyParam.type),
+        bodyType: EndpointBodyType.json,
+        bodyFromJson: bodyFromJson,
+      );
     }
 
     final paramType = bodyParam.type;
@@ -103,7 +113,7 @@ class BodyAnalyzer {
       throw InvalidGenerationSource(
         'List type must not be nullable!',
         todo: 'Make list type non nullable or use the "bodyFromJson" parameter '
-            'of the FrogEndpoint annotation to specify a custom converter.',
+            'of the FrogMethod annotation to specify a custom converter.',
         element: param,
       );
     }
@@ -124,7 +134,7 @@ class BodyAnalyzer {
     if (!keyType.isDartCoreString) {
       throw InvalidGenerationSource(
         'Can only handle maps with a String keys',
-        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
             'annotation to specify a custom converter or use string keys.',
         element: param,
       );
@@ -133,7 +143,7 @@ class BodyAnalyzer {
       throw InvalidGenerationSource(
         'Map value type must not be nullable!',
         todo: 'Make map value type non nullable or use the "bodyFromJson" '
-            'parameter of the FrogEndpoint annotation to specify a custom '
+            'parameter of the FrogMethod annotation to specify a custom '
             'converter.',
         element: param,
       );
@@ -163,7 +173,7 @@ class BodyAnalyzer {
     if (element is! ClassElement) {
       throw InvalidGenerationSource(
         'Cannot generate body for type without a fromJson constructor!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
             'annotation to specify a custom converter.',
         element: param,
       );
@@ -174,7 +184,7 @@ class BodyAnalyzer {
     if (fromJson == null) {
       throw InvalidGenerationSource(
         'Cannot generate body for type without a fromJson constructor!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
             'annotation to specify a custom converter.',
         element: param,
       );
@@ -184,7 +194,7 @@ class BodyAnalyzer {
     if (firstParam == null || !firstParam.isPositional) {
       throw InvalidGenerationSource(
         'fromJson constructor must have a single positional parameter!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
             'annotation to specify a custom converter or adjust the fromJson.',
         element: param,
       );

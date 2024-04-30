@@ -163,7 +163,9 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     switch (methodBody.bodyType) {
       case EndpointBodyType.json:
         return [
-          if (jsonType == null)
+          if (methodBody.bodyFromJson case final String bodyFromJson)
+            refer(bodyFromJson).call(const [_bodyRef])
+          else if (jsonType == null)
             _bodyRef.asA(bodyType)
           else if (methodBody.isNullable)
             _bodyRef.notEqualTo(literalNull).conditional(

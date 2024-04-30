@@ -9,8 +9,18 @@ class FrogMethod {
   /// The HTTP method this method will be called for.
   final HttpMethod method;
 
+  /// Custom converter function for the body.
+  ///
+  /// You can use this in case the body type does not have a fromJson
+  /// constructor or you need to customize the default deserialization behavior
+  /// for it.
+  final Function? bodyFromJson;
+
   /// Constructor.
-  const FrogMethod(this.method);
+  const FrogMethod(
+    this.method, {
+    this.bodyFromJson,
+  });
 }
 
 /// Marks the given method as the endpoints delete method

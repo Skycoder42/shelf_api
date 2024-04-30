@@ -5,6 +5,10 @@ part 'index.g.dart';
 class BasicModel {
   // ignore: avoid_unused_constructor_parameters
   BasicModel.fromJson(Map<String, int> t);
+
+  // ignore: prefer_constructors_over_static_methods
+  static BasicModel fromJsonX(dynamic j) =>
+      BasicModel.fromJson(j as Map<String, int>);
 }
 
 @FrogEndpoint()
@@ -21,5 +25,6 @@ final class BasicEndpoint extends _$BasicEndpoint {
   }) =>
       'Hello, World!';
 
+  @FrogMethod(HttpMethod.post, bodyFromJson: BasicModel.fromJsonX)
   void post(BasicModel value) {}
 }

@@ -34,11 +34,13 @@ class EndpointBody {
   final EndpointBodyType bodyType;
   final bool isNullable;
   final OpaqueType? jsonType;
+  final String? bodyFromJson;
 
   const EndpointBody({
     required this.paramType,
     required this.bodyType,
     this.isNullable = false,
     this.jsonType,
+    this.bodyFromJson,
   });
 }

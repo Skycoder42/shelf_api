@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_field_initializers_in_const_classes
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:frog_api/frog_api.dart';
 import 'package:meta/meta.dart';
@@ -15,11 +17,10 @@ class MethodsAnalyzer {
   final QueryAnalyzer _queryAnalyzer;
   final ResponseAnalyzer _responseAnalyzer;
 
-  const MethodsAnalyzer([
-    this._bodyAnalyzer = const BodyAnalyzer(),
-    this._queryAnalyzer = const QueryAnalyzer(),
-    this._responseAnalyzer = const ResponseAnalyzer(),
-  ]);
+  const MethodsAnalyzer()
+      : _bodyAnalyzer = const BodyAnalyzer(),
+        _queryAnalyzer = const QueryAnalyzer(),
+        _responseAnalyzer = const ResponseAnalyzer();
 
   Map<HttpMethod, EndpointMethod> analyzeMethods(ClassElement clazz) {
     final annotatedMethods = <HttpMethod, EndpointMethod>{};
@@ -39,7 +40,7 @@ class MethodsAnalyzer {
             'another method already declares this annotation.',
             element: method,
           ),
-          ifAbsent: () => _parseMethod(method),
+          ifAbsent: () => _parseMethod(method, methodAnnotation),
         );
         continue;
       }
@@ -62,8 +63,11 @@ class MethodsAnalyzer {
         .singleOrNull;
   }
 
-  EndpointMethod _parseMethod(MethodElement method) {
-    final body = _bodyAnalyzer.analyzeBody(method);
+  EndpointMethod _parseMethod(
+    MethodElement method, [
+    FrogMethodReader? methodAnnotation,
+  ]) {
+    final body = _bodyAnalyzer.analyzeBody(method, methodAnnotation);
     return EndpointMethod(
       name: method.name,
       response: _responseAnalyzer.analyzeResponse(method),

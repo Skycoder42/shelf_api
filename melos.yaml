@@ -7,6 +7,9 @@ scripts:
   get:
     exec: dart pub get
 
+  upgrade:
+    exec: dart pub upgrade --major-versions
+
   build: >-
     dart pub global run melos exec --depends-on=build_runner
     dart run build_runner build

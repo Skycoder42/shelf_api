@@ -17,6 +17,13 @@ class FrogMethodReader {
         (e) =>
             e.value == constantReader.read('method').read('value').stringValue,
       );
+
+  String? get bodyFromJson {
+    final bodyFromJsonReader = constantReader.read('bodyFromJson');
+    return bodyFromJsonReader.isNull
+        ? null
+        : bodyFromJsonReader.revive().accessor;
+  }
 }
 
 @internal
