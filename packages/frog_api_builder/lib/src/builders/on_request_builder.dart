@@ -17,6 +17,7 @@ class _AsyncRef {
 final class OnRequestBuilder extends SpecBuilder<Method> {
   static const _contextRef = Reference(r'$context');
   static const _endpointRef = Reference(r'$endpoint');
+  static const _bodyRef = Reference(r'$body');
   static const _queryRef = Reference(r'$query');
 
   final EndpointMethodsReader _endpointMethodsReader =
@@ -87,11 +88,12 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     EndpointMethod method,
     _AsyncRef asyncRef,
   ) sync* {
-    yield* _buildParamVariables(method);
+    yield* _buildBodyParamVariables(method.body, asyncRef);
+    yield* _buildQueryParamVariables(method.queryParameters);
 
-    var invocation = _endpointRef.property(method.element.name).call(
+    var invocation = _endpointRef.property(method.name).call(
       const [],
-      Map.fromEntries(_buildParams(method)),
+      Map.fromEntries(_buildQueryParams(method)),
     );
     if (method.isAsync) {
       asyncRef.isAsync = true;
@@ -101,8 +103,50 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     yield* _buildReturn(method, invocation);
   }
 
-  Iterable<Code> _buildParamVariables(EndpointMethod method) sync* {
-    if (method.queryParameters.isEmpty) {
+  Iterable<Code> _buildBodyParamVariables(
+    EndpointMethodBody? methodBody,
+    _AsyncRef asyncRef,
+  ) sync* {
+    if (methodBody == null) {
+      return;
+    }
+
+    if (!methodBody.bodyType.isStream) {
+      asyncRef.isAsync = true;
+    }
+
+    final requestRef = _contextRef.property('request');
+    final bodyExpr = switch (methodBody.bodyType) {
+      EndpointBodyType.text =>
+        requestRef.property('body').call(const []).awaited,
+      EndpointBodyType.binary => requestRef
+          .property('bytes')
+          .call(const [])
+          .property('collect')
+          .call(const [])
+          .awaited,
+      EndpointBodyType.textStream => requestRef
+          .property('bytes')
+          .call(const [])
+          .property('transform')
+          .call([Constants.utf8.property('decoder')]),
+      EndpointBodyType.binaryStream =>
+        requestRef.property('bytes').call(const []),
+      EndpointBodyType.formData =>
+        requestRef.property('formData').call(const []).awaited,
+      EndpointBodyType.json ||
+      EndpointBodyType.jsonList ||
+      EndpointBodyType.jsonMap =>
+        requestRef.property('json').call(const []).awaited,
+    };
+
+    yield declareFinal(_bodyRef.symbol!).assign(bodyExpr).statement;
+  }
+
+  Iterable<Code> _buildQueryParamVariables(
+    List<EndpointMethodParameter> queryParameters,
+  ) sync* {
+    if (queryParameters.isEmpty) {
       return;
     }
 
@@ -115,7 +159,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
         )
         .statement;
 
-    for (final param in method.queryParameters) {
+    for (final param in queryParameters) {
       final paramName = '\$\$${param.name}';
       yield declareFinal(paramName)
           .assign(_queryRef.index(literalString(param.name, raw: true)))
@@ -139,7 +183,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
     }
   }
 
-  Iterable<MapEntry<String, Expression>> _buildParams(
+  Iterable<MapEntry<String, Expression>> _buildQueryParams(
     EndpointMethod method,
   ) sync* {
     for (final param in method.queryParameters) {

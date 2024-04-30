@@ -24,8 +24,17 @@ enum EndpointReturnType {
 enum EndpointBodyType {
   text,
   binary,
+  textStream,
+  binaryStream,
   formData,
   json,
+  jsonList,
+  jsonMap;
+
+  bool get isStream => switch (this) {
+        EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
+        _ => false,
+      };
 }
 
 @internal
@@ -33,10 +42,12 @@ enum EndpointBodyType {
 class EndpointMethodBody {
   final DartType paramType;
   final EndpointBodyType bodyType;
+  final DartType? jsonType;
 
   const EndpointMethodBody({
     required this.paramType,
     required this.bodyType,
+    this.jsonType,
   });
 }
 
@@ -51,22 +62,22 @@ class EndpointMethodParameter {
   const EndpointMethodParameter({
     required this.name,
     required this.type,
-    required this.optional,
-    required this.defaultValue,
+    this.optional = false,
+    this.defaultValue,
   });
 }
 
 @internal
 @immutable
 class EndpointMethod {
-  final MethodElement element;
+  final String name;
   final EndpointReturnType returnType;
   final bool isAsync;
   final EndpointMethodBody? body;
   final List<EndpointMethodParameter> queryParameters;
 
   const EndpointMethod({
-    required this.element,
+    required this.name,
     required this.returnType,
     required this.isAsync,
     required this.body,
@@ -124,7 +135,7 @@ class EndpointMethodsReader {
     final (returnType, isAsync) = _findReturnType(method, method.returnType);
     final body = _getMethodBody(method);
     return EndpointMethod(
-      element: method,
+      name: method.name,
       returnType: returnType,
       isAsync: isAsync,
       body: body,
@@ -156,12 +167,106 @@ class EndpointMethodsReader {
         paramType: bodyParam.type,
         bodyType: EndpointBodyType.formData,
       );
-    } else {
+    } else if (paramType.isDartAsyncStream) {
+      final streamType = paramType
+          .typeArgumentsOf(const TypeChecker.fromRuntime(Stream))!
+          .single;
+      if (streamType.isDartCoreString) {
+        return EndpointMethodBody(
+          paramType: bodyParam.type,
+          bodyType: EndpointBodyType.textStream,
+        );
+      } else if (const TypeChecker.fromRuntime(List<int>)
+          .isAssignableFrom(streamType.element!)) {
+        return EndpointMethodBody(
+          paramType: bodyParam.type,
+          bodyType: EndpointBodyType.binaryStream,
+        );
+      } else {
+        throw InvalidGenerationSource(
+          'Only Stream<String> or Stream<List<int>> are supported as stream '
+          'body types.',
+          element: bodyParam,
+        );
+      }
+    } else if (paramType.isDartCoreBool ||
+        paramType.isDartCoreDouble ||
+        paramType.isDartCoreInt ||
+        paramType.isDartCoreNum ||
+        paramType.isDartCoreNull) {
       return EndpointMethodBody(
         paramType: paramType,
         bodyType: EndpointBodyType.json,
       );
+    } else if (paramType.isDartCoreList) {
+      return EndpointMethodBody(
+        paramType: paramType,
+        bodyType: EndpointBodyType.jsonList,
+        jsonType: _fromJsonType(
+          bodyParam,
+          paramType
+              .typeArgumentsOf(const TypeChecker.fromRuntime(List))!
+              .single,
+        ),
+      );
+    } else if (paramType.isDartCoreMap) {
+      final [keyType, valueType] =
+          paramType.typeArgumentsOf(const TypeChecker.fromRuntime(Map))!;
+      if (!keyType.isDartCoreString) {
+        throw InvalidGenerationSource(
+          'Can only handle maps with a String keys',
+          todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+              'annotation to specify a custom converter or use string keys.',
+          element: bodyParam,
+        );
+      }
+      return EndpointMethodBody(
+        paramType: paramType,
+        bodyType: EndpointBodyType.jsonMap,
+        jsonType: _fromJsonType(bodyParam, valueType),
+      );
+    } else {
+      return EndpointMethodBody(
+        paramType: paramType,
+        bodyType: EndpointBodyType.json,
+        jsonType: _fromJsonType(bodyParam, paramType),
+      );
     }
+  }
+
+  DartType _fromJsonType(ParameterElement param, DartType paramType) {
+    final element = paramType.element;
+    if (element is! ClassElement) {
+      throw InvalidGenerationSource(
+        'Cannot generate body for type without a fromJson constructor!',
+        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+            'annotation to specify a custom converter.',
+        element: param,
+      );
+    }
+
+    final fromJson =
+        element.constructors.where((c) => c.name == 'fromJson').singleOrNull;
+    if (fromJson == null) {
+      throw InvalidGenerationSource(
+        'Cannot generate body for type without a fromJson constructor!',
+        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+            'annotation to specify a custom converter.',
+        element: param,
+      );
+    }
+
+    final firstParam = fromJson.parameters.firstOrNull;
+    if (firstParam == null || !firstParam.isPositional) {
+      throw InvalidGenerationSource(
+        'fromJson constructor must have a single positional parameter!',
+        todo: 'Use the "bodyFromJson" parameter of the FrogEndpoint '
+            'annotation to specify a custom converter or adjust the fromJson.',
+        element: param,
+      );
+    }
+
+    return firstParam.type;
   }
 
   Iterable<EndpointMethodParameter> _findParameters(
