@@ -292,7 +292,7 @@ class EndpointMethodsReader {
       if (param.type.isNullableType &&
           (param.isRequired || param.hasDefaultValue)) {
         throw InvalidGenerationSource(
-          'Nullable parameters can neither be required nor have a default value',
+          'Nullable parameters can neither be required nor have default values',
           element: method,
         );
       }

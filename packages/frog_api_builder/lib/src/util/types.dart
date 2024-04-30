@@ -12,7 +12,7 @@ abstract base class Types {
 
   static final void$ = TypeReference((b) => b..symbol = 'void');
 
-  static final String$ = TypeReference((b) => b..symbol = 'String');
+  static final string = TypeReference((b) => b..symbol = 'String');
 
   static final TypeReference httpStatus = TypeReference(
     (b) => b
@@ -56,8 +56,10 @@ abstract base class Types {
           ..types.add(type ?? Types.dynamic$),
       );
 
-  static TypeReference map(
-          {TypeReference? keyType, TypeReference? valueType}) =>
+  static TypeReference map({
+    TypeReference? keyType,
+    TypeReference? valueType,
+  }) =>
       TypeReference(
         (b) => b
           ..symbol = 'Map'

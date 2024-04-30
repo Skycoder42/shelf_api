@@ -183,12 +183,12 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
       case EndpointBodyType.jsonMap:
         return [
           if (jsonType == null)
-            _bodyRef.asA(Types.map(keyType: Types.String$, valueType: bodyType))
+            _bodyRef.asA(Types.map(keyType: Types.string, valueType: bodyType))
           else
             _bodyRef
                 .asA(Types.map())
                 .property('cast')
-                .call(const [], const {}, [Types.String$, jsonType])
+                .call(const [], const {}, [Types.string, jsonType])
                 .property('mapValue')
                 .call([bodyType.property('fromJson')]),
         ];
