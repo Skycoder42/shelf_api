@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 import '../models/endpoint.dart';
 import '../util/types.dart';
-import 'spec_builder.dart';
+import 'base/spec_builder.dart';
 
 @internal
 final class BaseClassBuilder extends SpecBuilder<Class> {

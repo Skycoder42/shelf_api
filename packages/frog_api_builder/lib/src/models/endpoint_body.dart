@@ -17,14 +17,6 @@ enum EndpointBodyType {
         EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
         _ => false,
       };
-
-  bool get isJson => switch (this) {
-        EndpointBodyType.json ||
-        EndpointBodyType.jsonList ||
-        EndpointBodyType.jsonMap =>
-          true,
-        _ => false,
-      };
 }
 
 @internal
@@ -43,4 +35,6 @@ class EndpointBody {
     this.jsonType,
     this.bodyFromJson,
   });
+
+  bool get isAsync => !bodyType.isStream;
 }

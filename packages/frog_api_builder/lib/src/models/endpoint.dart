@@ -16,4 +16,6 @@ class Endpoint {
     required this.name,
     required this.methods,
   });
+
+  bool get isAsync => methods.values.any((m) => m.isAsync);
 }

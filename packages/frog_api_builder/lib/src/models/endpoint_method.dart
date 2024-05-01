@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'endpoint_body.dart';
 import 'endpoint_query_parameter.dart';
-import 'endpoint_response_type.dart';
+import 'endpoint_response.dart';
 
 @internal
 @immutable
@@ -18,4 +18,6 @@ class EndpointMethod {
     required this.body,
     required this.queryParameters,
   });
+
+  bool get isAsync => response.isAsync || (body?.isAsync ?? false);
 }

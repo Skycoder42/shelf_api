@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
 
-import '../models/endpoint_response_type.dart';
+import '../models/endpoint_response.dart';
 import '../util/type_checkers.dart';
 
 @internal

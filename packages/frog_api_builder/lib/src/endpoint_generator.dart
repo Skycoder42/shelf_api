@@ -7,7 +7,7 @@ import 'package:source_gen/source_gen.dart';
 
 import 'analyzers/endpoint_analyzer.dart';
 import 'builders/base_class_builder.dart';
-import 'builders/on_request_builder.dart';
+import 'builders/on_request/on_request_builder.dart';
 import 'readers/frog_endpoint_reader.dart';
 
 @internal
