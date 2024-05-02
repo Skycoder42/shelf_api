@@ -11,12 +11,15 @@ final class ParamsClassBuilder extends SpecBuilder<Class> {
 
   const ParamsClassBuilder(this._endpoint);
 
+  static String className(String endpointName) =>
+      '_\$${endpointName}PathParams';
+
   bool get shouldBuild => _endpoint.pathParameters.isNotEmpty;
 
   @override
   Class build() => Class(
         (b) => b
-          ..name = '_\$${_endpoint.name}PathParams'
+          ..name = className(_endpoint.name)
           ..modifier = ClassModifier.final$
           ..fields.addAll(_buildFields())
           ..constructors.add(_buildConstructor()),

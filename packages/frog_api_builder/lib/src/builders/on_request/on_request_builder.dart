@@ -2,6 +2,7 @@ import 'package:code_builder/code_builder.dart' hide MethodBuilder;
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint.dart';
+import '../../models/endpoint_path_parameter.dart';
 import '../../util/code/switch.dart';
 import '../../util/types.dart';
 import '../base/spec_builder.dart';
@@ -34,7 +35,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
             _endpoint.pathParameters.map(
               (p) => Parameter(
                 (b) => b
-                  ..name = p.name
+                  ..name = _pathParamName(p)
                   ..type = Types.string,
               ),
             ),
@@ -55,7 +56,11 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
 
     yield declareFinal(_endpointRef.symbol!)
         .assign(
-          Types.fromType(_endpoint.endpointType).newInstance([_contextRef]),
+          Types.fromType(_endpoint.endpointType).newInstance([
+            _contextRef,
+            for (final param in _endpoint.pathParameters)
+              refer(_pathParamName(param)),
+          ]),
         )
         .statement;
 
@@ -78,4 +83,7 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
 
     yield switchCase;
   }
+
+  String _pathParamName(EndpointPathParameter param) =>
+      '\$pathParam\$${param.name}';
 }
