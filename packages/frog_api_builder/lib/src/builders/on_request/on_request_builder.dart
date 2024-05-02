@@ -30,6 +30,15 @@ final class OnRequestBuilder extends SpecBuilder<Method> {
                 ..type = Types.requestContext,
             ),
           )
+          ..requiredParameters.addAll(
+            _endpoint.pathParameters.map(
+              (p) => Parameter(
+                (b) => b
+                  ..name = p.name
+                  ..type = Types.string,
+              ),
+            ),
+          )
           ..body = Block.of(_buildBody()),
       );
 

@@ -2,6 +2,7 @@ import 'package:frog_api/frog_api.dart';
 import 'package:meta/meta.dart';
 
 import 'endpoint_method.dart';
+import 'endpoint_path_parameter.dart';
 import 'opaque_type.dart';
 
 @internal
@@ -9,10 +10,12 @@ import 'opaque_type.dart';
 class Endpoint {
   final OpaqueType endpointType;
   final String name;
+  final List<EndpointPathParameter> pathParameters;
   final Map<HttpMethod, EndpointMethod> methods;
 
   const Endpoint({
     required this.endpointType,
+    required this.pathParameters,
     required this.name,
     required this.methods,
   });

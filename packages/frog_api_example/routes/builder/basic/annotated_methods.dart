@@ -1,6 +1,6 @@
 import 'package:frog_api/frog_api.dart';
 
-part 'annotated_methods.g.dart';
+part 'annotated_methods.api.dart';
 
 class SimpleJson {
   final int value;

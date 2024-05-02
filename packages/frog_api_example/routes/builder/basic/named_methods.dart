@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:frog_api/frog_api.dart';
 
-part 'named_methods.g.dart';
+part 'named_methods.api.dart';
 
 @FrogEndpoint()
 final class NamedMethodsEndpoint extends _$NamedMethodsEndpoint {

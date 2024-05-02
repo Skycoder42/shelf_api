@@ -1,6 +1,6 @@
 import 'package:frog_api/frog_api.dart';
 
-part 'index.g.dart';
+part 'index.api.dart';
 
 class BasicModel {
   // ignore: avoid_unused_constructor_parameters

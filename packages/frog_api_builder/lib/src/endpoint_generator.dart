@@ -8,6 +8,7 @@ import 'package:source_gen/source_gen.dart';
 import 'analyzers/endpoint_analyzer.dart';
 import 'builders/base_class_builder.dart';
 import 'builders/on_request/on_request_builder.dart';
+import 'builders/params_class_builder.dart';
 import 'readers/frog_endpoint_reader.dart';
 
 @internal
@@ -37,11 +38,15 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     const endpointAnalyzer = EndpointAnalyzer();
     final endpoint = endpointAnalyzer.analyzeEndpoint(element);
 
+    final paramsClassBuilder = ParamsClassBuilder(endpoint);
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..body.add(BaseClassBuilder(endpoint))
-        ..body.add(OnRequestBuilder(endpoint)),
+        ..body.addAll([
+          if (paramsClassBuilder.shouldBuild) paramsClassBuilder,
+          BaseClassBuilder(endpoint),
+          OnRequestBuilder(endpoint),
+        ]),
     );
 
     final emitter = DartEmitter(
