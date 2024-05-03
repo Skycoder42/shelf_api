@@ -51,7 +51,12 @@ final class ResponseBuilder extends CodeBuilder {
       case EndpointResponseType.json:
         yield Types.response
             .newInstanceNamed('ok', [
-              Constants.json.property('encode').call([_invocation]),
+              Constants.json.property('encode').call([
+                if (_response.toJson case final String toJson)
+                  refer(toJson).call([_invocation])
+                else
+                  _invocation,
+              ]),
             ])
             .returned
             .statement;

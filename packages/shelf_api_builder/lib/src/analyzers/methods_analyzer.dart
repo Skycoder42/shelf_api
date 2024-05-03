@@ -3,16 +3,19 @@ import 'package:meta/meta.dart';
 
 import '../models/endpoint_method.dart';
 import '../readers/api_method_reader.dart';
+import 'body_analyzer.dart';
 import 'query_analyzer.dart';
 import 'response_analyzer.dart';
 
 @internal
 class MethodsAnalyzer {
   final QueryAnalyzer _queryAnalyzer;
+  final BodyAnalyzer _bodyAnalyzer;
   final ResponseAnalyzer _responseAnalyzer;
 
   const MethodsAnalyzer([
     this._queryAnalyzer = const QueryAnalyzer(),
+    this._bodyAnalyzer = const BodyAnalyzer(),
     this._responseAnalyzer = const ResponseAnalyzer(),
   ]);
 
@@ -39,6 +42,7 @@ class MethodsAnalyzer {
         httpMethod: apiMethod.method,
         path: apiMethod.path,
         queryParameters: _queryAnalyzer.analyzeQuery(method),
+        body: _bodyAnalyzer.analyzeBody(method),
         response: _responseAnalyzer.analyzeResponse(method),
       );
 }

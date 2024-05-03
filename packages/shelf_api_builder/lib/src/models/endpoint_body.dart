@@ -8,7 +8,6 @@ enum EndpointBodyType {
   binary,
   textStream,
   binaryStream,
-  formData,
   json,
   jsonList,
   jsonMap;
@@ -26,14 +25,14 @@ class EndpointBody {
   final EndpointBodyType bodyType;
   final bool isNullable;
   final OpaqueType? jsonType;
-  final String? bodyFromJson;
+  final String? fromJson;
 
   const EndpointBody({
     required this.paramType,
     required this.bodyType,
     this.isNullable = false,
     this.jsonType,
-    this.bodyFromJson,
+    this.fromJson,
   });
 
   bool get isAsync => !bodyType.isStream;

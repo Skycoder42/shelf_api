@@ -2,17 +2,7 @@ import 'dart:typed_data';
 
 import 'package:shelf_api/shelf_api.dart';
 
-class BasicModel {
-  final int value;
-
-  const BasicModel(this.value);
-
-  // ignore: avoid_unused_constructor_parameters
-  factory BasicModel.fromJson(Map<String, dynamic> json) =>
-      BasicModel(json['value'] as int);
-
-  dynamic toJson() => {'value': value};
-}
+import '../basic_model.dart';
 
 @ApiEndpoint('/response/')
 class ResponseEndpoint extends ShelfEndpoint {
@@ -35,6 +25,9 @@ class ResponseEndpoint extends ShelfEndpoint {
 
   @Get('/json/map')
   Map<String, BasicModel> jsonMap() => const {'a': BasicModel(1)};
+
+  @Get('/json/custom', toJson: BasicModel.toJsonX)
+  BasicModel jsonCustom() => const BasicModel(42);
 
   @Get('/response')
   Response response() => Response.ok('Hello, World!');
@@ -60,6 +53,9 @@ class ResponseEndpoint extends ShelfEndpoint {
   @Get('/async/json/map')
   Future<Map<String, BasicModel>> asyncJsonMap() async =>
       const {'a': BasicModel(1)};
+
+  @Get('/async/json/custom', toJson: BasicModel.toJsonX)
+  Future<BasicModel> asyncJsonCustom() async => const BasicModel(42);
 
   @Get('/async/response')
   Future<Response> asyncResponse() async => Response.ok('Hello, World!');

@@ -25,6 +25,11 @@ class ApiMethodReader {
         ? null
         : bodyFromJsonReader.revive().accessor;
   }
+
+  String? get toJson {
+    final toJsonReader = constantReader.read('toJson');
+    return toJsonReader.isNull ? null : toJsonReader.revive().accessor;
+  }
 }
 
 @internal

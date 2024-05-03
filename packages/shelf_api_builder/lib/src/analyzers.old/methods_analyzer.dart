@@ -7,7 +7,7 @@ import 'package:source_gen/source_gen.dart';
 
 import '../models/endpoint_method.dart';
 import '../readers/api_method_reader.dart';
-import 'body_analyzer.dart';
+import '../analyzers/body_analyzer.dart';
 import '../analyzers/query_analyzer.dart';
 import '../analyzers/response_analyzer.dart';
 

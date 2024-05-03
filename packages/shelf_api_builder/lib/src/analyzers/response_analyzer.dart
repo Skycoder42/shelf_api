@@ -5,6 +5,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
 
 import '../models/endpoint_response.dart';
+import '../readers/api_method_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
@@ -19,9 +20,15 @@ class ResponseAnalyzer {
     DartType returnType,
     bool allowAsync,
   ) {
+    final apiMethod = method.apiMethodAnnotation;
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
       return _analyzeFuture(allowAsync, method, returnType);
+    } else if (apiMethod?.toJson case final String toJson) {
+      return EndpointResponse(
+        responseType: EndpointResponseType.json,
+        toJson: toJson,
+      );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
       return _analyzeStream(allowAsync, method, returnType);

@@ -6,65 +6,87 @@ import 'package:source_helper/source_helper.dart';
 
 import '../models/endpoint_body.dart';
 import '../models/opaque_type.dart';
-import '../readers/api_method_reader.dart';
+import '../readers/body_param_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
 class BodyAnalyzer {
   const BodyAnalyzer();
 
-  EndpointBody? analyzeBody(
-    MethodElement method, [
-    ApiMethodReader? methodAnnotation,
-  ]) {
-    final bodyParam = method.parameters.firstOrNull;
-    if (bodyParam == null || !bodyParam.isRequiredPositional) {
+  EndpointBody? analyzeBody(MethodElement method) {
+    final result = _findBodyParam(method);
+    if (result == null) {
       return null;
     }
+    final (param, bodyParam) = result;
+    final paramType = param.type;
 
-    if (methodAnnotation?.bodyFromJson case final String bodyFromJson) {
+    if (bodyParam.fromJson case final String fromJson) {
       return EndpointBody(
-        paramType: OpaqueDartType(bodyParam.type),
+        paramType: OpaqueDartType(paramType),
         bodyType: EndpointBodyType.json,
-        bodyFromJson: bodyFromJson,
+        fromJson: fromJson,
+        isNullable: paramType.isNullableType,
       );
-    }
-
-    final paramType = bodyParam.type;
-    if (paramType.isDartCoreString) {
+    } else if (paramType.isDartCoreString) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
-        paramType: OpaqueDartType(bodyParam.type),
+        paramType: OpaqueDartType(param.type),
         bodyType: EndpointBodyType.text,
       );
     } else if (TypeCheckers.uint8List.isAssignableFrom(paramType.element!)) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
-        paramType: OpaqueDartType(bodyParam.type),
+        paramType: OpaqueDartType(param.type),
         bodyType: EndpointBodyType.binary,
-      );
-    } else if (TypeCheckers.formData.isExactly(paramType.element!)) {
-      _ensureNotNullable(paramType, method);
-      return EndpointBody(
-        paramType: OpaqueDartType(bodyParam.type),
-        bodyType: EndpointBodyType.formData,
-        isNullable: paramType.isNullableType,
       );
     } else if (paramType.isDartAsyncStream) {
       _ensureNotNullable(paramType, method);
-      return _analyzeStreamBody(bodyParam, paramType);
+      return _analyzeStreamBody(param, paramType);
     } else if (paramType.isDartCoreList) {
-      return _analyzeJsonList(bodyParam, paramType);
+      return _analyzeJsonList(param, paramType);
     } else if (paramType.isDartCoreMap) {
-      return _analyzeJsonMap(bodyParam, paramType);
+      return _analyzeJsonMap(param, paramType);
     } else {
       return EndpointBody(
         paramType: OpaqueDartType(paramType),
         bodyType: EndpointBodyType.json,
-        jsonType: _fromJsonType(bodyParam, paramType),
+        jsonType: _fromJsonType(param, paramType),
         isNullable: paramType.isNullableType,
       );
     }
+  }
+
+  (ParameterElement, BodyParamReader)? _findBodyParam(MethodElement method) {
+    for (final param in method.parameters.skip(1)) {
+      if (param.bodyParamAnnotation != null) {
+        throw InvalidGenerationSource(
+          'Only the first parameter can be marked as body.',
+          todo: 'Move the parameter to the beginning of the method',
+          element: param,
+        );
+      }
+    }
+
+    final firstParam = method.parameters.firstOrNull;
+    if (firstParam == null) {
+      return null;
+    }
+
+    final bodyParam = firstParam.bodyParamAnnotation;
+    if (bodyParam == null) {
+      return null;
+    }
+
+    if (!firstParam.isRequiredPositional) {
+      throw InvalidGenerationSource(
+        'The body parameter must be required positional.',
+        todo: 'Turn the parameter into a non optional positional parameter',
+        element: firstParam,
+      );
+    }
+
+    return (firstParam, bodyParam);
   }
 
   void _ensureNotNullable(DartType paramType, MethodElement method) {
@@ -112,8 +134,8 @@ class BodyAnalyzer {
     if (listType.isNullableType) {
       throw InvalidGenerationSource(
         'List type must not be nullable!',
-        todo: 'Make list type non nullable or use the "bodyFromJson" parameter '
-            'of the FrogMethod annotation to specify a custom converter.',
+        todo: 'Make list type non nullable or use the "fromJson" parameter '
+            'of the BodyParam annotation to specify a custom converter.',
         element: param,
       );
     }
@@ -134,7 +156,7 @@ class BodyAnalyzer {
     if (!keyType.isDartCoreString) {
       throw InvalidGenerationSource(
         'Can only handle maps with a String keys',
-        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
+        todo: 'Use the "fromJson" parameter of the BodyParam '
             'annotation to specify a custom converter or use string keys.',
         element: param,
       );
@@ -142,8 +164,8 @@ class BodyAnalyzer {
     if (valueType.isNullableType) {
       throw InvalidGenerationSource(
         'Map value type must not be nullable!',
-        todo: 'Make map value type non nullable or use the "bodyFromJson" '
-            'parameter of the FrogMethod annotation to specify a custom '
+        todo: 'Make map value type non nullable or use the "fromJson" '
+            'parameter of the BodyParam annotation to specify a custom '
             'converter.',
         element: param,
       );
@@ -173,7 +195,7 @@ class BodyAnalyzer {
     if (element is! ClassElement) {
       throw InvalidGenerationSource(
         'Cannot generate body for type without a fromJson constructor!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
+        todo: 'Use the "fromJson" parameter of the BodyParam '
             'annotation to specify a custom converter.',
         element: param,
       );
@@ -184,7 +206,7 @@ class BodyAnalyzer {
     if (fromJson == null) {
       throw InvalidGenerationSource(
         'Cannot generate body for type without a fromJson constructor!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
+        todo: 'Use the "fromJson" parameter of the BodyParam '
             'annotation to specify a custom converter.',
         element: param,
       );
@@ -194,7 +216,7 @@ class BodyAnalyzer {
     if (firstParam == null || !firstParam.isPositional) {
       throw InvalidGenerationSource(
         'fromJson constructor must have a single positional parameter!',
-        todo: 'Use the "bodyFromJson" parameter of the FrogMethod '
+        todo: 'Use the "fromJson" parameter of the BodyParam '
             'annotation to specify a custom converter or adjust the fromJson.',
         element: param,
       );
