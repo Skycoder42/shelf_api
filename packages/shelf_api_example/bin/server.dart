@@ -21,8 +21,12 @@ void main(List<String> args) async {
   final server = await serve(app, 'localhost', port);
   print('Serving at http://${server.address.host}:${server.port}');
 
+  final signals = [
+    ProcessSignal.sigint,
+    if (!Platform.isWindows) ProcessSignal.sigterm,
+  ];
   final subs = <StreamSubscription>[];
-  for (final signal in [ProcessSignal.sigint, ProcessSignal.sigterm]) {
+  for (final signal in signals) {
     subs.add(
       signal.watch().listen((signal) {
         for (final sub in subs) {
