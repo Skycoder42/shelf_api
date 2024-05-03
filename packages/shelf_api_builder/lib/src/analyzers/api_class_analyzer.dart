@@ -33,6 +33,7 @@ class ApiClassAnalyzer {
         for (final endpoint in shelfApi.endpoints)
           await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),
       ],
+      basePath: shelfApi.basePath,
     );
   }
 }

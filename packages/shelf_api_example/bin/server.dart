@@ -13,7 +13,7 @@ void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');
   final router = Router()
     ..get('/riverpod', riverpodRequestHandler)
-    ..mount('/api', ExampleApi().call);
+    ..mount('/', ExampleApi().call);
 
   final app =
       const Pipeline().addMiddleware(rivershelf()).addHandler(router.call);

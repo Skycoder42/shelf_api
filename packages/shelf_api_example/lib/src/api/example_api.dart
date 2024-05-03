@@ -6,15 +6,18 @@ import 'endpoints/params_endpoint.dart';
 import 'endpoints/response_endpoint.dart';
 import 'endpoints/routing_endpoint.dart';
 
-@ShelfApi([
-  BasicEndpoint,
-  RootRoutingEndpoint,
-  OpenRoutingEndpoint,
-  ClosedRoutingEndpoint,
-  SlashRoutingEndpoint,
-  ResponseEndpoint,
-  ParamsEndpoint,
-  BodyEndpoint,
-])
+@ShelfApi(
+  [
+    BasicEndpoint,
+    RootRoutingEndpoint,
+    OpenRoutingEndpoint,
+    ClosedRoutingEndpoint,
+    SlashRoutingEndpoint,
+    ResponseEndpoint,
+    ParamsEndpoint,
+    BodyEndpoint,
+  ],
+  basePath: '/api/v1/',
+)
 // ignore: unused_element
 class _ExampleApi {}

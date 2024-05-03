@@ -60,6 +60,11 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
 
   Iterable<Code> _buildConstructorBody() sync* {
     Expression router = _routerRef;
+
+    if (_apiClass.basePath != null) {
+      router = Types.router.newInstance(const []);
+    }
+
     for (final endpoint in _apiClass.endpoints) {
       Expression endpointRouter;
       if (endpoint.path != null) {
@@ -84,6 +89,13 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
       } else {
         router = endpointRouter;
       }
+    }
+
+    if (_apiClass.basePath case final String path) {
+      router = _routerRef.cascade('mount').call([
+        literalString(path, raw: true),
+        router,
+      ]);
     }
 
     yield router.statement;
