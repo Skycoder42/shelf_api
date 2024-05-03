@@ -6,8 +6,6 @@ import 'endpoints/params_endpoint.dart';
 import 'endpoints/response_endpoint.dart';
 import 'endpoints/routing_endpoint.dart';
 
-part 'example_api.api.dart';
-
 @ShelfApi([
   BasicEndpoint,
   RootRoutingEndpoint,
@@ -18,6 +16,5 @@ part 'example_api.api.dart';
   ParamsEndpoint,
   BodyEndpoint,
 ])
-abstract class ExampleApi with _$ExampleApi {
-  factory ExampleApi() = _ExampleApi;
-}
+// ignore: unused_element
+class _ExampleApi {}

@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
@@ -25,7 +26,7 @@ class EndpointBody {
   final EndpointBodyType bodyType;
   final bool isNullable;
   final OpaqueType? jsonType;
-  final String? fromJson;
+  final OpaqueConstant? fromJson;
 
   const EndpointBody({
     required this.paramType,

@@ -78,7 +78,8 @@ abstract base class Types {
   static TypeReference futureOr([TypeReference? type]) => TypeReference(
         (b) => b
           ..symbol = 'FutureOr'
-          ..types.add(type ?? Types.dynamic$),
+          ..types.add(type ?? Types.dynamic$)
+          ..url = 'dart:async',
       );
 
   static TypeReference fromType(
@@ -94,12 +95,15 @@ abstract base class Types {
   static TypeReference _fromDartType(DartType dartType, [bool? isNull]) {
     if (dartType is VoidType || dartType.isDartCoreNull) {
       return void$;
+    } else if (dartType is DynamicType) {
+      return dynamic$;
     } else {
       return TypeReference(
         (b) {
           b
             ..symbol = dartType.element!.name
-            ..isNullable = isNull ?? dartType.isNullableType;
+            ..isNullable = isNull ?? dartType.isNullableType
+            ..url = dartType.element?.librarySource?.uri.toString();
 
           if (dartType is InterfaceType) {
             b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -114,7 +118,8 @@ abstract base class Types {
         (b) {
           b
             ..symbol = clazz.name
-            ..isNullable = isNull;
+            ..isNullable = isNull
+            ..url = clazz.librarySource.uri.toString();
         },
       );
 }

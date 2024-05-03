@@ -19,7 +19,6 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
   Class build() => Class(
         (b) => b
           ..name = _apiClass.implementationName
-          ..implements.add(Types.fromType(_apiClass.classType))
           ..fields.add(
             Field(
               (b) => b

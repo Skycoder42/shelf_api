@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -13,12 +14,13 @@ import '../util/type_checkers.dart';
 class EndpointAnalyzer {
   final MethodsAnalyzer _methodsAnalyzer;
 
-  const EndpointAnalyzer([this._methodsAnalyzer = const MethodsAnalyzer()]);
+  EndpointAnalyzer(BuildStep buildStep)
+      : _methodsAnalyzer = MethodsAnalyzer(buildStep);
 
-  Endpoint analyzeEndpoint(
+  Future<Endpoint> analyzeEndpoint(
     DartType endpointType,
     ClassElement apiElement,
-  ) {
+  ) async {
     final endpointElement = endpointType.element;
     if (endpointElement is! ClassElement ||
         !TypeCheckers.shelfEndpoint.isSuperOf(endpointElement)) {
@@ -33,7 +35,7 @@ class EndpointAnalyzer {
       endpointType: OpaqueClassType(endpointElement),
       name: endpointElement.name,
       path: apiEndpoint?.path,
-      methods: _methodsAnalyzer.analyzeMethods(endpointElement),
+      methods: await _methodsAnalyzer.analyzeMethods(endpointElement),
     );
   }
 }

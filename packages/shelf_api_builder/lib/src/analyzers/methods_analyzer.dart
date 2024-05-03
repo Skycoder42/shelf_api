@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 
 import '../models/endpoint_method.dart';
@@ -13,36 +14,35 @@ class MethodsAnalyzer {
   final BodyAnalyzer _bodyAnalyzer;
   final ResponseAnalyzer _responseAnalyzer;
 
-  const MethodsAnalyzer([
-    this._queryAnalyzer = const QueryAnalyzer(),
-    this._bodyAnalyzer = const BodyAnalyzer(),
-    this._responseAnalyzer = const ResponseAnalyzer(),
-  ]);
+  MethodsAnalyzer(BuildStep buildStep)
+      : _queryAnalyzer = QueryAnalyzer(buildStep),
+        _bodyAnalyzer = BodyAnalyzer(buildStep),
+        _responseAnalyzer = ResponseAnalyzer(buildStep);
 
-  List<EndpointMethod> analyzeMethods(ClassElement clazz) =>
+  Future<List<EndpointMethod>> analyzeMethods(ClassElement clazz) =>
       _analyzeMethods(clazz).toList();
 
-  Iterable<EndpointMethod> _analyzeMethods(ClassElement clazz) sync* {
+  Stream<EndpointMethod> _analyzeMethods(ClassElement clazz) async* {
     for (final method in clazz.methods) {
       final apiMethod = method.apiMethodAnnotation;
       if (apiMethod == null) {
         continue;
       }
 
-      yield _analyzeMethod(method, apiMethod);
+      yield await _analyzeMethod(method, apiMethod);
     }
   }
 
-  EndpointMethod _analyzeMethod(
+  Future<EndpointMethod> _analyzeMethod(
     MethodElement method,
     ApiMethodReader apiMethod,
-  ) =>
+  ) async =>
       EndpointMethod(
         name: method.name,
         httpMethod: apiMethod.method,
         path: apiMethod.path,
-        queryParameters: _queryAnalyzer.analyzeQuery(method),
-        body: _bodyAnalyzer.analyzeBody(method),
-        response: _responseAnalyzer.analyzeResponse(method),
+        queryParameters: await _queryAnalyzer.analyzeQuery(method),
+        body: await _bodyAnalyzer.analyzeBody(method),
+        response: await _responseAnalyzer.analyzeResponse(method),
       );
 }

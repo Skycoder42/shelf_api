@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
@@ -10,24 +11,26 @@ import '../util/type_checkers.dart';
 
 @internal
 class ResponseAnalyzer {
-  const ResponseAnalyzer();
+  final BuildStep _buildStep;
 
-  EndpointResponse analyzeResponse(MethodElement method) =>
+  ResponseAnalyzer(this._buildStep);
+
+  Future<EndpointResponse> analyzeResponse(MethodElement method) =>
       _analyzeResponseImpl(method, method.returnType, true);
 
-  EndpointResponse _analyzeResponseImpl(
+  Future<EndpointResponse> _analyzeResponseImpl(
     MethodElement method,
     DartType returnType,
     bool allowAsync,
-  ) {
+  ) async {
     final apiMethod = method.apiMethodAnnotation;
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
       return _analyzeFuture(allowAsync, method, returnType);
-    } else if (apiMethod?.toJson case final String toJson) {
+    } else if (apiMethod?.hasToJson ?? false) {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
-        toJson: toJson,
+        toJson: await apiMethod!.toJson(_buildStep),
       );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
@@ -62,11 +65,11 @@ class ResponseAnalyzer {
     }
   }
 
-  EndpointResponse _analyzeFuture(
+  Future<EndpointResponse> _analyzeFuture(
     bool allowAsync,
     MethodElement method,
     DartType returnType,
-  ) {
+  ) async {
     if (!allowAsync) {
       throw InvalidGenerationSource(
         'Cannot process nested Futures',
@@ -75,7 +78,7 @@ class ResponseAnalyzer {
     }
 
     final [futureType] = returnType.typeArgumentsOf(TypeCheckers.future)!;
-    return _analyzeResponseImpl(method, futureType, false)
+    return (await _analyzeResponseImpl(method, futureType, false))
         .copyWith(isAsync: true);
   }
 

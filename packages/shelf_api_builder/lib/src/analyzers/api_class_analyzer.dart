@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -11,14 +12,13 @@ import 'endpoint_analyzer.dart';
 class ApiClassAnalyzer {
   final EndpointAnalyzer _endpointAnalyzer;
 
-  const ApiClassAnalyzer([
-    this._endpointAnalyzer = const EndpointAnalyzer(),
-  ]);
+  ApiClassAnalyzer(BuildStep buildStep)
+      : _endpointAnalyzer = EndpointAnalyzer(buildStep);
 
-  ApiClass analyzeApiClass(
+  Future<ApiClass> analyzeApiClass(
     ClassElement clazz,
     ShelfApiReader shelfApi,
-  ) {
+  ) async {
     if (shelfApi.endpoints.isEmpty) {
       throw InvalidGenerationSourceError(
         'The ShelfApi annotation must define at least one endpoint.',
@@ -31,7 +31,7 @@ class ApiClassAnalyzer {
       className: clazz.name,
       endpoints: [
         for (final endpoint in shelfApi.endpoints)
-          _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),
+          await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),
       ],
     );
   }

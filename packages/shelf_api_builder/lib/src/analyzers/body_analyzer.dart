@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
@@ -11,9 +12,11 @@ import '../util/type_checkers.dart';
 
 @internal
 class BodyAnalyzer {
-  const BodyAnalyzer();
+  final BuildStep _buildStep;
 
-  EndpointBody? analyzeBody(MethodElement method) {
+  BodyAnalyzer(this._buildStep);
+
+  Future<EndpointBody?> analyzeBody(MethodElement method) async {
     final result = _findBodyParam(method);
     if (result == null) {
       return null;
@@ -21,11 +24,11 @@ class BodyAnalyzer {
     final (param, bodyParam) = result;
     final paramType = param.type;
 
-    if (bodyParam.fromJson case final String fromJson) {
+    if (bodyParam.hasFromJson) {
       return EndpointBody(
         paramType: OpaqueDartType(paramType),
         bodyType: EndpointBodyType.json,
-        fromJson: fromJson,
+        fromJson: await bodyParam.fromJson(_buildStep),
         isNullable: paramType.isNullableType,
       );
     } else if (paramType.isDartCoreString) {

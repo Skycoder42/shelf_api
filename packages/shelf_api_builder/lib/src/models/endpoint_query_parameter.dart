@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
@@ -12,7 +13,7 @@ class EndpointQueryParameter {
   final bool isList;
   final bool isOptional;
   final String? defaultValue;
-  final String? customParse;
+  final OpaqueConstant? customParse;
 
   const EndpointQueryParameter({
     required this.paramName,

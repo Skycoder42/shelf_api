@@ -16,7 +16,5 @@ class ApiClass {
     required this.endpoints,
   });
 
-  String get mixinName => '_\$$className';
-
-  String get implementationName => '_$className';
+  String get implementationName => className.substring(1);
 }

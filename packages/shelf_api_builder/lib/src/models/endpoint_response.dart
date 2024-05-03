@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import 'opaque_constant.dart';
+
 @internal
 enum EndpointResponseType {
   noContent,
@@ -16,7 +18,7 @@ enum EndpointResponseType {
 class EndpointResponse {
   final EndpointResponseType responseType;
   final bool isAsync;
-  final String? toJson;
+  final OpaqueConstant? toJson;
 
   const EndpointResponse({
     required this.responseType,
@@ -27,7 +29,7 @@ class EndpointResponse {
   EndpointResponse copyWith({
     EndpointResponseType? responseType,
     bool? isAsync,
-    String? toJson,
+    OpaqueConstant? toJson,
   }) =>
       EndpointResponse(
         responseType: responseType ?? this.responseType,

@@ -2,6 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
 import '../models/endpoint_body.dart';
+import '../models/opaque_constant.dart';
 import '../models/opaque_type.dart';
 import '../util/constants.dart';
 import '../util/extensions/code_builder_extensions.dart';
@@ -92,9 +93,10 @@ final class _BodyParamBuilder {
   ) {
     var checkNull = false;
     Expression paramExpr;
-    if (_methodBody.fromJson case final String fromJson) {
+    if (_methodBody.fromJson case final OpaqueConstant fromJson) {
       checkNull = true;
-      paramExpr = refer(fromJson).call(const [BodyBuilder._bodyRef]);
+      paramExpr =
+          Constants.fromConstant(fromJson).call(const [BodyBuilder._bodyRef]);
     } else if (jsonType == null) {
       paramExpr = BodyBuilder._bodyRef.asA(paramType);
     } else {

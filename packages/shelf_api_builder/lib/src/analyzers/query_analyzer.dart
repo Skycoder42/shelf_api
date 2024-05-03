@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
@@ -10,22 +11,24 @@ import '../util/type_checkers.dart';
 
 @internal
 class QueryAnalyzer {
-  const QueryAnalyzer();
+  final BuildStep _buildStep;
 
-  List<EndpointQueryParameter> analyzeQuery(MethodElement method) =>
+  QueryAnalyzer(this._buildStep);
+
+  Future<List<EndpointQueryParameter>> analyzeQuery(MethodElement method) =>
       _analyzeQuery(method).toList();
 
-  Iterable<EndpointQueryParameter> _analyzeQuery(MethodElement method) sync* {
+  Stream<EndpointQueryParameter> _analyzeQuery(MethodElement method) async* {
     for (final param in method.parameters) {
       if (param.isPositional) {
         continue;
       }
 
-      yield _analyzeParam(param);
+      yield await _analyzeParam(param);
     }
   }
 
-  EndpointQueryParameter _analyzeParam(ParameterElement param) {
+  Future<EndpointQueryParameter> _analyzeParam(ParameterElement param) async {
     var paramType = param.type;
     if (paramType.isNullableType &&
         (param.isRequired || param.hasDefaultValue)) {
@@ -58,7 +61,7 @@ class QueryAnalyzer {
       isList: isList,
       isOptional: param.isOptional,
       defaultValue: param.defaultValueCode,
-      customParse: queryParam?.parse,
+      customParse: await queryParam?.parse(_buildStep),
     );
   }
 }

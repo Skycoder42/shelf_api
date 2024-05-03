@@ -2,7 +2,9 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
 import '../models/endpoint_query_parameter.dart';
+import '../models/opaque_constant.dart';
 import '../util/code/if.dart';
+import '../util/constants.dart';
 import '../util/types.dart';
 import 'base/code_builder.dart';
 
@@ -104,8 +106,8 @@ final class _QueryParamsBuilder {
     EndpointQueryParameter param,
     Reference paramRef,
   ) {
-    if (param.customParse case final String parse) {
-      return refer(parse).call([paramRef]);
+    if (param.customParse case final OpaqueConstant parse) {
+      return Constants.fromConstant(parse).call([paramRef]);
     }
 
     if (param.isString) {
