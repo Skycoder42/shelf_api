@@ -1,0 +1,10 @@
+builders:
+  shelf_api_builder:
+    import: "package:shelf_api_builder/shelf_api_builder.dart"
+    builder_factories: ["shelfApiBuilder"]
+    build_extensions: { ".dart": [".api.dart"] }
+    auto_apply: dependents
+    build_to: source
+    # runs_before: ["retrofit|retrofit_generator"]
+    defaults:
+      generate_for: ["routes/**"]

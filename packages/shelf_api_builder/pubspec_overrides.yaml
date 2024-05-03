@@ -1,0 +1,3 @@
+dependency_overrides:
+  shelf_api:
+    path: ../shelf_api

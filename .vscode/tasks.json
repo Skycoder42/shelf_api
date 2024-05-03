@@ -4,7 +4,7 @@
 		{
 			"type": "dart",
 			"command": "dart",
-			"cwd": "packages/frog_api",
+			"cwd": "packages/shelf_api",
 			"args": [
 				"pub",
 				"global",

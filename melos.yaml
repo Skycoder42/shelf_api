@@ -1,4 +1,4 @@
-name: frog_api
+name: shelf_api
 
 packages:
   - packages/**

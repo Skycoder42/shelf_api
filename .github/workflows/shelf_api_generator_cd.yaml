@@ -1,0 +1,27 @@
+name: CD - Publish shelf_api_builder to pub.dev
+
+on:
+  push:
+    tags:
+      - "shelf_api_builder-v*"
+
+jobs:
+  publish_ci:
+    name: CI
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/shelf_api_builder
+      buildRunner: false
+      unitTestPaths: ""
+
+  publish:
+    name: Publish
+    uses: Skycoder42/dart_test_tools/.github/workflows/publish.yml@main
+    needs:
+      - publish_ci
+    permissions:
+      id-token: write
+    with:
+      tagPrefix: shelf_api_builder-v
+      workingDirectory: packages/shelf_api_builder
+      buildRunner: false
