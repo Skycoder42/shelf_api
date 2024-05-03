@@ -1,11 +1,11 @@
-import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks([
-  MockSpec<RequestContextRef>(),
+  MockSpec<RequestRef>(),
   MockSpec<ProviderContainer>(),
   MockSpec<ProviderSubscription>(),
 ])
@@ -16,7 +16,7 @@ class _FakeProvider extends Fake implements ProviderBase, ProviderListenable {}
 
 void main() {
   group('requestContext', () {
-    final mockRef = MockRequestContextRef();
+    final mockRef = MockRequestRef();
 
     setUp(() {
       reset(mockRef);
@@ -24,7 +24,7 @@ void main() {
 
     test('throws state error by default', () {
       expect(
-        () => requestContext(mockRef),
+        () => request(mockRef),
         throwsStateError,
       );
     });

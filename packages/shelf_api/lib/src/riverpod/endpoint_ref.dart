@@ -24,7 +24,7 @@ Request request(RequestRef ref) => throw StateError(
       'requestProvider can only be accessed via session.ref',
     );
 
-/// An object that allows frog endpoints to interact with providers.
+/// An object that allows shelf request handlers to interact with providers.
 class EndpointRef {
   /// @nodoc
   @visibleForTesting

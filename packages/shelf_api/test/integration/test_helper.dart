@@ -23,11 +23,8 @@ class ExampleServer {
     final runnerTemp = Github.env.runnerTemp;
     final port = 8000 + Random.secure().nextInt(999);
     final process = await Process.start(
-      runnerTemp.uri.resolve('frog-api-example-server.exe').toFilePath(),
-      const [],
-      environment: {
-        'PORT': port.toString(),
-      },
+      runnerTemp.uri.resolve('shelf-api-example-server.exe').toFilePath(),
+      [port.toString()],
       mode: ProcessStartMode.inheritStdio,
     );
 

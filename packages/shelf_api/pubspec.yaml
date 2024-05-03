@@ -1,5 +1,5 @@
 name: shelf_api
-description: A code generation based API package to make dart_frog even more awesome.
+description: A package to declare rest API endpoints that generate into shelf handlers.
 version: 1.0.0
 homepage: https://github.com/Skycoder42/shelf_api
 

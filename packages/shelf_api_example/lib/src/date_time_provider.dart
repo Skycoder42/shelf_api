@@ -1,5 +1,5 @@
-import 'package:shelf_api/shelf_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shelf_api/shelf_api.dart';
 
 part 'date_time_provider.g.dart';
 
@@ -9,10 +9,10 @@ DateTime dateTimeSingleton(DateTimeSingletonRef ref) => DateTime.now();
 @Riverpod(keepAlive: false)
 DateTime dateTimeFactory(DateTimeFactoryRef ref) => DateTime.now();
 
-@Riverpod(dependencies: [requestContext])
+@Riverpod(dependencies: [request])
 DateTime requestDateTimeSingleton(RequestDateTimeSingletonRef ref) =>
     DateTime.now();
 
-@Riverpod(dependencies: [requestContext])
+@Riverpod(dependencies: [request])
 DateTime requestDateTimeFactory(RequestDateTimeFactoryRef ref) =>
     DateTime.now();

@@ -1,34 +1,44 @@
 /// HTTP request method.
-enum HttpMethod {
+abstract base class HttpMethod {
+  HttpMethod._();
+
   /// CONNECT
-  connect('CONNECT'),
+  static const connect = 'CONNECT';
 
   /// DELETE
-  delete('DELETE'),
+  static const delete = 'DELETE';
 
   /// GET
-  get('GET'),
+  static const get = 'GET';
 
   /// HEAD
-  head('HEAD'),
+  static const head = 'HEAD';
 
   /// OPTIONS
-  options('OPTIONS'),
+  static const options = 'OPTIONS';
 
   /// PATCH
-  patch('PATCH'),
+  static const patch = 'PATCH';
 
   /// POST
-  post('POST'),
+  static const post = 'POST';
 
   /// PUT
-  put('PUT'),
+  static const put = 'PUT';
 
   /// TRACE
-  trace('TRACE');
+  static const trace = 'TRACE';
 
-  /// The HTTP method verb
-  final String verb;
-
-  const HttpMethod(this.verb);
+  /// All known http methods.
+  static const values = [
+    connect,
+    delete,
+    get,
+    head,
+    options,
+    patch,
+    post,
+    put,
+    trace,
+  ];
 }

@@ -8,7 +8,7 @@ import '../api/http_method.dart';
 @Target({TargetKind.method})
 class ShelfApiMethod {
   /// The HTTP method this method will be called for.
-  final HttpMethod method;
+  final String method;
 
   /// Custom converter function for the body.
   ///

@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:dart_frog/dart_frog.dart';
+import 'package:shelf/shelf.dart';
+import 'package:shelf_api/src/api/http_method.dart';
 import 'package:shelf_api/src/util/stream_extensions.dart';
 import 'package:test/test.dart';
 
@@ -22,7 +23,7 @@ void main() {
 
       group('(with request)', () {
         final request = Request(
-          HttpMethod.get.value,
+          HttpMethod.get,
           Uri.http('localhost', '/'),
           headers: {
             HttpHeaders.contentLengthHeader: '6',
