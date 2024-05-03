@@ -1,5 +1,5 @@
 export 'dart:async' show FutureOr;
-export 'dart:convert' show utf8;
+export 'dart:convert' show json, utf8;
 export 'dart:io' show HttpStatus;
 
 export 'package:shelf/shelf.dart' show Request, Response;
