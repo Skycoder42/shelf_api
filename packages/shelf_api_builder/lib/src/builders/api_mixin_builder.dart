@@ -1,9 +1,9 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
-import 'base/spec_builder.dart';
 import '../models/api_class.dart';
 import '../util/types.dart';
+import 'base/spec_builder.dart';
 
 @internal
 final class ApiMixinBuilder extends SpecBuilder<Mixin> {

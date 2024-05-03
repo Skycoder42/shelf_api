@@ -1,5 +1,5 @@
 import 'package:dart_test_tools/test.dart';
-import 'package:shelf_api/shelf_api.dart';
+import 'package:shelf_api/src/api/http_method.dart';
 import 'package:test/test.dart';
 
 void main() {

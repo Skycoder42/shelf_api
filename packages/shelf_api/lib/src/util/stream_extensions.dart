@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import '../../shelf_api.dart';
+import 'package:shelf/shelf.dart';
 
 /// Utility extensions used by the code generator
 extension ShelfApiStreamX on Stream<List<int>> {
