@@ -1,2 +1,2 @@
 # shelf_api
-A code generation based API package to make dart_frog even more awesome
+A package to declare rest API endpoints that generate into shelf handlers.

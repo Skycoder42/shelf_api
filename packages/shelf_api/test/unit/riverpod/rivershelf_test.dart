@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelf_api/src/api/http_method.dart';
 import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:shelf_api/src/riverpod/rivershelf.dart';
 import 'package:test/test.dart';
@@ -14,6 +15,8 @@ import 'package:test/test.dart';
 import 'rivershelf_test.mocks.dart';
 
 class _FakeResponse extends Fake implements Response {}
+
+class _FakeEndpointRef extends Fake implements EndpointRef {}
 
 void main() {
   group('RivershelfMiddleware', () {
@@ -36,6 +39,20 @@ void main() {
     test('creates pipeline with given handler', () {
       final testResponse = _FakeResponse();
       final newHandler = sut(
+        expectAsync1((request) {
+          expect(request, isNot(same(mockRequest)));
+          return testResponse;
+        }),
+      );
+
+      expect(newHandler(mockRequest), completion(testResponse));
+    });
+
+    test('middleware method creates new instance of middleware', () {
+      final middleware = rivershelf(parent: testProviderContainer);
+
+      final testResponse = _FakeResponse();
+      final newHandler = middleware(
         expectAsync1((request) {
           expect(request, isNot(same(mockRequest)));
           return testResponse;
@@ -103,6 +120,33 @@ void main() {
           ),
         ),
       );
+    });
+  });
+
+  group('RequestRivershelfExtension', () {
+    final mockRequest = MockRequest();
+
+    setUp(() {
+      reset(mockRequest);
+    });
+
+    test('ref returns EndpointRef of request context', () {
+      final testRef = _FakeEndpointRef();
+      final request = Request(
+        HttpMethod.get,
+        Uri.http('localhost', '/'),
+        context: {
+          RivershelfMiddleware.refKey: testRef,
+        },
+      );
+
+      expect(request.ref, same(testRef));
+    });
+
+    test('asserts if not ref is available', () {
+      final request = Request(HttpMethod.get, Uri.http('localhost', '/'));
+
+      expect(() => request.ref, throwsA(isA<AssertionError>()));
     });
   });
 }
