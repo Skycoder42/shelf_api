@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import '../../models/endpoint_query_parameter.dart';
 import '../../util/code/if.dart';
 import '../../util/types.dart';
-import '../base/code_builder.dart';
+import '../../builders/base/code_builder.dart';
 
 @internal
 final class QueryBuilder {

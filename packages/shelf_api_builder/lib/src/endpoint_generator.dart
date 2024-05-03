@@ -1,18 +1,17 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:meta/meta.dart';
+import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'analyzers/endpoint_analyzer.dart';
-import 'builders/base_class_builder.dart';
-import 'builders/on_request/on_request_builder.dart';
-import 'builders/params_class_builder.dart';
-import 'readers/frog_endpoint_reader.dart';
+import 'analyzers/api_class_analyzer.dart';
+import 'builders/api_implementation_builder.dart';
+import 'builders/api_mixin_builder.dart';
+import 'readers/shelf_api_reader.dart';
 
 @internal
-class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
+class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
   // ignore: unused_field
   final BuilderOptions _options;
 
@@ -24,29 +23,30 @@ class EndpointGenerator extends GeneratorForAnnotation<FrogEndpoint> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (element is! ClassElement || !element.isFinal) {
+    if (element is! ClassElement || !element.isAbstract) {
       throw InvalidGenerationSourceError(
-        'The $FrogEndpoint annotation can only be used on final classes',
+        'The $ShelfApi annotation can only be used on abstract classes.',
         element: element,
       );
     }
 
-    // ignore: unused_local_variable
-    final frogEndpoint = FrogEndpointReader(annotation);
+    // analyzers
+    final shelfApi = ShelfApiReader(annotation);
+    const apiClassAnalyzer = ApiClassAnalyzer();
+    final apiClass = apiClassAnalyzer.analyzeApiClass(element, shelfApi);
 
-    // analyzer
-    const endpointAnalyzer = EndpointAnalyzer();
-    final endpoint = endpointAnalyzer.analyzeEndpoint(element);
-
-    final paramsClassBuilder = ParamsClassBuilder(endpoint);
+    // final paramsClassBuilder = ParamsClassBuilder(endpoint);
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..body.addAll([
-          if (paramsClassBuilder.shouldBuild) paramsClassBuilder,
-          BaseClassBuilder(endpoint),
-          OnRequestBuilder(endpoint),
-        ]),
+        ..ignoreForFile.add('invalid_use_of_protected_member')
+        ..body.add(ApiMixinBuilder(apiClass))
+        ..body.add(ApiImplementationBuilder(apiClass)),
+      // ..body.addAll([
+      //   if (paramsClassBuilder.shouldBuild) paramsClassBuilder,
+      //   BaseClassBuilder(endpoint),
+      //   OnRequestBuilder(endpoint),
+      // ]),
     );
 
     final emitter = DartEmitter(

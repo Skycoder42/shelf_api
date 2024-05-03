@@ -1,26 +1,39 @@
-// ignore_for_file: avoid_field_initializers_in_const_classes
-
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:meta/meta.dart';
+import 'package:source_gen/source_gen.dart';
 
+import '../analyzers/methods_analyzer.dart';
 import '../models/endpoint.dart';
 import '../models/opaque_type.dart';
-import 'methods_analyzer.dart';
-import 'path_analyzer.dart';
+import '../readers/api_endpoint_reader.dart';
+import '../util/type_checkers.dart';
 
 @internal
 class EndpointAnalyzer {
   final MethodsAnalyzer _methodsAnalyzer;
-  final PathAnalyzer _pathAnalyzer;
 
-  const EndpointAnalyzer()
-      : _pathAnalyzer = const PathAnalyzer(),
-        _methodsAnalyzer = const MethodsAnalyzer();
+  const EndpointAnalyzer([this._methodsAnalyzer = const MethodsAnalyzer()]);
 
-  Endpoint analyzeEndpoint(ClassElement clazz) => Endpoint(
-        endpointType: OpaqueClassType(clazz),
-        name: clazz.name,
-        pathParameters: _pathAnalyzer.analyzePath(clazz),
-        methods: _methodsAnalyzer.analyzeMethods(clazz),
+  Endpoint analyzeEndpoint(
+    DartType endpointType,
+    ClassElement apiElement,
+  ) {
+    final endpointElement = endpointType.element;
+    if (endpointElement is! ClassElement ||
+        !TypeCheckers.shelfEndpoint.isSuperOf(endpointElement)) {
+      throw InvalidGenerationSource(
+        'Endpoints of ShelfApi must extend ShelfEndpoint!',
+        element: apiElement,
       );
+    }
+
+    final apiEndpoint = endpointElement.apiEndpointAnnotation;
+    return Endpoint(
+      endpointType: OpaqueClassType(endpointElement),
+      name: endpointElement.name,
+      path: apiEndpoint?.path,
+      methods: _methodsAnalyzer.analyzeMethods(endpointElement),
+    );
+  }
 }

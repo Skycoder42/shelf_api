@@ -6,7 +6,7 @@ import '../../models/opaque_type.dart';
 import '../../util/constants.dart';
 import '../../util/extensions/code_builder_extensions.dart';
 import '../../util/types.dart';
-import '../base/code_builder.dart';
+import '../../builders/base/code_builder.dart';
 
 @internal
 final class BodyBuilder {

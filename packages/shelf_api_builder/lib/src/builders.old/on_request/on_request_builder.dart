@@ -5,7 +5,7 @@ import '../../models/endpoint.dart';
 import '../../models/endpoint_path_parameter.dart';
 import '../../util/code/switch.dart';
 import '../../util/types.dart';
-import '../base/spec_builder.dart';
+import '../../builders/base/spec_builder.dart';
 import 'method_builder.dart';
 
 @internal

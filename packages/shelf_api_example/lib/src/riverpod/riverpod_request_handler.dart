@@ -1,6 +1,6 @@
 import 'package:shelf_api/shelf_api.dart';
 
-import '../date_time_provider.dart';
+import 'date_time_provider.dart';
 
 Future<Response> riverpodRequestHandler(Request request) async {
   final delay = int.parse(request.url.queryParameters['delay'] ?? '0');

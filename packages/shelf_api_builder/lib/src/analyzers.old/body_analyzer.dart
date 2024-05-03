@@ -6,7 +6,7 @@ import 'package:source_helper/source_helper.dart';
 
 import '../models/endpoint_body.dart';
 import '../models/opaque_type.dart';
-import '../readers/frog_method_reader.dart';
+import '../readers/api_method_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
@@ -15,7 +15,7 @@ class BodyAnalyzer {
 
   EndpointBody? analyzeBody(
     MethodElement method, [
-    FrogMethodReader? methodAnnotation,
+    ApiMethodReader? methodAnnotation,
   ]) {
     final bodyParam = method.parameters.firstOrNull;
     if (bodyParam == null || !bodyParam.isRequiredPositional) {

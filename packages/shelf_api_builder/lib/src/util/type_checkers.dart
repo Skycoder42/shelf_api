@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:shelf_api/shelf_api.dart';
 import 'package:meta/meta.dart';
+import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 @internal
@@ -18,7 +18,11 @@ abstract base class TypeCheckers {
 
   static const uint8List = TypeChecker.fromRuntime(Uint8List);
 
-  static const formData = TypeChecker.fromRuntime(FormData);
-
   static const response = TypeChecker.fromRuntime(Response);
+
+  static const shelfEndpoint = TypeChecker.fromRuntime(ShelfEndpoint);
+
+  static const apiEndpoint = TypeChecker.fromRuntime(ApiEndpoint);
+
+  static const apiMethod = TypeChecker.fromRuntime(ApiMethod);
 }

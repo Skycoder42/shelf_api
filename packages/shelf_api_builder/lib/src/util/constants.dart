@@ -6,4 +6,6 @@ abstract base class Constants {
   Constants._();
 
   static const utf8 = Reference('utf8');
+
+  static const json = Reference('json');
 }

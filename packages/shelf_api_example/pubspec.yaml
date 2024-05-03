@@ -22,13 +22,13 @@ dev_dependencies:
   dart_pre_commit: ^5.3.0
   dart_test_tools: ^5.10.1
   riverpod_generator: ^2.4.0
-  # shelf_api_builder:
+  shelf_api_builder:
 
 dependency_overrides:
   shelf_api:
     path: ../shelf_api
-  # shelf_api_builder:
-  #   path: ../shelf_api_builder
+  shelf_api_builder:
+    path: ../shelf_api_builder
 
 dart_pre_commit:
   flutter-compat: false

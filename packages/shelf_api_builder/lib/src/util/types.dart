@@ -22,28 +22,28 @@ abstract base class Types {
       ..url = 'dart:io',
   );
 
-  static final TypeReference httpMethod = TypeReference(
-    (b) => b
-      ..symbol = 'HttpMethod'
-      ..url = 'package:dart_frog/dart_frog.dart',
-  );
-
-  static final TypeReference requestContext = TypeReference(
-    (b) => b
-      ..symbol = 'RequestContext'
-      ..url = 'package:dart_frog/dart_frog.dart',
-  );
-
   static final TypeReference request = TypeReference(
     (b) => b
       ..symbol = 'Request'
-      ..url = 'package:dart_frog/dart_frog.dart',
+      ..url = 'package:shelf/shelf.dart',
   );
 
   static final TypeReference response = TypeReference(
     (b) => b
       ..symbol = 'Response'
-      ..url = 'package:dart_frog/dart_frog.dart',
+      ..url = 'package:shelf/shelf.dart',
+  );
+
+  static final TypeReference router = TypeReference(
+    (b) => b
+      ..symbol = 'Router'
+      ..url = 'package:shelf_router/shelf_router.dart',
+  );
+
+  static final TypeReference httpMethod = TypeReference(
+    (b) => b
+      ..symbol = 'HttpMethod'
+      ..url = 'package:shelf_api/shelf_api.dart',
   );
 
   static final TypeReference endpointRef = TypeReference(
@@ -72,6 +72,12 @@ abstract base class Types {
   static TypeReference future([TypeReference? type]) => TypeReference(
         (b) => b
           ..symbol = 'Future'
+          ..types.add(type ?? Types.dynamic$),
+      );
+
+  static TypeReference futureOr([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'FutureOr'
           ..types.add(type ?? Types.dynamic$),
       );
 

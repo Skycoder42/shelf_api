@@ -6,12 +6,14 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_api/shelf_api.dart';
-import 'package:shelf_api_example/src/routes/riverpod.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:shelf_api_example/src/api/example_api.dart';
+import 'package:shelf_api_example/src/riverpod/riverpod_request_handler.dart';
 
 void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');
-  final router = Router()..get('/riverpod', riverpodRequestHandler);
+  final router = Router()
+    ..get('/riverpod', riverpodRequestHandler)
+    ..mount('/api', ExampleApi().call);
 
   final app =
       const Pipeline().addMiddleware(rivershelf()).addHandler(router.call);
