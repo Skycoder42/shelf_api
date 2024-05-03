@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
 import 'endpoint_body.dart';
+import 'endpoint_path_parameter.dart';
 import 'endpoint_query_parameter.dart';
 import 'endpoint_response.dart';
 
@@ -12,6 +13,7 @@ class EndpointMethod {
   final String path;
   final EndpointResponse response;
   final EndpointBody? body;
+  final List<EndpointPathParameter> pathParameters;
   final List<EndpointQueryParameter> queryParameters;
 
   const EndpointMethod({
@@ -20,6 +22,7 @@ class EndpointMethod {
     required this.path,
     required this.response,
     required this.body,
+    required this.pathParameters,
     required this.queryParameters,
   });
 

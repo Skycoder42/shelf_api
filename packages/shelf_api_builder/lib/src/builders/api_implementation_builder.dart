@@ -71,14 +71,14 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
       for (final method in endpoint.methods) {
         endpointRouter = endpointRouter.cascade('add').call([
           literalString(method.httpMethod),
-          literalString(method.path),
+          literalString(method.path, raw: true),
           refer(ApiHandlerBuilder.handlerMethodName(endpoint, method)),
         ]);
       }
 
       if (endpoint.path case final String path) {
         router = router.cascade('mount').call([
-          literalString(path),
+          literalString(path, raw: true),
           endpointRouter,
         ]);
       } else {

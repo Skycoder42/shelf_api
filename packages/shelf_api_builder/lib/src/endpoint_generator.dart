@@ -39,18 +39,20 @@ class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
       (b) => b
         ..ignoreForFile.add('type=lint')
         ..ignoreForFile.add('invalid_use_of_protected_member')
+        ..ignoreForFile.add('unused_import')
         ..directives.add(
           Directive.import(
             'package:shelf_api/shelf_api.dart',
             show: const ['ShelfApiMapX', 'ShelfApiStreamX'],
           ),
         )
+        ..directives.add(
+          Directive.import(
+            'package:shelf_router/shelf_router.dart',
+            show: const ['RouterParams'],
+          ),
+        )
         ..body.add(ApiImplementationBuilder(apiClass)),
-      // ..body.addAll([
-      //   if (paramsClassBuilder.shouldBuild) paramsClassBuilder,
-      //   BaseClassBuilder(endpoint),
-      //   OnRequestBuilder(endpoint),
-      // ]),
     );
 
     final emitter = DartEmitter.scoped(

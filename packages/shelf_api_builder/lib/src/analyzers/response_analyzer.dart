@@ -15,22 +15,25 @@ class ResponseAnalyzer {
 
   ResponseAnalyzer(this._buildStep);
 
-  Future<EndpointResponse> analyzeResponse(MethodElement method) =>
-      _analyzeResponseImpl(method, method.returnType, true);
+  Future<EndpointResponse> analyzeResponse(
+    MethodElement method,
+    ApiMethodReader apiMethod,
+  ) =>
+      _analyzeResponseImpl(method, apiMethod, method.returnType, true);
 
   Future<EndpointResponse> _analyzeResponseImpl(
     MethodElement method,
+    ApiMethodReader apiMethod,
     DartType returnType,
     bool allowAsync,
   ) async {
-    final apiMethod = method.apiMethodAnnotation;
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
-      return _analyzeFuture(allowAsync, method, returnType);
-    } else if (apiMethod?.hasToJson ?? false) {
+      return _analyzeFuture(method, apiMethod, returnType, allowAsync);
+    } else if (apiMethod.hasToJson) {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
-        toJson: await apiMethod!.toJson(_buildStep),
+        toJson: await apiMethod.toJson(_buildStep),
       );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
@@ -66,9 +69,10 @@ class ResponseAnalyzer {
   }
 
   Future<EndpointResponse> _analyzeFuture(
-    bool allowAsync,
     MethodElement method,
+    ApiMethodReader apiMethod,
     DartType returnType,
+    bool allowAsync,
   ) async {
     if (!allowAsync) {
       throw InvalidGenerationSource(
@@ -78,7 +82,7 @@ class ResponseAnalyzer {
     }
 
     final [futureType] = returnType.typeArgumentsOf(TypeCheckers.future)!;
-    return (await _analyzeResponseImpl(method, futureType, false))
+    return (await _analyzeResponseImpl(method, apiMethod, futureType, false))
         .copyWith(isAsync: true);
   }
 

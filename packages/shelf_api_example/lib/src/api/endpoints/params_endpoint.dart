@@ -4,8 +4,18 @@ import 'package:shelf_api/shelf_api.dart';
 class ParamsEndpoint extends ShelfEndpoint {
   ParamsEndpoint(super.request);
 
+  @Get(r'/path/simple/<p1>/sub/<p2|\d+>')
+  List<dynamic> getPathSimple(String p1, int p2) => [p1, p2];
+
+  @Get('/path/simple/<c1>/sub/<c2|.*>')
+  List<dynamic> getPathCustom(
+    @PathParam(parse: parseString) String c1,
+    Uri c2,
+  ) =>
+      [c1, c2];
+
   @Get('/query')
-  Map<String, dynamic> get({
+  Map<String, dynamic> getQuery({
     required String sValue,
     int? oValue,
     double dValue = 42.0,
@@ -23,7 +33,7 @@ class ParamsEndpoint extends ShelfEndpoint {
       };
 
   @Get('/query/list')
-  Map<String, dynamic> getList({
+  Map<String, dynamic> getQueryList({
     required List<String> sValue,
     List<int>? oValue,
     List<double> dValue = const [4, 2, 0],
@@ -41,7 +51,7 @@ class ParamsEndpoint extends ShelfEndpoint {
       };
 
   @Get('/query/custom')
-  Map<String, dynamic> getCustom({
+  Map<String, dynamic> getQueryCustom({
     @QueryParam(name: 'named_value') required String namedValue,
     @QueryParam(parse: parseString) required String parsedValue,
     @QueryParam(
@@ -54,6 +64,18 @@ class ParamsEndpoint extends ShelfEndpoint {
         'namedValue': namedValue,
         'parsedValue': parsedValue,
         'parsedListValue': parsedListValue,
+      };
+
+  @Get('/combined/<p1>')
+  Map<String, dynamic> getCombined(
+    double p1, {
+    required int precision,
+    bool roundDown = false,
+  }) =>
+      {
+        'p1': p1,
+        'precision': precision,
+        'roundDown': roundDown,
       };
 
   static String parseString(String s) => s * 3;

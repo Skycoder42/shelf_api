@@ -2,7 +2,7 @@
 
 import 'package:meta/meta_meta.dart';
 
-/// Marks the given method as a specific endpoint method.
+/// Can be used to add metadata to a query parameter of an endpoint method.
 @Target({TargetKind.parameter})
 class QueryParam {
   /// The name of the query parameter.

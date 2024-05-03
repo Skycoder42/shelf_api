@@ -5,18 +5,21 @@ import 'package:meta/meta.dart';
 import '../models/endpoint_method.dart';
 import '../readers/api_method_reader.dart';
 import 'body_analyzer.dart';
+import 'path_analyzer.dart';
 import 'query_analyzer.dart';
 import 'response_analyzer.dart';
 
 @internal
 class MethodsAnalyzer {
-  final QueryAnalyzer _queryAnalyzer;
   final BodyAnalyzer _bodyAnalyzer;
+  final PathAnalyzer _pathAnalyzer;
+  final QueryAnalyzer _queryAnalyzer;
   final ResponseAnalyzer _responseAnalyzer;
 
   MethodsAnalyzer(BuildStep buildStep)
-      : _queryAnalyzer = QueryAnalyzer(buildStep),
-        _bodyAnalyzer = BodyAnalyzer(buildStep),
+      : _bodyAnalyzer = BodyAnalyzer(buildStep),
+        _pathAnalyzer = PathAnalyzer(buildStep),
+        _queryAnalyzer = QueryAnalyzer(buildStep),
         _responseAnalyzer = ResponseAnalyzer(buildStep);
 
   Future<List<EndpointMethod>> analyzeMethods(ClassElement clazz) =>
@@ -41,8 +44,9 @@ class MethodsAnalyzer {
         name: method.name,
         httpMethod: apiMethod.method,
         path: apiMethod.path,
-        queryParameters: await _queryAnalyzer.analyzeQuery(method),
         body: await _bodyAnalyzer.analyzeBody(method),
-        response: await _responseAnalyzer.analyzeResponse(method),
+        pathParameters: await _pathAnalyzer.analyzePath(method, apiMethod),
+        queryParameters: await _queryAnalyzer.analyzeQuery(method),
+        response: await _responseAnalyzer.analyzeResponse(method, apiMethod),
       );
 }

@@ -6,6 +6,7 @@ import '../models/endpoint_method.dart';
 import '../util/code/try.dart';
 import '../util/types.dart';
 import 'body_builder.dart';
+import 'path_builder.dart';
 import 'query_builder.dart';
 import 'response_builder.dart';
 
@@ -58,14 +59,17 @@ final class ApiHandlerBuilder {
 
   Iterable<Code> _buildTryBody() sync* {
     final bodyBuilder = BodyBuilder(_method.body, _requestRef);
+    final pathBuilder = PathBuilder(_method.pathParameters, _requestRef);
     final queryBuilder = QueryBuilder(_method.queryParameters, _requestRef);
 
     yield bodyBuilder.variables;
+    yield pathBuilder.variables;
     yield queryBuilder.variables;
 
     var invocation = _endpointRef.property(_method.name).call(
       [
         if (bodyBuilder.parameter case final Expression param) param,
+        ...pathBuilder.parameters,
       ],
       queryBuilder.parameters,
     );

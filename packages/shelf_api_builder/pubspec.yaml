@@ -34,4 +34,7 @@ cider:
     diff: https://github.com/Skycoder42/shelf_api/compare/shelf_api_builder-v%from%...shelf_api_builder-v%to%
 
 dart_pre_commit:
+  pull-up-dependencies:
+    allowed:
+      - meta
   flutter-compat: false # TODO enable again after release

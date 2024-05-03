@@ -28,5 +28,7 @@ abstract base class TypeCheckers {
 
   static const bodyParam = TypeChecker.fromRuntime(BodyParam);
 
+  static const pathParam = TypeChecker.fromRuntime(PathParam);
+
   static const queryParam = TypeChecker.fromRuntime(QueryParam);
 }
