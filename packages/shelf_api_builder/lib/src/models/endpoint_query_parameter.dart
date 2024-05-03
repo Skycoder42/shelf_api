@@ -5,17 +5,23 @@ import 'opaque_type.dart';
 @internal
 @immutable
 class EndpointQueryParameter {
-  final String name;
+  final String paramName;
+  final String queryName;
   final OpaqueType type;
   final bool isString;
+  final bool isList;
   final bool isOptional;
   final String? defaultValue;
+  final String? customParse;
 
   const EndpointQueryParameter({
-    required this.name,
+    required this.paramName,
+    required this.queryName,
     required this.type,
     required this.isString,
-    this.isOptional = false,
-    this.defaultValue,
+    required this.isList,
+    required this.isOptional,
+    required this.defaultValue,
+    required this.customParse,
   });
 }

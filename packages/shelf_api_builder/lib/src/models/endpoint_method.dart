@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import 'endpoint_query_parameter.dart';
 import 'endpoint_response.dart';
 
 @internal
@@ -10,7 +11,7 @@ class EndpointMethod {
   final String path;
   final EndpointResponse response;
   // final EndpointBody? body;
-  // final List<EndpointQueryParameter> queryParameters;
+  final List<EndpointQueryParameter> queryParameters;
 
   const EndpointMethod({
     required this.name,
@@ -18,7 +19,7 @@ class EndpointMethod {
     required this.path,
     required this.response,
     // required this.body,
-    // required this.queryParameters,
+    required this.queryParameters,
   });
 
   bool get isAsync => response.isAsync; //|| (body?.isAsync ?? false);

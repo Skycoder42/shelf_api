@@ -25,4 +25,6 @@ abstract base class TypeCheckers {
   static const apiEndpoint = TypeChecker.fromRuntime(ApiEndpoint);
 
   static const apiMethod = TypeChecker.fromRuntime(ApiMethod);
+
+  static const queryParam = TypeChecker.fromRuntime(QueryParam);
 }

@@ -5,12 +5,13 @@ import '../models/endpoint.dart';
 import '../models/endpoint_method.dart';
 import '../util/code/try.dart';
 import '../util/types.dart';
+import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
 final class ApiHandlerBuilder {
   static const _endpointRef = Reference(r'$endpoint');
-  static const _requestParamRef = Reference('request');
+  static const _requestRef = Reference('request');
 
   final Endpoint _endpoint;
   final EndpointMethod _method;
@@ -34,7 +35,7 @@ final class ApiHandlerBuilder {
           ..requiredParameters.add(
             Parameter(
               (b) => b
-                ..name = _requestParamRef.symbol!
+                ..name = _requestRef.symbol!
                 ..type = Types.request,
             ),
           )
@@ -44,8 +45,7 @@ final class ApiHandlerBuilder {
   Iterable<Code> _buildBody() sync* {
     yield declareFinal(_endpointRef.symbol!)
         .assign(
-          Types.fromType(_endpoint.endpointType)
-              .newInstance([_requestParamRef]),
+          Types.fromType(_endpoint.endpointType).newInstance([_requestRef]),
         )
         .statement;
 
@@ -56,7 +56,14 @@ final class ApiHandlerBuilder {
   }
 
   Iterable<Code> _buildTryBody() sync* {
-    var invocation = _endpointRef.property(_method.name).call(const []);
+    final queryBuilder = QueryBuilder(_method.queryParameters, _requestRef);
+
+    yield queryBuilder.variables;
+
+    var invocation = _endpointRef.property(_method.name).call(
+      const [],
+      queryBuilder.parameters,
+    );
     if (_method.response.isAsync) {
       invocation = invocation.awaited;
     }

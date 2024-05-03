@@ -1,20 +1,20 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
-import '../../models/endpoint_query_parameter.dart';
-import '../../util/code/if.dart';
-import '../../util/types.dart';
-import '../../builders/base/code_builder.dart';
+import '../models/endpoint_query_parameter.dart';
+import '../util/code/if.dart';
+import '../util/types.dart';
+import 'base/code_builder.dart';
 
 @internal
 final class QueryBuilder {
   final List<EndpointQueryParameter> _queryParameters;
-  final Reference _contextRef;
+  final Reference _requestRef;
 
-  const QueryBuilder(this._queryParameters, this._contextRef);
+  const QueryBuilder(this._queryParameters, this._requestRef);
 
   Code get variables => _queryParameters.isNotEmpty
-      ? _QueryVariablesBuilder(_queryParameters, _contextRef)
+      ? _QueryVariablesBuilder(_queryParameters, _requestRef)
       : const Code('');
 
   Map<String, Expression> get parameters => _queryParameters.isNotEmpty
@@ -22,42 +22,41 @@ final class QueryBuilder {
       : const {};
 
   static Reference _paramRef(EndpointQueryParameter param) =>
-      refer('\$\$${param.name}');
+      refer('\$\$${param.paramName}');
 }
 
 final class _QueryVariablesBuilder extends CodeBuilder {
   static const _queryRef = Reference(r'$query');
 
   final List<EndpointQueryParameter> _queryParameters;
-  final Reference _contextRef;
+  final Reference _requestRef;
 
-  const _QueryVariablesBuilder(this._queryParameters, this._contextRef);
+  const _QueryVariablesBuilder(this._queryParameters, this._requestRef);
 
   @override
   Iterable<Code> build() sync* {
     yield declareFinal(_queryRef.symbol!)
         .assign(
-          _contextRef
-              .property('request')
-              .property('url')
-              .property('queryParameters'),
+          _requestRef.property('url').property('queryParametersAll'),
         )
         .statement;
 
     for (final param in _queryParameters) {
       final paramRef = QueryBuilder._paramRef(param);
-      yield declareFinal(paramRef.symbol!)
-          .assign(_queryRef.index(literalString(param.name, raw: true)))
-          .statement;
+      var getValueExpr =
+          _queryRef.index(literalString(param.queryName, raw: true));
+      if (!param.isList) {
+        getValueExpr = getValueExpr.nullSafeProperty('firstOrNull');
+      }
+      yield declareFinal(paramRef.symbol!).assign(getValueExpr).statement;
 
       if (!param.isOptional) {
         yield If(
           paramRef.equalTo(literalNull),
           Types.response
-              .newInstance(const [], {
-                'statusCode': Types.httpStatus.property('badRequest'),
+              .newInstanceNamed('badRequest', const [], {
                 'body': literalString(
-                  'Missing required query parameter ${param.name}',
+                  'Missing required query parameter ${param.queryName}',
                   raw: true,
                 ),
               })
@@ -76,31 +75,52 @@ final class _QueryParamsBuilder {
 
   Iterable<MapEntry<String, Expression>> build() sync* {
     for (final param in _queryParameters) {
-      final paramRef = refer('\$\$${param.name}');
-      final convertExpression = param.isString
-          ? paramRef
-          : Types.fromType(param.type, isNull: false)
-              .newInstanceNamed('parse', [paramRef]);
+      final paramRef = refer('\$\$${param.paramName}');
+      final convertExpression = _convertExpression(param, paramRef);
 
       if (param.isOptional) {
         if (param.defaultValue case final String code) {
           yield MapEntry(
-            param.name,
+            param.paramName,
             paramRef
                 .notEqualTo(literalNull)
                 .conditional(convertExpression, CodeExpression(Code(code))),
           );
         } else {
           yield MapEntry(
-            param.name,
+            param.paramName,
             paramRef
                 .notEqualTo(literalNull)
                 .conditional(convertExpression, literalNull),
           );
         }
       } else {
-        yield MapEntry(param.name, convertExpression);
+        yield MapEntry(param.paramName, convertExpression);
       }
     }
+  }
+
+  Expression _convertExpression(
+    EndpointQueryParameter param,
+    Reference paramRef,
+  ) {
+    if (param.customParse case final String parse) {
+      return refer(parse).call([paramRef]);
+    }
+
+    if (param.isString) {
+      return paramRef;
+    }
+
+    if (param.isList) {
+      return paramRef
+          .property('map')
+          .call([Types.fromType(param.type, isNull: false).property('parse')])
+          .property('toList')
+          .call(const []);
+    }
+
+    return Types.fromType(param.type, isNull: false)
+        .newInstanceNamed('parse', [paramRef]);
   }
 }

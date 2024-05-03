@@ -7,6 +7,7 @@ export 'package:shelf_router/shelf_router.dart' show Router, RouterParams;
 
 export 'src/annotations/api_endpoint.dart';
 export 'src/annotations/api_method.dart';
+export 'src/annotations/query_param.dart';
 export 'src/annotations/shelf_api.dart';
 
 export 'src/api/http_method.dart';
