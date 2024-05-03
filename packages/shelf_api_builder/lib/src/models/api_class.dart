@@ -19,4 +19,6 @@ class ApiClass {
   });
 
   String get implementationName => className.substring(1);
+
+  String get clientName => '${implementationName}Client';
 }

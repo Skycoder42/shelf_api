@@ -29,6 +29,7 @@ doc/api/
 # Generated build files
 *.g.dart
 *.api.dart
+*.client.dart
 *.mocks.dart
 
 # Intellij files

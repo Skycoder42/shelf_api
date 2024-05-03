@@ -20,6 +20,8 @@ abstract base class TypeCheckers {
 
   static const response = TypeChecker.fromRuntime(Response);
 
+  static const tResponse = TypeChecker.fromRuntime(TResponse);
+
   static const shelfEndpoint = TypeChecker.fromRuntime(ShelfEndpoint);
 
   static const apiEndpoint = TypeChecker.fromRuntime(ApiEndpoint);

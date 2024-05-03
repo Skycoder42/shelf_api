@@ -1,11 +1,11 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
-import '../models/endpoint_response.dart';
-import '../models/opaque_constant.dart';
-import '../util/constants.dart';
-import '../util/types.dart';
-import 'base/code_builder.dart';
+import '../../models/endpoint_response.dart';
+import '../../models/opaque_constant.dart';
+import '../../util/constants.dart';
+import '../../util/types.dart';
+import '../base/code_builder.dart';
 
 @internal
 final class ResponseBuilder extends CodeBuilder {

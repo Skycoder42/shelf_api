@@ -14,6 +14,8 @@ abstract base class Types {
 
   static final void$ = TypeReference((b) => b..symbol = 'void');
 
+  static final int$ = TypeReference((b) => b..symbol = 'int');
+
   static final string = TypeReference((b) => b..symbol = 'String');
 
   static final TypeReference httpStatus = TypeReference(

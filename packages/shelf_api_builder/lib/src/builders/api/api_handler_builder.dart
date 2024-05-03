@@ -1,10 +1,10 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
-import '../models/endpoint.dart';
-import '../models/endpoint_method.dart';
-import '../util/code/try.dart';
-import '../util/types.dart';
+import '../../models/endpoint.dart';
+import '../../models/endpoint_method.dart';
+import '../../util/code/try.dart';
+import '../../util/types.dart';
 import 'body_builder.dart';
 import 'path_builder.dart';
 import 'query_builder.dart';

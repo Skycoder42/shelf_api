@@ -6,12 +6,12 @@ import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'analyzers/api_class_analyzer.dart';
-import 'builders/api/api_implementation_builder.dart';
+import 'builders/client/client_builder.dart';
 import 'readers/shelf_api_reader.dart';
 
 @internal
-class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
-  const EndpointGenerator();
+class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
+  const ClientGenerator();
 
   @override
   Future<String> generateForAnnotatedElement(
@@ -31,24 +31,16 @@ class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
     final apiClassAnalyzer = ApiClassAnalyzer(buildStep);
     final apiClass = await apiClassAnalyzer.analyzeApiClass(element, shelfApi);
 
+    final asset = buildStep.allowedOutputs.single;
+    final baseName = asset.uri.pathSegments.last;
+    final partName = '${baseName.substring(0, baseName.length - 4)}g.dart';
+
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..ignoreForFile.add('invalid_use_of_protected_member')
-        ..ignoreForFile.add('unused_import')
-        ..directives.add(
-          Directive.import(
-            'package:shelf_api/shelf_api.dart',
-            show: const ['ShelfApiMapX', 'ShelfApiStreamX'],
-          ),
-        )
-        ..directives.add(
-          Directive.import(
-            'package:shelf_router/shelf_router.dart',
-            show: const ['RouterParams'],
-          ),
-        )
-        ..body.add(ApiImplementationBuilder(apiClass)),
+        ..directives.add(Directive.import('package:dio/dio.dart'))
+        ..directives.add(Directive.part(partName))
+        ..body.add(ClientBuilder(apiClass)),
     );
 
     final emitter = DartEmitter.scoped(

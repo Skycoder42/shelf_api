@@ -6,6 +6,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
 
 import '../models/endpoint_response.dart';
+import '../models/opaque_type.dart';
 import '../readers/api_method_reader.dart';
 import '../util/type_checkers.dart';
 
@@ -33,28 +34,40 @@ class ResponseAnalyzer {
     } else if (apiMethod.hasToJson) {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
+        rawType: OpaqueDartType(returnType),
         toJson: await apiMethod.toJson(_buildStep),
       );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
       return _analyzeStream(allowAsync, method, returnType);
     } else if (returnType is VoidType) {
-      return const EndpointResponse(
+      return EndpointResponse(
         responseType: EndpointResponseType.noContent,
+        rawType: OpaqueDartType(returnType),
       );
     } else if (returnType.isDartCoreString) {
       _ensureNotNullable(returnType, method);
-      return const EndpointResponse(responseType: EndpointResponseType.text);
+      return EndpointResponse(
+        responseType: EndpointResponseType.text,
+        rawType: OpaqueDartType(returnType),
+      );
     } else if (TypeCheckers.uint8List.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
-      return const EndpointResponse(responseType: EndpointResponseType.binary);
+      return EndpointResponse(
+        responseType: EndpointResponseType.binary,
+        rawType: OpaqueDartType(returnType),
+      );
     } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
       _ensureNotNullable(returnType, method);
-      return const EndpointResponse(
+      return EndpointResponse(
         responseType: EndpointResponseType.response,
+        rawType: OpaqueDartType(returnType),
       );
     } else {
-      return const EndpointResponse(responseType: EndpointResponseType.json);
+      return EndpointResponse(
+        responseType: EndpointResponseType.json,
+        rawType: OpaqueDartType(returnType),
+      );
     }
   }
 
@@ -100,12 +113,14 @@ class ResponseAnalyzer {
 
     final [streamType] = returnType.typeArgumentsOf(TypeCheckers.stream)!;
     if (streamType.isDartCoreString) {
-      return const EndpointResponse(
+      return EndpointResponse(
         responseType: EndpointResponseType.textStream,
+        rawType: OpaqueDartType(returnType),
       );
     } else if (TypeCheckers.intList.isAssignableFrom(streamType.element!)) {
-      return const EndpointResponse(
+      return EndpointResponse(
         responseType: EndpointResponseType.binaryStream,
+        rawType: OpaqueDartType(returnType),
       );
     } else {
       throw InvalidGenerationSource(
