@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "packages/shelf_api/**"
+      - "packages/shelf_api_example/**"
       - ".github/workflows/shelf_api_ci.yaml"
       - ".github/workflows/shelf_api_cd.yaml"
 
