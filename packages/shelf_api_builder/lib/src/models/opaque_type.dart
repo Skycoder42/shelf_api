@@ -23,3 +23,9 @@ class OpaqueClassType extends OpaqueType {
 
   const OpaqueClassType(this.element);
 }
+
+@internal
+@immutable
+class OpaqueVoidType extends OpaqueType {
+  const OpaqueVoidType();
+}

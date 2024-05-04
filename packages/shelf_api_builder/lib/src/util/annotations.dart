@@ -18,4 +18,10 @@ abstract base class Annotations {
       ..symbol = 'Method'
       ..url = 'package:retrofit/retrofit.dart',
   );
+
+  static final TypeReference dioResponseType = TypeReference(
+    (b) => b
+      ..symbol = 'DioResponseType'
+      ..url = 'package:retrofit/retrofit.dart',
+  );
 }

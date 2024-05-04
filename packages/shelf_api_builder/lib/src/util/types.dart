@@ -42,6 +42,12 @@ abstract base class Types {
       ..url = 'package:shelf_router/shelf_router.dart',
   );
 
+  static final TypeReference responseType = TypeReference(
+    (b) => b
+      ..symbol = 'ResponseType'
+      ..url = 'package:dio/dio.dart',
+  );
+
   static final TypeReference httpMethod = TypeReference(
     (b) => b
       ..symbol = 'HttpMethod'
@@ -84,6 +90,13 @@ abstract base class Types {
           ..url = 'dart:async',
       );
 
+  static TypeReference httpResponse([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'HttpResponse'
+          ..types.add(type ?? Types.dynamic$)
+          ..url = 'package:retrofit/retrofit.dart',
+      );
+
   static TypeReference fromType(
     OpaqueType type, {
     bool? isNull,
@@ -92,6 +105,7 @@ abstract base class Types {
         OpaqueDartType(dartType: final dartType) =>
           _fromDartType(dartType, isNull),
         OpaqueClassType(element: final element) => _fromClass(element, isNull),
+        OpaqueVoidType() => void$,
       };
 
   static TypeReference _fromDartType(DartType dartType, [bool? isNull]) {

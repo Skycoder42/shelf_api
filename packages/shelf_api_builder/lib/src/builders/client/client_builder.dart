@@ -33,7 +33,8 @@ final class ClientBuilder extends SpecBuilder<Class> {
         yield Method(
           (b) => b
             ..name = _methodName(endpoint, method)
-            ..returns = _returnType(method.response),
+            ..returns = _returnType(method.response)
+            ..annotations.addAll(_buildAnnotations(method)),
         );
       }
     }
@@ -48,15 +49,48 @@ final class ClientBuilder extends SpecBuilder<Class> {
     return name + method.name.pascal;
   }
 
+  Iterable<Expression> _buildAnnotations(EndpointMethod method) sync* {
+    yield Annotations.method.newInstance([
+      literalString(method.httpMethod),
+      literalString(method.path, raw: true),
+    ]);
+
+    switch (method.response.responseType) {
+      case EndpointResponseType.noContent:
+      case EndpointResponseType.text:
+      case EndpointResponseType.json:
+        break;
+      case EndpointResponseType.binary:
+        yield Annotations.dioResponseType.newInstance([
+          Types.responseType.property('bytes'),
+        ]);
+      case EndpointResponseType.textStream:
+        yield Annotations.dioResponseType.newInstance([
+          Types.responseType.property('stream'),
+        ]);
+      case EndpointResponseType.binaryStream:
+        yield Annotations.dioResponseType.newInstance([
+          Types.responseType.property('stream'),
+        ]);
+      case EndpointResponseType.response:
+        // TODO set correct responseType!
+        yield Annotations.dioResponseType.newInstance([
+          Types.responseType.property('stream'),
+        ]);
+    }
+  }
+
   TypeReference _returnType(EndpointResponse response) {
     switch (response.responseType) {
       case EndpointResponseType.textStream:
       case EndpointResponseType.binaryStream:
-        return Types.fromType(response.rawType);
+        return Types.future(Types.httpResponse());
       case EndpointResponseType.binary:
         return Types.future(Types.list(Types.int$));
       case EndpointResponseType.response:
-      // TODO here
+        return Types.future(
+          Types.httpResponse(Types.fromType(response.rawType)),
+        );
       // ignore: no_default_cases
       default:
         return Types.future(Types.fromType(response.rawType));

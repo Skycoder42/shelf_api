@@ -38,12 +38,13 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..directives.add(Directive.import('package:dio/dio.dart'))
+        ..ignoreForFile.add('unnecessary_import')
         ..directives.add(Directive.part(partName))
         ..body.add(ClientBuilder(apiClass)),
     );
 
-    final emitter = DartEmitter.scoped(
+    final emitter = DartEmitter(
+      allocator: Allocator(),
       orderDirectives: true,
       useNullSafetySyntax: true,
     );

@@ -57,11 +57,19 @@ class ResponseAnalyzer {
         responseType: EndpointResponseType.binary,
         rawType: OpaqueDartType(returnType),
       );
-    } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
+    } else if (TypeCheckers.tResponse.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
+      final [responseType] =
+          returnType.typeArgumentsOf(TypeCheckers.tResponse)!;
       return EndpointResponse(
         responseType: EndpointResponseType.response,
-        rawType: OpaqueDartType(returnType),
+        rawType: OpaqueDartType(responseType),
+      );
+    } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
+      _ensureNotNullable(returnType, method);
+      return const EndpointResponse(
+        responseType: EndpointResponseType.response,
+        rawType: OpaqueVoidType(),
       );
     } else {
       return EndpointResponse(
