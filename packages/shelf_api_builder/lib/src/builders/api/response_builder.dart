@@ -16,8 +16,6 @@ final class ResponseBuilder extends CodeBuilder {
 
   @override
   Iterable<Code> build() sync* {
-    // TODO set correct content type header!
-
     if (_response.isResponse) {
       yield _invocation.returned.statement;
       return;
@@ -32,42 +30,62 @@ final class ResponseBuilder extends CodeBuilder {
             .statement;
       case EndpointResponseType.text:
         yield Types.shelfResponse
-            .newInstanceNamed('ok', [_invocation])
+            .newInstanceNamed('ok', [_invocation], _extraParams('text'))
             .returned
             .statement;
       case EndpointResponseType.binary:
         yield Types.shelfResponse
-            .newInstanceNamed('ok', [_invocation])
+            .newInstanceNamed('ok', [_invocation], _extraParams('binary'))
             .returned
             .statement;
       case EndpointResponseType.textStream:
         yield Types.shelfResponse
-            .newInstanceNamed('ok', [
-              _invocation
-                  .property('transform')
-                  .call([Constants.utf8.property('encoder')]),
-            ], {
-              'encoding': Constants.utf8,
-            })
+            .newInstanceNamed(
+              'ok',
+              [
+                _invocation
+                    .property('transform')
+                    .call([Constants.utf8.property('encoder')]),
+              ],
+              _extraParams('text', Constants.utf8),
+            )
             .returned
             .statement;
       case EndpointResponseType.binaryStream:
         yield Types.shelfResponse
-            .newInstanceNamed('ok', [_invocation])
+            .newInstanceNamed('ok', [_invocation], _extraParams('binary'))
             .returned
             .statement;
       case EndpointResponseType.json:
         yield Types.shelfResponse
-            .newInstanceNamed('ok', [
-              Constants.json.property('encode').call([
-                if (_response.toJson case final OpaqueConstant toJson)
-                  Constants.fromConstant(toJson).call([_invocation])
-                else
-                  _invocation,
-              ]),
-            ])
+            .newInstanceNamed(
+              'ok',
+              [
+                Constants.json.property('encode').call([
+                  if (_response.toJson case final OpaqueConstant toJson)
+                    Constants.fromConstant(toJson).call([_invocation])
+                  else
+                    _invocation,
+                ]),
+              ],
+              _extraParams('json'),
+            )
             .returned
             .statement;
     }
   }
+
+  Map<String, Expression> _extraParams(
+    String typeName, [
+    Reference? encoding,
+  ]) =>
+      {
+        'headers': literalMap({
+          Types.httpHeaders.property('contentTypeHeader'): Types.contentType
+              .property(typeName)
+              .property('toString')
+              .call(const []),
+          if (encoding != null) 'encoding': encoding,
+        }),
+      };
 }

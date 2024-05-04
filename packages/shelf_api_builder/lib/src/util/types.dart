@@ -24,6 +24,18 @@ abstract base class Types {
       ..url = 'dart:io',
   );
 
+  static final TypeReference httpHeaders = TypeReference(
+    (b) => b
+      ..symbol = 'HttpHeaders'
+      ..url = 'dart:io',
+  );
+
+  static final TypeReference contentType = TypeReference(
+    (b) => b
+      ..symbol = 'ContentType'
+      ..url = 'dart:io',
+  );
+
   static final TypeReference shelfRequest = TypeReference(
     (b) => b
       ..symbol = 'Request'

@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 @isTestGroup
 void _testResponseConstructor(
   String name, {
-  required int expectedStatusCode,
+  required int statusCode,
   required Response Function(
     Object? body, {
     Map<String, Object>? headers,
@@ -35,7 +35,7 @@ void _testResponseConstructor(
         headers: testHeaders,
         context: testContext,
       );
-      expect(sut.statusCode, expectedStatusCode);
+      expect(sut.statusCode, statusCode);
       final allHeaders = {...testHeaders, ...?extraHeaders};
       for (final entry in allHeaders.entries) {
         expect(sut.headers, containsPair(entry.key, entry.value));
@@ -63,34 +63,95 @@ void _testResponseConstructor(
       const testBody = 'test-body';
       final sut = construct(testBody);
       expect(sut.readAsString(), completion(testBody));
+      expect(
+        sut.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.text.toString(),
+        ),
+      );
+    });
+
+    test('correctly sets text body with headers', () {
+      const testBody = 'test-body';
+      const testHeaders = {'a': '1'};
+      final sut = construct(testBody, headers: testHeaders);
+      expect(sut.readAsString(), completion(testBody));
+      expect(
+        sut.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.text.toString(),
+        ),
+      );
+      expect(sut.headers, containsPair('a', '1'));
+      for (final entry
+          in extraHeaders?.entries ?? <MapEntry<String, Object>>[]) {
+        expect(sut.headers, containsPair(entry.key, entry.value));
+      }
     });
 
     test('correctly sets text stream body', () {
       const testBody = 'test-body';
       final sut = construct(Stream.value(testBody));
       expect(sut.readAsString(), completion(testBody));
+      expect(
+        sut.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.text.toString(),
+        ),
+      );
     });
 
     test('correctly sets binary body', () {
       const testBody = [1, 2, 3, 4, 5];
       final sut = construct(Uint8List.fromList(testBody));
       expect(sut.read(), emitsInOrder([testBody, emitsDone]));
+      expect(
+        sut.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.binary.toString(),
+        ),
+      );
     });
 
     test('correctly sets binary stream body', () {
       const testBody = [1, 2, 3, 4, 5];
       final sut = construct(Stream.value(testBody));
       expect(sut.read(), emitsInOrder([testBody, emitsDone]));
+      expect(
+        sut.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.binary.toString(),
+        ),
+      );
     });
 
     test('correctly sets json body', () {
       const testBody1 = {'a': 1, 'b': true};
       final sut1 = construct(testBody1);
       expect(sut1.readAsString(), completion(json.encode(testBody1)));
+      expect(
+        sut1.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.json.toString(),
+        ),
+      );
 
       const testBody2 = [1, 2, 3];
       final sut2 = construct(testBody2);
       expect(sut2.readAsString(), completion(json.encode(testBody2)));
+      expect(
+        sut2.headers,
+        containsPair(
+          HttpHeaders.contentTypeHeader,
+          ContentType.json.toString(),
+        ),
+      );
     });
   });
 }
@@ -106,7 +167,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.tooManyRequests,
+        statusCode: HttpStatus.tooManyRequests,
       );
 
       _testResponseConstructor(
@@ -116,7 +177,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.ok,
+        statusCode: HttpStatus.ok,
       );
 
       _testResponseConstructor(
@@ -127,7 +188,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.movedPermanently,
+        statusCode: HttpStatus.movedPermanently,
         extraHeaders: {
           HttpHeaders.locationHeader: 'test-location',
         },
@@ -141,7 +202,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.found,
+        statusCode: HttpStatus.found,
         extraHeaders: {
           HttpHeaders.locationHeader: 'test-location',
         },
@@ -155,7 +216,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.seeOther,
+        statusCode: HttpStatus.seeOther,
         extraHeaders: {
           HttpHeaders.locationHeader: 'test-location',
         },
@@ -167,7 +228,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.notModified,
+        statusCode: HttpStatus.notModified,
         hasBody: false,
       );
 
@@ -178,7 +239,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.badRequest,
+        statusCode: HttpStatus.badRequest,
         hasDefaultBody: true,
       );
 
@@ -189,7 +250,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.unauthorized,
+        statusCode: HttpStatus.unauthorized,
         hasDefaultBody: true,
       );
 
@@ -200,7 +261,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.forbidden,
+        statusCode: HttpStatus.forbidden,
         hasDefaultBody: true,
       );
 
@@ -211,7 +272,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.notFound,
+        statusCode: HttpStatus.notFound,
         hasDefaultBody: true,
       );
 
@@ -222,7 +283,7 @@ void main() {
           headers: headers,
           context: context,
         ),
-        expectedStatusCode: HttpStatus.internalServerError,
+        statusCode: HttpStatus.internalServerError,
         hasDefaultBody: true,
       );
     });
@@ -240,7 +301,7 @@ void main() {
           headers: {...testResponse.headers, ...?headers},
           context: context,
         ),
-        expectedStatusCode: HttpStatus.ok,
+        statusCode: HttpStatus.ok,
         hasDefaultBody: true,
         extraHeaders: {
           'pre-change': '42',
