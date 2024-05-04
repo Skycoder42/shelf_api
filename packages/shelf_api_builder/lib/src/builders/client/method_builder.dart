@@ -141,9 +141,6 @@ final class MethodBuilder extends SpecBuilder<Method> {
           Types.responseBody,
         // TODO fromJsonType
         EndpointResponseType.json => Types.dynamic$,
-        // TODO find correct type!
-        EndpointResponseType.response =>
-          Types.fromType(_method.response.rawType),
       };
 
   Expression get _responseType => switch (_method.response.responseType) {
@@ -155,7 +152,5 @@ final class MethodBuilder extends SpecBuilder<Method> {
         EndpointResponseType.binaryStream =>
           Types.responseType.property('stream'),
         EndpointResponseType.json => Types.responseType.property('json'),
-        // TODO find correct type!
-        EndpointResponseType.response => Types.responseType.property('stream'),
       };
 }

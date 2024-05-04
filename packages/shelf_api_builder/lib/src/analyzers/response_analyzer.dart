@@ -59,17 +59,13 @@ class ResponseAnalyzer {
       );
     } else if (TypeCheckers.tResponse.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
-      final [responseType] =
-          returnType.typeArgumentsOf(TypeCheckers.tResponse)!;
-      return EndpointResponse(
-        responseType: EndpointResponseType.response,
-        rawType: OpaqueDartType(responseType),
-      );
+      return await _analyzeTResponse(method, apiMethod, returnType);
     } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
       _ensureNotNullable(returnType, method);
       return const EndpointResponse(
-        responseType: EndpointResponseType.response,
+        responseType: EndpointResponseType.noContent,
         rawType: OpaqueVoidType(),
+        isResponse: true,
       );
     } else {
       return EndpointResponse(
@@ -105,6 +101,16 @@ class ResponseAnalyzer {
     final [futureType] = returnType.typeArgumentsOf(TypeCheckers.future)!;
     return (await _analyzeResponseImpl(method, apiMethod, futureType, false))
         .copyWith(isAsync: true);
+  }
+
+  Future<EndpointResponse> _analyzeTResponse(
+    MethodElement method,
+    ApiMethodReader apiMethod,
+    DartType returnType,
+  ) async {
+    final [responseType] = returnType.typeArgumentsOf(TypeCheckers.tResponse)!;
+    return (await _analyzeResponseImpl(method, apiMethod, responseType, false))
+        .copyWith(isResponse: true);
   }
 
   EndpointResponse _analyzeStream(

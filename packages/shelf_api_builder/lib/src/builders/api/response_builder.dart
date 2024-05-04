@@ -17,6 +17,12 @@ final class ResponseBuilder extends CodeBuilder {
   @override
   Iterable<Code> build() sync* {
     // TODO set correct content type header!
+
+    if (_response.isResponse) {
+      yield _invocation.returned.statement;
+      return;
+    }
+
     switch (_response.responseType) {
       case EndpointResponseType.noContent:
         yield _invocation.statement;
@@ -62,8 +68,6 @@ final class ResponseBuilder extends CodeBuilder {
             ])
             .returned
             .statement;
-      case EndpointResponseType.response:
-        yield _invocation.returned.statement;
     }
   }
 }
