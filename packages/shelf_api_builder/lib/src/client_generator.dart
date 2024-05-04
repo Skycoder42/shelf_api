@@ -31,20 +31,13 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
     final apiClassAnalyzer = ApiClassAnalyzer(buildStep);
     final apiClass = await apiClassAnalyzer.analyzeApiClass(element, shelfApi);
 
-    final asset = buildStep.allowedOutputs.single;
-    final baseName = asset.uri.pathSegments.last;
-    final partName = '${baseName.substring(0, baseName.length - 4)}g.dart';
-
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
-        ..ignoreForFile.add('unnecessary_import')
-        ..directives.add(Directive.part(partName))
         ..body.add(ClientBuilder(apiClass)),
     );
 
-    final emitter = DartEmitter(
-      allocator: Allocator(),
+    final emitter = DartEmitter.scoped(
       orderDirectives: true,
       useNullSafetySyntax: true,
     );

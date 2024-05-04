@@ -55,7 +55,7 @@ final class _QueryVariablesBuilder extends CodeBuilder {
       if (!param.isOptional) {
         yield If(
           paramRef.equalTo(literalNull),
-          Types.response
+          Types.shelfResponse
               .newInstanceNamed('badRequest', const [], {
                 'body': literalString(
                   'Missing required query parameter ${param.queryName}',

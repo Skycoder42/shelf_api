@@ -40,12 +40,12 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
             Method(
               (b) => b
                 ..name = 'call'
-                ..returns = Types.future(Types.response)
+                ..returns = Types.future(Types.shelfResponse)
                 ..requiredParameters.add(
                   Parameter(
                     (b) => b
                       ..name = 'request'
-                      ..type = Types.request,
+                      ..type = Types.shelfRequest,
                   ),
                 )
                 ..body = _routerRef.call([_requestRef]).code,

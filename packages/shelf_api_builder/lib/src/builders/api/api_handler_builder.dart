@@ -32,13 +32,13 @@ final class ApiHandlerBuilder {
   Method build() => Method(
         (b) => b
           ..name = handlerMethodName(_endpoint, _method)
-          ..returns = Types.future(Types.response)
+          ..returns = Types.future(Types.shelfResponse)
           ..modifier = MethodModifier.async
           ..requiredParameters.add(
             Parameter(
               (b) => b
                 ..name = _requestRef.symbol!
-                ..type = Types.request,
+                ..type = Types.shelfRequest,
             ),
           )
           ..body = Block.of(_buildBody()),

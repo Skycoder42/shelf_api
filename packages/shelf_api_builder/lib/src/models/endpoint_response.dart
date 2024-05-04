@@ -11,7 +11,14 @@ enum EndpointResponseType {
   textStream,
   binaryStream,
   json,
-  response,
+  response;
+
+  bool get isStream => switch (this) {
+        EndpointResponseType.textStream ||
+        EndpointResponseType.binaryStream =>
+          true,
+        _ => false,
+      };
 }
 
 @internal

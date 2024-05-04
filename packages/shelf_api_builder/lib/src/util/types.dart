@@ -24,13 +24,13 @@ abstract base class Types {
       ..url = 'dart:io',
   );
 
-  static final TypeReference request = TypeReference(
+  static final TypeReference shelfRequest = TypeReference(
     (b) => b
       ..symbol = 'Request'
       ..url = 'package:shelf/shelf.dart',
   );
 
-  static final TypeReference response = TypeReference(
+  static final TypeReference shelfResponse = TypeReference(
     (b) => b
       ..symbol = 'Response'
       ..url = 'package:shelf/shelf.dart',
@@ -42,9 +42,39 @@ abstract base class Types {
       ..url = 'package:shelf_router/shelf_router.dart',
   );
 
+  static final TypeReference dio = TypeReference(
+    (b) => b
+      ..symbol = 'Dio'
+      ..url = 'package:dio/dio.dart',
+  );
+
   static final TypeReference responseType = TypeReference(
     (b) => b
       ..symbol = 'ResponseType'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference responseBody = TypeReference(
+    (b) => b
+      ..symbol = 'ResponseBody'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference options = TypeReference(
+    (b) => b
+      ..symbol = 'Options'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference cancelToken = TypeReference(
+    (b) => b
+      ..symbol = 'CancelToken'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference progressCallback = TypeReference(
+    (b) => b
+      ..symbol = 'ProgressCallback'
       ..url = 'package:dio/dio.dart',
   );
 
@@ -90,11 +120,18 @@ abstract base class Types {
           ..url = 'dart:async',
       );
 
-  static TypeReference httpResponse([TypeReference? type]) => TypeReference(
+  static TypeReference dioRequest([TypeReference? type]) => TypeReference(
         (b) => b
-          ..symbol = 'HttpResponse'
+          ..symbol = 'Request'
           ..types.add(type ?? Types.dynamic$)
-          ..url = 'package:retrofit/retrofit.dart',
+          ..url = 'package:dio/dio.dart',
+      );
+
+  static TypeReference dioResponse([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'Response'
+          ..types.add(type ?? Types.dynamic$)
+          ..url = 'package:dio/dio.dart',
       );
 
   static TypeReference fromType(

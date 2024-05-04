@@ -51,7 +51,7 @@ final class _PathVariablesBuilder extends CodeBuilder {
 
       yield If(
         paramRef.equalTo(literalNull),
-        Types.response
+        Types.shelfResponse
             .newInstanceNamed('badRequest', const [], {
               'body': literalString(
                 'Missing required path parameter ${param.name}',

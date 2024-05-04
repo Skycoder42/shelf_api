@@ -16,25 +16,26 @@ final class ResponseBuilder extends CodeBuilder {
 
   @override
   Iterable<Code> build() sync* {
+    // TODO set correct content type header!
     switch (_response.responseType) {
       case EndpointResponseType.noContent:
         yield _invocation.statement;
-        yield Types.response
+        yield Types.shelfResponse
             .newInstance([Types.httpStatus.property('noContent')])
             .returned
             .statement;
       case EndpointResponseType.text:
-        yield Types.response
+        yield Types.shelfResponse
             .newInstanceNamed('ok', [_invocation])
             .returned
             .statement;
       case EndpointResponseType.binary:
-        yield Types.response
+        yield Types.shelfResponse
             .newInstanceNamed('ok', [_invocation])
             .returned
             .statement;
       case EndpointResponseType.textStream:
-        yield Types.response
+        yield Types.shelfResponse
             .newInstanceNamed('ok', [
               _invocation
                   .property('transform')
@@ -45,12 +46,12 @@ final class ResponseBuilder extends CodeBuilder {
             .returned
             .statement;
       case EndpointResponseType.binaryStream:
-        yield Types.response
+        yield Types.shelfResponse
             .newInstanceNamed('ok', [_invocation])
             .returned
             .statement;
       case EndpointResponseType.json:
-        yield Types.response
+        yield Types.shelfResponse
             .newInstanceNamed('ok', [
               Constants.json.property('encode').call([
                 if (_response.toJson case final OpaqueConstant toJson)
