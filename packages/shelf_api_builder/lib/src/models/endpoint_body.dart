@@ -32,4 +32,15 @@ class EndpointBody {
         );
 
   bool get isAsync => !bodyType.isStream;
+
+  SerializableType get serializableParamType {
+    // TODO replace all asserts
+    assert(
+      bodyType == EndpointBodyType.json,
+      'Cannot get serializableParamType if bodyType is not json',
+    );
+    return paramType.toSerializable(
+      'EndpointBody with bodyType json must hold a OpaqueSerializableType',
+    );
+  }
 }

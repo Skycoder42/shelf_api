@@ -143,12 +143,8 @@ final class MethodBuilder extends SpecBuilder<Method> {
       case EndpointResponseType.binaryStream:
         return Types.responseBody;
       case EndpointResponseType.json:
-        // TODO move logic into custom builder class
-        final serializableType = _method.response.returnType.toSerializable(
-          'EndpointResponse with responseType json must hold a '
-          'OpaqueSerializableType',
-        );
-        return FromJsonBuilder(serializableType).rawJsonType;
+        return FromJsonBuilder(_method.response.serializableReturnType)
+            .rawJsonType;
     }
   }
 

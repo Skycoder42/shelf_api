@@ -51,4 +51,15 @@ class EndpointResponse {
         isResponse: isResponse ?? this.isResponse,
         isAsync: isAsync ?? this.isAsync,
       );
+
+  SerializableType get serializableReturnType {
+    assert(
+      responseType == EndpointResponseType.json,
+      'Cannot get serializableReturnType if responseType is not json',
+    );
+    return returnType.toSerializable(
+      'EndpointResponse with responseType json must hold a '
+      'OpaqueSerializableType',
+    );
+  }
 }

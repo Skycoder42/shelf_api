@@ -52,12 +52,19 @@ final class _BodyVariableBuilder extends CodeBuilder {
           .call([Constants.utf8.property('decoder')]),
       EndpointBodyType.binaryStream =>
         _requestRef.property('read').call(const []),
-      EndpointBodyType.json => Constants.json.property('decode').call([
-          _requestRef.property('readAsString').call(const []).awaited,
-        ]),
+      EndpointBodyType.json => _jsonCall(),
     };
 
     yield declareFinal(BodyBuilder._bodyRef.symbol!).assign(bodyExpr).statement;
+  }
+
+  Expression _jsonCall() {
+    final rawJsonType =
+        FromJsonBuilder(_methodBody.serializableParamType).rawJsonType;
+    final callExpr = Constants.json.property('decode').call([
+      _requestRef.property('readAsString').call(const []).awaited,
+    ]);
+    return rawJsonType == Types.dynamic$ ? callExpr : callExpr.asA(rawJsonType);
   }
 }
 
@@ -71,37 +78,27 @@ final class _BodyParamBuilder {
       return BodyBuilder._bodyRef;
     }
 
-    final serializableType = _methodBody.paramType.toSerializable(
-      'EndpointBody with bodyType json must hold a OpaqueSerializableType',
-    );
-
-    final rawJsonType = FromJsonBuilder(serializableType).rawJsonType;
-    final castBody = rawJsonType == Types.dynamic$
-        ? BodyBuilder._bodyRef
-        : BodyBuilder._bodyRef.asA(rawJsonType);
+    final serializableType = _methodBody.serializableParamType;
     return switch (serializableType.wrapped) {
-      Wrapped.none => _buildJson(serializableType, castBody),
-      Wrapped.list => _buildList(serializableType, castBody),
-      Wrapped.map => _buildMap(serializableType, castBody),
+      Wrapped.none => _buildJson(serializableType),
+      Wrapped.list => _buildList(serializableType),
+      Wrapped.map => _buildMap(serializableType),
     };
   }
 
-  Expression _buildJson(
-    SerializableType type,
-    Expression castBody,
-  ) {
+  Expression _buildJson(SerializableType type) {
     var checkNull = false;
     Expression paramExpr;
     if (type.fromJson case final OpaqueConstant fromJson) {
       checkNull = true;
-      paramExpr = Constants.fromConstant(fromJson).call([castBody]);
+      paramExpr = Constants.fromConstant(fromJson).call([BodyBuilder._bodyRef]);
     } else if (type.jsonType != null) {
       checkNull = true;
       paramExpr = Types.fromType(type.dartType)
           .withNullable(false)
-          .newInstanceNamed('fromJson', [castBody]);
+          .newInstanceNamed('fromJson', [BodyBuilder._bodyRef]);
     } else {
-      paramExpr = castBody;
+      paramExpr = BodyBuilder._bodyRef;
     }
 
     if (checkNull && type.isNullable) {
@@ -114,12 +111,9 @@ final class _BodyParamBuilder {
     return paramExpr;
   }
 
-  Expression _buildList(
-    SerializableType type,
-    Expression castBody,
-  ) {
+  Expression _buildList(SerializableType type) {
     if (type.jsonType case final OpaqueType jsonType) {
-      return castBody
+      return BodyBuilder._bodyRef
           .autoProperty('cast', type.isNullable)
           .call(const [], const {}, [Types.fromType(jsonType)])
           .property('map')
@@ -127,7 +121,7 @@ final class _BodyParamBuilder {
           .property('toList')
           .call(const []);
     } else {
-      return castBody
+      return BodyBuilder._bodyRef
           .autoProperty('cast', type.isNullable)
           .call(const [], const {}, [Types.fromType(type.dartType)])
           .property('toList')
@@ -135,18 +129,15 @@ final class _BodyParamBuilder {
     }
   }
 
-  Expression _buildMap(
-    SerializableType type,
-    Expression castBody,
-  ) {
+  Expression _buildMap(SerializableType type) {
     if (type.jsonType case final OpaqueType jsonType) {
-      return castBody
+      return BodyBuilder._bodyRef
           .autoProperty('cast', type.isNullable)
           .call(const [], const {}, [Types.string, Types.fromType(jsonType)])
           .property('mapValue')
           .call([Types.fromType(type.dartType).property('fromJson')]);
     } else {
-      return castBody.autoProperty('cast', type.isNullable).call(
+      return BodyBuilder._bodyRef.autoProperty('cast', type.isNullable).call(
         const [],
         const {},
         [Types.string, Types.fromType(type.dartType)],
