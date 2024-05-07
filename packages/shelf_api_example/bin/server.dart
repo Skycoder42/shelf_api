@@ -15,8 +15,10 @@ void main(List<String> args) async {
     ..get('/riverpod', riverpodRequestHandler)
     ..mount('/', ExampleApi().call);
 
-  final app =
-      const Pipeline().addMiddleware(rivershelf()).addHandler(router.call);
+  final app = const Pipeline()
+      .addMiddleware(rivershelf())
+      .addMiddleware(formatExceptionHandler())
+      .addHandler(router.call);
 
   final server = await serve(app, 'localhost', port);
   print('Serving at http://${server.address.host}:${server.port}');

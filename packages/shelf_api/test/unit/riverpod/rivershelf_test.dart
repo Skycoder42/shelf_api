@@ -14,9 +14,9 @@ import 'package:test/test.dart';
 ])
 import 'rivershelf_test.mocks.dart';
 
-class _FakeResponse extends Fake implements Response {}
+class FakeResponse extends Fake implements Response {}
 
-class _FakeEndpointRef extends Fake implements EndpointRef {}
+class FakeEndpointRef extends Fake implements EndpointRef {}
 
 void main() {
   group('RivershelfMiddleware', () {
@@ -37,7 +37,7 @@ void main() {
     });
 
     test('creates pipeline with given handler', () {
-      final testResponse = _FakeResponse();
+      final testResponse = FakeResponse();
       final newHandler = sut(
         expectAsync1((request) {
           expect(request, isNot(same(mockRequest)));
@@ -51,7 +51,7 @@ void main() {
     test('middleware method creates new instance of middleware', () {
       final middleware = rivershelf(parent: testProviderContainer);
 
-      final testResponse = _FakeResponse();
+      final testResponse = FakeResponse();
       final newHandler = middleware(
         expectAsync1((request) {
           expect(request, isNot(same(mockRequest)));
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('registers endpoint ref on context', () {
-      final testResponse = _FakeResponse();
+      final testResponse = FakeResponse();
       final newHandler = sut(expectAsync1((context) => testResponse));
 
       expect(newHandler(mockRequest), completes);
@@ -78,7 +78,7 @@ void main() {
     });
 
     test('uses scoped provider container with context override', () {
-      final testResponse = _FakeResponse();
+      final testResponse = FakeResponse();
       final newHandler = sut(expectAsync1((context) => testResponse));
 
       expect(newHandler(mockRequest), completes);
@@ -100,7 +100,7 @@ void main() {
     });
 
     test('disposes scoped container', () async {
-      final testResponse = _FakeResponse();
+      final testResponse = FakeResponse();
       final newHandler = sut(expectAsync1((context) => testResponse));
 
       await expectLater(newHandler(mockRequest), completes);
@@ -131,7 +131,7 @@ void main() {
     });
 
     test('ref returns EndpointRef of request context', () {
-      final testRef = _FakeEndpointRef();
+      final testRef = FakeEndpointRef();
       final request = Request(
         HttpMethod.get,
         Uri.http('localhost', '/'),
