@@ -14,6 +14,10 @@ scripts:
     dart pub global run melos exec -c1 --depends-on=build_runner
     dart run build_runner build
 
+  build:clean: >-
+    dart pub global run melos exec -c1 --depends-on=build_runner
+    dart run build_runner build --delete-conflicting-outputs
+
   build:watch: >-
     dart pub global run melos exec --depends-on=build_runner
     dart run build_runner watch

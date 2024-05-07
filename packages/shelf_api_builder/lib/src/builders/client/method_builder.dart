@@ -7,6 +7,7 @@ import '../../models/endpoint_method.dart';
 import '../../models/endpoint_response.dart';
 import '../../util/types.dart';
 import '../base/spec_builder.dart';
+import '../common/from_json_builder.dart';
 
 @internal
 final class MethodBuilder extends SpecBuilder<Method> {
@@ -48,13 +49,12 @@ final class MethodBuilder extends SpecBuilder<Method> {
 
     final innerType = switch (response.responseType) {
       EndpointResponseType.binary => Types.list(Types.int$),
-      _ => Types.fromType(response.rawType),
+      _ => Types.fromType(response.returnType),
     };
 
     if (response.responseType.isStream) {
       return innerType;
-    }
-    {
+    } else {
       return Types.future(innerType);
     }
   }
@@ -131,17 +131,26 @@ final class MethodBuilder extends SpecBuilder<Method> {
         'responseType': _responseType,
       };
 
-  TypeReference get _responseDartType =>
-      switch (_method.response.responseType) {
-        EndpointResponseType.noContent => Types.void$,
-        EndpointResponseType.text => Types.string,
-        EndpointResponseType.binary => Types.list(Types.int$),
-        EndpointResponseType.textStream ||
-        EndpointResponseType.binaryStream =>
-          Types.responseBody,
-        // TODO fromJsonType
-        EndpointResponseType.json => Types.dynamic$,
-      };
+  TypeReference get _responseDartType {
+    switch (_method.response.responseType) {
+      case EndpointResponseType.noContent:
+        return Types.void$;
+      case EndpointResponseType.text:
+        return Types.string;
+      case EndpointResponseType.binary:
+        return Types.list(Types.int$);
+      case EndpointResponseType.textStream:
+      case EndpointResponseType.binaryStream:
+        return Types.responseBody;
+      case EndpointResponseType.json:
+        // TODO move logic into custom builder class
+        final serializableType = _method.response.returnType.toSerializable(
+          'EndpointResponse with responseType json must hold a '
+          'OpaqueSerializableType',
+        );
+        return FromJsonBuilder(serializableType).rawJsonType;
+    }
+  }
 
   Expression get _responseType => switch (_method.response.responseType) {
         EndpointResponseType.noContent => literalNull,

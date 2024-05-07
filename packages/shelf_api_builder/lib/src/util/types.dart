@@ -151,6 +151,8 @@ abstract base class Types {
     bool? isNull,
   }) =>
       switch (type) {
+        OpaqueSerializableType(serializableType: final serializableType) =>
+          fromType(serializableType.dartType),
         OpaqueDartType(dartType: final dartType) =>
           _fromDartType(dartType, isNull),
         OpaqueClassType(element: final element) => _fromClass(element, isNull),

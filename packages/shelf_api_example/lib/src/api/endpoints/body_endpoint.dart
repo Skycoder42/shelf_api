@@ -32,7 +32,11 @@ class BodyEndpoint extends ShelfEndpoint {
 
   @Get('/json/custom')
   BasicModel getJsonCustom(
-    @BodyParam(fromJson: BasicModel.fromJsonX) BasicModel body,
+    @BodyParam(
+      fromJson: BasicModel.fromJsonX,
+      toJson: BasicModel.toJsonX,
+    )
+    BasicModel body,
   ) =>
       body;
 
@@ -47,7 +51,11 @@ class BodyEndpoint extends ShelfEndpoint {
 
   @Get('/json/null/custom')
   BasicModel? getJsonNullCustom(
-    @BodyParam(fromJson: BasicModel.fromJsonX) BasicModel? body,
+    @BodyParam(
+      fromJson: BasicModel.fromJsonX,
+      toJson: BasicModel.toJsonX,
+    )
+    BasicModel? body,
   ) =>
       body;
 }

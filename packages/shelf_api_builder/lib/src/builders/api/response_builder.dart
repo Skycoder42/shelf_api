@@ -57,12 +57,17 @@ final class ResponseBuilder extends CodeBuilder {
             .returned
             .statement;
       case EndpointResponseType.json:
+        final serializableType = _response.returnType.toSerializable(
+          'EndpointResponse with responseType json must hold a '
+          'OpaqueSerializableType',
+        );
+
         yield Types.shelfResponse
             .newInstanceNamed(
               'ok',
               [
                 Constants.json.property('encode').call([
-                  if (_response.toJson case final OpaqueConstant toJson)
+                  if (serializableType.toJson case final OpaqueConstant toJson)
                     Constants.fromConstant(toJson).call([_invocation])
                   else
                     _invocation,

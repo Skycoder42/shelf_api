@@ -3,8 +3,8 @@ import 'package:meta/meta.dart';
 
 import '../../models/api_class.dart';
 import '../../util/types.dart';
-import 'api_handler_builder.dart';
 import '../base/spec_builder.dart';
+import 'api_handler_builder.dart';
 
 @internal
 final class ApiImplementationBuilder extends SpecBuilder<Class> {

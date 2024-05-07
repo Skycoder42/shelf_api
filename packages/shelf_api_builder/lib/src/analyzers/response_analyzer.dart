@@ -9,12 +9,14 @@ import '../models/endpoint_response.dart';
 import '../models/opaque_type.dart';
 import '../readers/api_method_reader.dart';
 import '../util/type_checkers.dart';
+import 'serializable_analyzer.dart';
 
 @internal
 class ResponseAnalyzer {
-  final BuildStep _buildStep;
+  final SerializableAnalyzer _serializableAnalyzer;
 
-  ResponseAnalyzer(this._buildStep);
+  ResponseAnalyzer(BuildStep buildStep)
+      : _serializableAnalyzer = SerializableAnalyzer(buildStep);
 
   Future<EndpointResponse> analyzeResponse(
     MethodElement method,
@@ -31,11 +33,14 @@ class ResponseAnalyzer {
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
       return _analyzeFuture(method, apiMethod, returnType, allowAsync);
-    } else if (apiMethod.hasToJson) {
+    } else if (_serializableAnalyzer.isCustom(apiMethod)) {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
-        rawType: OpaqueDartType(returnType),
-        toJson: await apiMethod.toJson(_buildStep),
+        returnType: await _serializableAnalyzer.analyzeType(
+          method,
+          returnType,
+          apiMethod,
+        ),
       );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
@@ -43,19 +48,19 @@ class ResponseAnalyzer {
     } else if (returnType is VoidType) {
       return EndpointResponse(
         responseType: EndpointResponseType.noContent,
-        rawType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(returnType),
       );
     } else if (returnType.isDartCoreString) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.text,
-        rawType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(returnType),
       );
     } else if (TypeCheckers.uint8List.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.binary,
-        rawType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(returnType),
       );
     } else if (TypeCheckers.tResponse.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
@@ -64,13 +69,17 @@ class ResponseAnalyzer {
       _ensureNotNullable(returnType, method);
       return const EndpointResponse(
         responseType: EndpointResponseType.noContent,
-        rawType: OpaqueVoidType(),
+        returnType: OpaqueVoidType(),
         isResponse: true,
       );
     } else {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
-        rawType: OpaqueDartType(returnType),
+        returnType: await _serializableAnalyzer.analyzeType(
+          method,
+          returnType,
+          apiMethod,
+        ),
       );
     }
   }
@@ -129,12 +138,12 @@ class ResponseAnalyzer {
     if (streamType.isDartCoreString) {
       return EndpointResponse(
         responseType: EndpointResponseType.textStream,
-        rawType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(returnType),
       );
     } else if (TypeCheckers.intList.isAssignableFrom(streamType.element!)) {
       return EndpointResponse(
         responseType: EndpointResponseType.binaryStream,
-        rawType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(returnType),
       );
     } else {
       throw InvalidGenerationSource(

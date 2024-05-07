@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import 'opaque_constant.dart';
 import 'opaque_type.dart';
+import 'serializable_type.dart';
 
 @internal
 enum EndpointBodyType {
@@ -9,9 +9,7 @@ enum EndpointBodyType {
   binary,
   textStream,
   binaryStream,
-  json,
-  jsonList,
-  jsonMap;
+  json;
 
   bool get isStream => switch (this) {
         EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
@@ -24,17 +22,14 @@ enum EndpointBodyType {
 class EndpointBody {
   final OpaqueType paramType;
   final EndpointBodyType bodyType;
-  final bool isNullable;
-  final OpaqueType? jsonType;
-  final OpaqueConstant? fromJson;
 
   const EndpointBody({
     required this.paramType,
     required this.bodyType,
-    this.isNullable = false,
-    this.jsonType,
-    this.fromJson,
-  });
+  }) : assert(
+          bodyType != EndpointBodyType.json || paramType is SerializableType,
+          'If bodyType is json, paramType must be as $SerializableType',
+        );
 
   bool get isAsync => !bodyType.isStream;
 }

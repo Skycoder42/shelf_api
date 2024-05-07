@@ -2,10 +2,25 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:meta/meta.dart';
 
+import 'serializable_type.dart';
+
 @internal
 @immutable
 sealed class OpaqueType {
   const OpaqueType();
+
+  SerializableType toSerializable(String reason) => switch (this) {
+        OpaqueSerializableType(serializableType: final type) => type,
+        _ => throw StateError(reason),
+      };
+}
+
+@internal
+@immutable
+class OpaqueSerializableType extends OpaqueType {
+  final SerializableType serializableType;
+
+  const OpaqueSerializableType(this.serializableType);
 }
 
 @internal
