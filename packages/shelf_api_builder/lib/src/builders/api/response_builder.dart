@@ -9,6 +9,8 @@ import '../base/code_builder.dart';
 
 @internal
 final class ResponseBuilder extends CodeBuilder {
+  static const _responseRef = Reference(r'$response');
+
   final EndpointResponse _response;
   final Expression _invocation;
 
@@ -57,23 +59,32 @@ final class ResponseBuilder extends CodeBuilder {
             .returned
             .statement;
       case EndpointResponseType.json:
-        yield Types.shelfResponse
-            .newInstanceNamed(
-              'ok',
-              [
-                Constants.json.property('encode').call([
-                  if (_response.serializableReturnType.toJson
-                      case final OpaqueConstant toJson)
-                    Constants.fromConstant(toJson).call([_invocation])
-                  else
-                    _invocation,
-                ]),
-              ],
-              _extraParams('json'),
-            )
-            .returned
-            .statement;
+        yield* _buildJson();
     }
+  }
+
+  Iterable<Code> _buildJson() sync* {
+    final serializableType = _response.serializableReturnType;
+
+    Expression responseExpr;
+    if (serializableType.toJson case final OpaqueConstant toJson) {
+      if (serializableType.isNullable) {
+        yield declareFinal(_responseRef.symbol!).assign(_invocation).statement;
+        responseExpr = _responseRef.notEqualTo(literalNull).conditional(
+              Constants.fromConstant(toJson).call([_responseRef]),
+              literalNull,
+            );
+      } else {
+        responseExpr = Constants.fromConstant(toJson).call([_invocation]);
+      }
+    } else {
+      responseExpr = _invocation;
+    }
+
+    yield Types.shelfResponse
+        .newInstanceNamed('ok', [responseExpr], _extraParams('json'))
+        .returned
+        .statement;
   }
 
   Map<String, Expression> _extraParams(

@@ -18,6 +18,8 @@ abstract base class Types {
 
   static final string = TypeReference((b) => b..symbol = 'String');
 
+  static final uri = TypeReference((b) => b..symbol = 'Uri');
+
   static final TypeReference httpStatus = TypeReference(
     (b) => b
       ..symbol = 'HttpStatus'
@@ -72,6 +74,12 @@ abstract base class Types {
       ..url = 'package:dio/dio.dart',
   );
 
+  static final TypeReference baseOptions = TypeReference(
+    (b) => b
+      ..symbol = 'BaseOptions'
+      ..url = 'package:dio/dio.dart',
+  );
+
   static final TypeReference options = TypeReference(
     (b) => b
       ..symbol = 'Options'
@@ -87,6 +95,18 @@ abstract base class Types {
   static final TypeReference progressCallback = TypeReference(
     (b) => b
       ..symbol = 'ProgressCallback'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference dioException = TypeReference(
+    (b) => b
+      ..symbol = 'DioException'
+      ..url = 'package:dio/dio.dart',
+  );
+
+  static final TypeReference dioExceptionType = TypeReference(
+    (b) => b
+      ..symbol = 'DioExceptionType'
       ..url = 'package:dio/dio.dart',
   );
 
@@ -151,8 +171,9 @@ abstract base class Types {
     bool? isNull,
   }) =>
       switch (type) {
-        OpaqueSerializableType(serializableType: final serializableType) =>
-          fromType(serializableType.dartType),
+        OpaqueSerializableType() => throw StateError(
+            'Cannot convert OpaqueSerializableType via fromType',
+          ),
         OpaqueDartType(dartType: final dartType) =>
           _fromDartType(dartType, isNull),
         OpaqueClassType(element: final element) => _fromClass(element, isNull),

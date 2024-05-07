@@ -9,6 +9,8 @@ import 'method_builder.dart';
 @internal
 final class ClientBuilder extends SpecBuilder<Class> {
   static const _dioRef = Reference('_dio');
+  static const _baseUrlRef = Reference('baseUrl');
+  static const _baseOptionsRef = Reference('baseOptions');
 
   final ApiClass _apiClass;
 
@@ -18,7 +20,6 @@ final class ClientBuilder extends SpecBuilder<Class> {
   Class build() => Class(
         (b) => b
           ..name = _apiClass.clientName
-          ..abstract = true
           ..fields.add(
             Field(
               (b) => b
@@ -27,14 +28,70 @@ final class ClientBuilder extends SpecBuilder<Class> {
                 ..type = Types.dio,
             ),
           )
+          ..constructors.add(_buildDefaultConstructor())
+          ..constructors.add(_buildOptionsConstructor())
+          ..constructors.add(_buildDioConstructor())
           ..methods.addAll(_buildMethods()),
       );
 
   Iterable<Method> _buildMethods() sync* {
     for (final endpoint in _apiClass.endpoints) {
       for (final method in endpoint.methods) {
-        yield MethodBuilder(endpoint, method, _dioRef).build();
+        yield MethodBuilder(_apiClass, endpoint, method, _dioRef).build();
       }
     }
   }
+
+  Constructor _buildDefaultConstructor() => Constructor(
+        (b) => b
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = _baseUrlRef.symbol!
+                ..type = Types.uri,
+            ),
+          )
+          ..initializers.add(
+            _dioRef
+                .assign(
+                  Types.dio.newInstance([
+                    Types.baseOptions.newInstance(
+                      const [],
+                      {
+                        'baseUrl':
+                            _baseUrlRef.property('toString').call(const []),
+                      },
+                    ),
+                  ]),
+                )
+                .code,
+          ),
+      );
+
+  Constructor _buildOptionsConstructor() => Constructor(
+        (b) => b
+          ..name = 'options'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = _baseOptionsRef.symbol!
+                ..type = Types.baseOptions,
+            ),
+          )
+          ..initializers.add(
+            _dioRef.assign(Types.dio.newInstance([_baseOptionsRef])).code,
+          ),
+      );
+
+  Constructor _buildDioConstructor() => Constructor(
+        (b) => b
+          ..name = 'dio'
+          ..requiredParameters.add(
+            Parameter(
+              (b) => b
+                ..name = _dioRef.symbol!
+                ..toThis = true,
+            ),
+          ),
+      );
 }

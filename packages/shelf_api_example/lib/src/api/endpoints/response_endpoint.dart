@@ -50,27 +50,27 @@ class ResponseEndpoint extends ShelfEndpoint {
   Future<Uint8List> asyncBinary() async => Uint8List.fromList([1, 2, 3, 4, 5]);
 
   @Get('/async/json')
-  Future<int> asyncJson() async => 4224;
+  Future<int?> asyncJson() async => 4224;
 
   @Get('/async/json/list')
-  Future<List<BasicModel>> asyncJsonList() async =>
+  Future<List<BasicModel>?> asyncJsonList() async =>
       const [BasicModel(1), BasicModel(2), BasicModel(3)];
 
   @Get('/async/json/map')
-  Future<Map<String, int>> asyncJsonMap() async => const {'a': 1, 'b': 2};
+  Future<Map<String, int>?> asyncJsonMap() async => const {'a': 1, 'b': 2};
 
   @Get(
     '/async/json/custom',
     fromJson: BasicModel.fromJsonX,
     toJson: BasicModel.toJsonX,
   )
-  Future<BasicModel> asyncJsonCustom() async => const BasicModel(42);
+  Future<BasicModel?> asyncJsonCustom() async => const BasicModel(42);
 
   @Get('/async/response')
   Future<Response> asyncResponse() async => Response.ok('Hello, World!');
 
   @Get('/async/response/typed')
-  Future<TResponse<BasicModel>> asyncTypedResponse() async =>
+  Future<TResponse<BasicModel?>> asyncTypedResponse() async =>
       TResponse.ok(const BasicModel(24));
 
   @Get('/stream/text')
@@ -78,6 +78,4 @@ class ResponseEndpoint extends ShelfEndpoint {
 
   @Get('/stream/binary')
   Stream<List<int>> streamBinary() => Stream.value([1, 2, 3, 4, 5]);
-
-  // TODO test null responses
 }

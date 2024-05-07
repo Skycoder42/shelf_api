@@ -2,11 +2,8 @@ import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_body.dart';
-import '../../models/opaque_constant.dart';
-import '../../models/opaque_type.dart';
-import '../../models/serializable_type.dart';
+import '../../util/code/if.dart';
 import '../../util/constants.dart';
-import '../../util/extensions/code_builder_extensions.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
 import '../common/from_json_builder.dart';
@@ -29,6 +26,8 @@ final class BodyBuilder {
 }
 
 final class _BodyVariableBuilder extends CodeBuilder {
+  static const _rawBodyRef = Reference(r'$rawBody');
+
   final EndpointBody _methodBody;
   final Reference _requestRef;
 
@@ -36,35 +35,70 @@ final class _BodyVariableBuilder extends CodeBuilder {
 
   @override
   Iterable<Code> build() sync* {
-    final bodyExpr = switch (_methodBody.bodyType) {
-      EndpointBodyType.text =>
-        _requestRef.property('readAsString').call(const []).awaited,
-      EndpointBodyType.binary => _requestRef
-          .property('read')
-          .call(const [])
-          .property('collect')
-          .call([_requestRef])
-          .awaited,
-      EndpointBodyType.textStream => _requestRef
-          .property('read')
-          .call(const [])
-          .property('transform')
-          .call([Constants.utf8.property('decoder')]),
-      EndpointBodyType.binaryStream =>
-        _requestRef.property('read').call(const []),
-      EndpointBodyType.json => _jsonCall(),
-    };
+    // TODO validate content type?
+
+    final Expression bodyExpr;
+    switch (_methodBody.bodyType) {
+      case EndpointBodyType.text:
+        bodyExpr = _requestRef.property('readAsString').call(const []).awaited;
+      case EndpointBodyType.binary:
+        bodyExpr = _requestRef
+            .property('read')
+            .call(const [])
+            .property('collect')
+            .call([_requestRef])
+            .awaited;
+      case EndpointBodyType.textStream:
+        bodyExpr = _requestRef
+            .property('read')
+            .call(const [])
+            .property('transform')
+            .call([Constants.utf8.property('decoder')]);
+      case EndpointBodyType.binaryStream:
+        bodyExpr = _requestRef.property('read').call(const []);
+      case EndpointBodyType.json:
+        yield* _jsonCall();
+        return;
+    }
 
     yield declareFinal(BodyBuilder._bodyRef.symbol!).assign(bodyExpr).statement;
   }
 
-  Expression _jsonCall() {
-    final rawJsonType =
-        FromJsonBuilder(_methodBody.serializableParamType).rawJsonType;
-    final callExpr = Constants.json.property('decode').call([
-      _requestRef.property('readAsString').call(const []).awaited,
-    ]);
-    return rawJsonType == Types.dynamic$ ? callExpr : callExpr.asA(rawJsonType);
+  Iterable<Code> _jsonCall() sync* {
+    yield declareFinal(_rawBodyRef.symbol!)
+        .assign(_requestRef.property('readAsString').call(const []).awaited)
+        .statement;
+
+    final serializableType = _methodBody.serializableParamType;
+    final rawJsonType = FromJsonBuilder(serializableType).rawJsonType;
+
+    final Expression callExpr;
+    if (serializableType.isNullable) {
+      callExpr = _rawBodyRef
+          .property('isNotEmpty')
+          .conditional(
+            Constants.json.property('decode').call(const [_rawBodyRef]),
+            literalNull,
+          )
+          .parenthesized;
+    } else {
+      yield If(
+        _rawBodyRef.property('isEmpty'),
+        Types.shelfResponse
+            .newInstanceNamed('badRequest', const [], {
+              'body': literalString('Missing required request body'),
+            })
+            .returned
+            .statement,
+      );
+      callExpr = Constants.json.property('decode').call(const [_rawBodyRef]);
+    }
+
+    yield declareFinal(BodyBuilder._bodyRef.symbol!)
+        .assign(
+          rawJsonType == Types.dynamic$ ? callExpr : callExpr.asA(rawJsonType),
+        )
+        .statement;
   }
 }
 
@@ -78,70 +112,7 @@ final class _BodyParamBuilder {
       return BodyBuilder._bodyRef;
     }
 
-    final serializableType = _methodBody.serializableParamType;
-    return switch (serializableType.wrapped) {
-      Wrapped.none => _buildJson(serializableType),
-      Wrapped.list => _buildList(serializableType),
-      Wrapped.map => _buildMap(serializableType),
-    };
-  }
-
-  Expression _buildJson(SerializableType type) {
-    var checkNull = false;
-    Expression paramExpr;
-    if (type.fromJson case final OpaqueConstant fromJson) {
-      checkNull = true;
-      paramExpr = Constants.fromConstant(fromJson).call([BodyBuilder._bodyRef]);
-    } else if (type.jsonType != null) {
-      checkNull = true;
-      paramExpr = Types.fromType(type.dartType)
-          .withNullable(false)
-          .newInstanceNamed('fromJson', [BodyBuilder._bodyRef]);
-    } else {
-      paramExpr = BodyBuilder._bodyRef;
-    }
-
-    if (checkNull && type.isNullable) {
-      paramExpr = BodyBuilder._bodyRef.notEqualTo(literalNull).conditional(
-            paramExpr,
-            literalNull,
-          );
-    }
-
-    return paramExpr;
-  }
-
-  Expression _buildList(SerializableType type) {
-    if (type.jsonType case final OpaqueType jsonType) {
-      return BodyBuilder._bodyRef
-          .autoProperty('cast', type.isNullable)
-          .call(const [], const {}, [Types.fromType(jsonType)])
-          .property('map')
-          .call([Types.fromType(type.dartType).property('fromJson')])
-          .property('toList')
-          .call(const []);
-    } else {
-      return BodyBuilder._bodyRef
-          .autoProperty('cast', type.isNullable)
-          .call(const [], const {}, [Types.fromType(type.dartType)])
-          .property('toList')
-          .call(const []);
-    }
-  }
-
-  Expression _buildMap(SerializableType type) {
-    if (type.jsonType case final OpaqueType jsonType) {
-      return BodyBuilder._bodyRef
-          .autoProperty('cast', type.isNullable)
-          .call(const [], const {}, [Types.string, Types.fromType(jsonType)])
-          .property('mapValue')
-          .call([Types.fromType(type.dartType).property('fromJson')]);
-    } else {
-      return BodyBuilder._bodyRef.autoProperty('cast', type.isNullable).call(
-        const [],
-        const {},
-        [Types.string, Types.fromType(type.dartType)],
-      );
-    }
+    return FromJsonBuilder(_methodBody.serializableParamType)
+        .buildFromJson(BodyBuilder._bodyRef);
   }
 }

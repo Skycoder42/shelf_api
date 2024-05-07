@@ -53,6 +53,7 @@ final class ApiHandlerBuilder {
 
     yield _endpointRef.property('init').call(const []).awaited.statement;
     yield Try(Block.of(_buildTryBody()))
+      // TODO wait for stream to be done
       ..finallyBody =
           _endpointRef.property('dispose').call(const []).awaited.statement;
   }
