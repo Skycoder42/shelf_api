@@ -38,6 +38,17 @@ class ExampleServer {
     return response.transform(utf8.decoder).join();
   }
 
+  Future<HttpClientResponse> getRaw(Uri url, [String? body]) async {
+    final request = await _client.getUrl(_baseUri.resolveUri(url));
+    if (body != null) {
+      final bytes = utf8.encode(body);
+      request.headers.add(HttpHeaders.contentLengthHeader, bytes.length);
+      request.add(bytes);
+    }
+    final response = await request.close();
+    return response;
+  }
+
   Future<void> stop() async {
     _client.close(force: true);
 

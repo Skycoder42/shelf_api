@@ -13,7 +13,7 @@ import 'response_builder.dart';
 @internal
 final class ApiHandlerBuilder {
   static const _endpointRef = Reference(r'$endpoint');
-  static const _requestRef = Reference('request');
+  static const _requestRef = Reference(r'$request');
 
   final Endpoint _endpoint;
   final EndpointMethod _method;
@@ -34,15 +34,25 @@ final class ApiHandlerBuilder {
           ..name = handlerMethodName(_endpoint, _method)
           ..returns = Types.future(Types.shelfResponse)
           ..modifier = MethodModifier.async
-          ..requiredParameters.add(
-            Parameter(
-              (b) => b
-                ..name = _requestRef.symbol!
-                ..type = Types.shelfRequest,
-            ),
-          )
+          ..requiredParameters.addAll(_buildParameters())
           ..body = Block.of(_buildBody()),
       );
+
+  Iterable<Parameter> _buildParameters() sync* {
+    yield Parameter(
+      (b) => b
+        ..name = _requestRef.symbol!
+        ..type = Types.shelfRequest,
+    );
+
+    for (final pathParam in _method.pathParameters) {
+      yield Parameter(
+        (b) => b
+          ..name = pathParam.handlerParamName
+          ..type = Types.string,
+      );
+    }
+  }
 
   Iterable<Code> _buildBody() sync* {
     yield declareFinal(_endpointRef.symbol!)
@@ -60,17 +70,16 @@ final class ApiHandlerBuilder {
 
   Iterable<Code> _buildTryBody() sync* {
     final bodyBuilder = BodyBuilder(_method.body, _requestRef);
-    final pathBuilder = PathBuilder(_method.pathParameters, _requestRef);
+    final pathBuilder = PathBuilder(_method.pathParameters);
     final queryBuilder = QueryBuilder(_method.queryParameters, _requestRef);
 
     yield bodyBuilder.variables;
-    yield pathBuilder.variables;
     yield queryBuilder.variables;
 
     var invocation = _endpointRef.property(_method.name).call(
       [
         if (bodyBuilder.parameter case final Expression param) param,
-        ...pathBuilder.parameters,
+        ...pathBuilder.build(),
       ],
       queryBuilder.parameters,
     );

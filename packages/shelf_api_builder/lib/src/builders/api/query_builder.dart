@@ -22,9 +22,6 @@ final class QueryBuilder {
   Map<String, Expression> get parameters => _queryParameters.isNotEmpty
       ? Map.fromEntries(_QueryParamsBuilder(_queryParameters).build())
       : const {};
-
-  static Reference _paramRef(EndpointQueryParameter param) =>
-      refer('\$\$${param.paramName}');
 }
 
 final class _QueryVariablesBuilder extends CodeBuilder {
@@ -44,7 +41,7 @@ final class _QueryVariablesBuilder extends CodeBuilder {
         .statement;
 
     for (final param in _queryParameters) {
-      final paramRef = QueryBuilder._paramRef(param);
+      final paramRef = refer(param.handlerParamName);
       var getValueExpr =
           _queryRef.index(literalString(param.queryName, raw: true));
       if (!param.isList) {
@@ -77,7 +74,7 @@ final class _QueryParamsBuilder {
 
   Iterable<MapEntry<String, Expression>> build() sync* {
     for (final param in _queryParameters) {
-      final paramRef = refer('\$\$${param.paramName}');
+      final paramRef = refer(param.handlerParamName);
       final convertExpression = _convertExpression(param, paramRef);
 
       if (param.isOptional) {

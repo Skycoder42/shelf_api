@@ -25,4 +25,6 @@ class EndpointQueryParameter {
     required this.defaultValue,
     required this.customParse,
   });
+
+  String get handlerParamName => '\$query\$$paramName';
 }

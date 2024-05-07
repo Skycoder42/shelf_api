@@ -17,4 +17,6 @@ class EndpointPathParameter {
     required this.isString,
     required this.customParse,
   });
+
+  String get handlerParamName => '\$path\$$name';
 }
