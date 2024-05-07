@@ -82,7 +82,13 @@ final class ResponseBuilder extends CodeBuilder {
     }
 
     yield Types.shelfResponse
-        .newInstanceNamed('ok', [responseExpr], _extraParams('json'))
+        .newInstanceNamed(
+          'ok',
+          [
+            Constants.json.property('encode').call([responseExpr]),
+          ],
+          _extraParams('json'),
+        )
         .returned
         .statement;
   }

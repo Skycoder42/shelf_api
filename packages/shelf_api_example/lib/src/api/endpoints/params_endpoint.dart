@@ -7,12 +7,12 @@ class ParamsEndpoint extends ShelfEndpoint {
   @Get(r'/path/simple/<p1>/sub/<p2|\d+>')
   List<dynamic> getPathSimple(String p1, int p2) => [p1, p2];
 
-  @Get('/path/simple/<c1>/sub/<c2|.*>')
+  @Get('/path/custom/<c1>/sub/<c2|.*>')
   List<dynamic> getPathCustom(
     @PathParam(parse: parseString) String c1,
     Uri c2,
   ) =>
-      [c1, c2];
+      [c1, c2.toString()];
 
   @Get('/query')
   Map<String, dynamic> getQuery({
@@ -27,8 +27,8 @@ class ParamsEndpoint extends ShelfEndpoint {
         'sValue': sValue,
         'oValue': oValue,
         'dValue': dValue,
-        'uValue': uValue,
-        'dtValue': dtValue,
+        'uValue': uValue.toString(),
+        'dtValue': dtValue?.toString(),
         's2Value': s2Value,
       };
 
@@ -45,8 +45,8 @@ class ParamsEndpoint extends ShelfEndpoint {
         'sValue': sValue,
         'oValue': oValue,
         'dValue': dValue,
-        'uValue': uValue,
-        'dtValue': dtValue,
+        'uValue': uValue.toString(),
+        'dtValue': dtValue?.toString(),
         's2Value': s2Value,
       };
 
