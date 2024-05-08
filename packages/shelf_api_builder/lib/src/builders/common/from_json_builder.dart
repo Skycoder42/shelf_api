@@ -14,16 +14,6 @@ class FromJsonBuilder {
 
   FromJsonBuilder(this._serializableType);
 
-  TypeReference get dartType => switch (_serializableType.wrapped) {
-        Wrapped.none => Types.fromType(_serializableType.dartType),
-        Wrapped.list => Types.list(Types.fromType(_serializableType.dartType))
-            .withNullable(_serializableType.isNullable),
-        Wrapped.map => Types.map(
-            keyType: Types.string,
-            valueType: Types.fromType(_serializableType.dartType),
-          ).withNullable(_serializableType.isNullable),
-      };
-
   TypeReference get rawJsonType {
     if (_serializableType.fromJson != null) {
       return Types.dynamic$;

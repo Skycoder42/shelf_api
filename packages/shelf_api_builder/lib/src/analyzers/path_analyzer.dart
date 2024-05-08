@@ -33,7 +33,7 @@ class PathAnalyzer {
         .map(_pathParamRegexp.firstMatch)
         .whereType<RegExpMatch>()
         .map((match) => match[1]!)
-        .toSet();
+        .toList();
 
     final positionalParams = method.parameters
         .where((p) => p.isPositional)
@@ -48,8 +48,7 @@ class PathAnalyzer {
         );
       }
 
-      final pathParam = param.pathParamAnnotation;
-      if (!pathParamMatches.remove(param.name)) {
+      if (pathParamMatches.isEmpty) {
         throw InvalidGenerationSource(
           'Unable to find parameter named ${param.name} in the URL template '
           'of the endpoint method',
@@ -58,6 +57,18 @@ class PathAnalyzer {
         );
       }
 
+      final matchName = pathParamMatches.removeAt(0);
+      if (matchName != param.name) {
+        throw InvalidGenerationSource(
+          'Expected ${param.name} in the URL template but found $matchName. '
+          'Make sure template parameters and method parameters are in the same '
+          'order!',
+          todo: 'Reorder or rename your method parameters.',
+          element: param,
+        );
+      }
+
+      final pathParam = param.pathParamAnnotation;
       yield EndpointPathParameter(
         name: param.name,
         type: OpaqueDartType(param.type),

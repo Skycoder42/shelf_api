@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:source_helper/source_helper.dart';
 
 import '../models/opaque_type.dart';
+import '../models/serializable_type.dart';
 
 @internal
 abstract base class Types {
@@ -171,9 +172,8 @@ abstract base class Types {
     bool? isNull,
   }) =>
       switch (type) {
-        OpaqueSerializableType() => throw StateError(
-            'Cannot convert OpaqueSerializableType via fromType',
-          ),
+        OpaqueSerializableType(serializableType: final type) =>
+          _fromSerializableType(type, isNull),
         OpaqueDartType(dartType: final dartType) =>
           _fromDartType(dartType, isNull),
         OpaqueClassType(element: final element) => _fromClass(element, isNull),
@@ -210,6 +210,21 @@ abstract base class Types {
             ..url = clazz.librarySource.uri.toString();
         },
       );
+
+  static TypeReference _fromSerializableType(
+    SerializableType serializableType,
+    bool? isNull,
+  ) =>
+      switch (serializableType.wrapped) {
+        Wrapped.none =>
+          Types.fromType(serializableType.dartType, isNull: isNull),
+        Wrapped.list => Types.list(Types.fromType(serializableType.dartType))
+            .withNullable(isNull ?? serializableType.isNullable),
+        Wrapped.map => Types.map(
+            keyType: Types.string,
+            valueType: Types.fromType(serializableType.dartType),
+          ).withNullable(isNull ?? serializableType.isNullable),
+      };
 }
 
 @internal
