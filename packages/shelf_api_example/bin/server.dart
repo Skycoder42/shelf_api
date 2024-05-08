@@ -9,6 +9,7 @@ import 'package:shelf_api/shelf_api.dart';
 import 'package:shelf_api_example/src/api/example_api.api.dart';
 import 'package:shelf_api_example/src/format_handler.dart';
 import 'package:shelf_api_example/src/riverpod/riverpod_request_handler.dart';
+import 'package:shelf_router/shelf_router.dart';
 
 void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');

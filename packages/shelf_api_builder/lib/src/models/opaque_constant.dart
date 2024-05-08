@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
 @internal
-@immutable
 sealed class OpaqueConstant {
   const OpaqueConstant();
 
@@ -24,10 +23,9 @@ sealed class OpaqueConstant {
 }
 
 @internal
-@immutable
 class RevivedOpaqueConstant extends OpaqueConstant {
   final String name;
   final Uri source;
 
-  const RevivedOpaqueConstant._(this.name, this.source);
+  RevivedOpaqueConstant._(this.name, this.source);
 }

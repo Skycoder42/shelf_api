@@ -24,9 +24,22 @@ class QueryParam {
   /// ```
   final Function? parse;
 
+  /// A custom toString function.
+  ///
+  /// By default, path parameters are converted to a string via their
+  /// [Object.toString] implementation. In case you cannot override the toString
+  /// method, you can use any static or top level method with the following
+  /// signature:
+  ///
+  /// ```dart
+  /// String Function(T)
+  /// ```
+  final Function? stringify;
+
   /// Constructor.
   const QueryParam({
     this.name,
     this.parse,
+    this.stringify,
   });
 }

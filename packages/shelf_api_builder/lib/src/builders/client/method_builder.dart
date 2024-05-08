@@ -13,10 +13,10 @@ import 'method_body_builder.dart';
 
 @internal
 final class MethodBuilder extends SpecBuilder<Method> {
-  static const _optionsRef = Reference('options');
-  static const _cancelTokenRef = Reference('cancelToken');
-  static const _onSendProgressRef = Reference('onSendProgress');
-  static const _onReceiveProgressRef = Reference('onReceiveProgress');
+  static const _optionsRef = Reference(r'$options');
+  static const _cancelTokenRef = Reference(r'$cancelToken');
+  static const _onSendProgressRef = Reference(r'$onSendProgress');
+  static const _onReceiveProgressRef = Reference(r'$onReceiveProgress');
 
   final ApiClass _apiClass;
   final Endpoint _endpoint;
@@ -92,6 +92,19 @@ final class MethodBuilder extends SpecBuilder<Method> {
   }
 
   Iterable<Parameter> _buildOptionalParameters() sync* {
+    for (final queryParam in _method.queryParameters) {
+      yield Parameter(
+        (b) => b
+          ..name = queryParam.paramName
+          ..named = true
+          ..required = !queryParam.isOptional
+          ..type = (queryParam.isList
+                  ? Types.list(Types.fromType(queryParam.type))
+                  : Types.fromType(queryParam.type))
+              .withNullable(queryParam.isOptional),
+      );
+    }
+
     yield Parameter(
       (b) => b
         ..name = _optionsRef.symbol!

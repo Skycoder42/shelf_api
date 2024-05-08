@@ -62,6 +62,7 @@ class QueryAnalyzer {
       isOptional: param.isOptional,
       defaultValue: param.defaultValueCode,
       customParse: await queryParam?.parse(_buildStep),
+      customToString: await queryParam?.stringify(_buildStep),
     );
   }
 }

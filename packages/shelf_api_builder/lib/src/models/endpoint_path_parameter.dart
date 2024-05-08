@@ -4,7 +4,6 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-@immutable
 class EndpointPathParameter {
   final String name;
   final OpaqueType type;
@@ -12,7 +11,7 @@ class EndpointPathParameter {
   final OpaqueConstant? customParse;
   final OpaqueConstant? customToString;
 
-  const EndpointPathParameter({
+  EndpointPathParameter({
     required this.name,
     required this.type,
     required this.isString,

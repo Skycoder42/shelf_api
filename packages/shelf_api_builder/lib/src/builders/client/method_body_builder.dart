@@ -11,6 +11,7 @@ import '../base/code_builder.dart';
 import '../common/from_json_builder.dart';
 import 'body_builder.dart';
 import 'path_builder.dart';
+import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
@@ -33,6 +34,7 @@ final class MethodBodyBuilder extends CodeBuilder {
 
   @override
   Iterable<Code> build() sync* {
+    final queryBuilder = QueryBuilder(_method.queryParameters);
     final invocation = _dioRef.property('request').call(
       [
         PathBuilder(_apiClass, _endpoint, _method),
@@ -40,12 +42,13 @@ final class MethodBodyBuilder extends CodeBuilder {
       {
         if (_method.body case final EndpointBody body)
           'data': BodyBuilder(body),
-        _optionsRef.symbol!: _optionsRef
+        if (queryBuilder.hasParams) 'queryParameters': queryBuilder.build(),
+        _optionsRef.symbol!.substring(1): _optionsRef
             .ifNullThen(Types.options.newInstance(const []))
             .parenthesized
             .property('copyWith')
             .call(const [], _options),
-        for (final param in _extraParamsRefs) param.symbol!: param,
+        for (final param in _extraParamsRefs) param.symbol!.substring(1): param,
       },
       [
         _responseDartType,

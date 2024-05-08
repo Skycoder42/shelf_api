@@ -21,23 +21,25 @@ enum EndpointResponseType {
 }
 
 @internal
-@immutable
 class EndpointResponse {
   final EndpointResponseType responseType;
   final OpaqueType returnType;
   final bool isResponse;
   final bool isAsync;
 
-  const EndpointResponse({
+  EndpointResponse({
     required this.responseType,
     required this.returnType,
     this.isResponse = false,
     this.isAsync = false,
-  }) : assert(
-          responseType != EndpointResponseType.json ||
-              returnType is SerializableType,
-          'If bodyType is json, returnType must be as $SerializableType',
-        );
+  }) {
+    if (responseType == EndpointResponseType.json &&
+        returnType is! OpaqueSerializableType) {
+      throw ArgumentError(
+        'If responseType is json, returnType must be as $SerializableType',
+      );
+    }
+  }
 
   EndpointResponse copyWith({
     EndpointResponseType? responseType,
@@ -53,10 +55,11 @@ class EndpointResponse {
       );
 
   SerializableType get serializableReturnType {
-    assert(
-      responseType == EndpointResponseType.json,
-      'Cannot get serializableReturnType if responseType is not json',
-    );
+    if (responseType != EndpointResponseType.json) {
+      throw StateError(
+        'Cannot get serializableReturnType if responseType is not json',
+      );
+    }
     return returnType.toSerializable(
       'EndpointResponse with responseType json must hold a '
       'OpaqueSerializableType',

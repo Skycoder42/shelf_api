@@ -11,11 +11,15 @@ class ApiMethodReader with SerializableReader {
   @override
   final ConstantReader constantReader;
 
-  ApiMethodReader(this.constantReader)
-      : assert(
-          constantReader.instanceOf(const TypeChecker.fromRuntime(ApiMethod)),
-          'Can only apply ApiMethodReader on ApiMethod annotations.',
-        );
+  ApiMethodReader(this.constantReader) {
+    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(ApiMethod))) {
+      throw ArgumentError.value(
+        constantReader,
+        'constantReader',
+        'Can only apply ApiMethodReader on ApiMethod annotations.',
+      );
+    }
+  }
 
   String get method => constantReader.read('method').stringValue;
 

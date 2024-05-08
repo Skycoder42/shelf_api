@@ -64,10 +64,13 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
         .statement;
 
     yield _endpointRef.property('init').call(const []).awaited.statement;
-    yield Try(Block.of(_buildTryBody()))
-      // TODO wait for stream to be done
-      ..finallyBody =
-          _endpointRef.property('dispose').call(const []).awaited.statement;
+    if (_method.isStream) {
+      yield* _buildTryBody();
+    } else {
+      yield Try(Block.of(_buildTryBody()))
+        ..finallyBody =
+            _endpointRef.property('dispose').call(const []).awaited.statement;
+    }
   }
 
   Iterable<Code> _buildTryBody() sync* {
@@ -85,8 +88,12 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
       ],
       queryBuilder.parameters,
     );
-    if (_method.response.isAsync) {
+    if (_method.isAsync) {
       invocation = invocation.awaited;
+    } else if (_method.isStream) {
+      invocation = invocation.property('onFinished').call([
+        _endpointRef.property('dispose'),
+      ]);
     }
     yield ResponseBuilder(_method.response, invocation);
   }

@@ -35,10 +35,7 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
       (b) => b
         ..ignoreForFile.add('type=lint')
         ..directives.add(
-          Directive.import(
-            'package:shelf_api/shelf_api.dart',
-            show: const ['ShelfApiMapX'],
-          ),
+          Directive.import('package:shelf_api/builder_utils.dart'),
         )
         ..body.add(ClientBuilder(apiClass)),
     );

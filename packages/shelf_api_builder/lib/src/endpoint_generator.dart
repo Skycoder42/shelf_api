@@ -37,10 +37,7 @@ class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
         ..ignoreForFile.add('invalid_use_of_protected_member')
         ..ignoreForFile.add('unused_import')
         ..directives.add(
-          Directive.import(
-            'package:shelf_api/shelf_api.dart',
-            show: const ['ShelfApiMapX', 'ShelfApiStreamX'],
-          ),
+          Directive.import('package:shelf_api/builder_utils.dart'),
         )
         ..directives.add(
           Directive.import(

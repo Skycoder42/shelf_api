@@ -4,14 +4,13 @@ import 'endpoint_method.dart';
 import 'opaque_type.dart';
 
 @internal
-@immutable
 class Endpoint {
   final OpaqueType endpointType;
   final String name;
   final String? path;
   final List<EndpointMethod> methods;
 
-  const Endpoint({
+  Endpoint({
     required this.endpointType,
     required this.name,
     required this.path,

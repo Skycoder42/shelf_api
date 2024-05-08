@@ -67,7 +67,7 @@ class ResponseAnalyzer {
       return await _analyzeTResponse(method, apiMethod, returnType);
     } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
       _ensureNotNullable(returnType, method);
-      return const EndpointResponse(
+      return EndpointResponse(
         responseType: EndpointResponseType.noContent,
         returnType: OpaqueVoidType(),
         isResponse: true,

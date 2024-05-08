@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 
 import '../basic_model.dart';

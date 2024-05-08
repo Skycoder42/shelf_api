@@ -9,11 +9,16 @@ import '../util/type_checkers.dart';
 class ApiEndpointReader {
   final ConstantReader constantReader;
 
-  ApiEndpointReader(this.constantReader)
-      : assert(
-          constantReader.instanceOf(const TypeChecker.fromRuntime(ApiEndpoint)),
-          'Can only apply ApiEndpointReader on ApiEndpoint annotations.',
-        );
+  ApiEndpointReader(this.constantReader) {
+    if (!constantReader
+        .instanceOf(const TypeChecker.fromRuntime(ApiEndpoint))) {
+      throw ArgumentError.value(
+        constantReader,
+        'constantReader',
+        'Can only apply ApiEndpointReader on ApiEndpoint annotations.',
+      );
+    }
+  }
 
   String get path => constantReader.read('path').stringValue;
 }

@@ -7,11 +7,15 @@ import 'package:source_gen/source_gen.dart';
 class ShelfApiReader {
   final ConstantReader constantReader;
 
-  ShelfApiReader(this.constantReader)
-      : assert(
-          constantReader.instanceOf(const TypeChecker.fromRuntime(ShelfApi)),
-          'Can only apply ShelfApiReader on ShelfApi annotations.',
-        );
+  ShelfApiReader(this.constantReader) {
+    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(ShelfApi))) {
+      throw ArgumentError.value(
+        constantReader,
+        'constantReader',
+        'Can only apply ShelfApiReader on ShelfApi annotations.',
+      );
+    }
+  }
 
   List<DartType> get endpoints => constantReader
       .read('endpoints')

@@ -11,7 +11,6 @@ enum Wrapped {
 }
 
 @internal
-@immutable
 class SerializableType {
   final OpaqueType dartType;
   final Wrapped wrapped;
@@ -20,15 +19,18 @@ class SerializableType {
   final OpaqueConstant? fromJson;
   final OpaqueConstant? toJson;
 
-  const SerializableType({
+  SerializableType({
     required this.dartType,
     required this.wrapped,
     required this.isNullable,
     required this.jsonType,
     this.fromJson,
     this.toJson,
-  }) : assert(
-          wrapped == Wrapped.none || (fromJson == null && toJson == null),
-          'If fromJson or toJson are set, wrapped must be Wrapped.none!',
-        );
+  }) {
+    if ((fromJson != null || toJson != null) && wrapped != Wrapped.none) {
+      throw ArgumentError(
+        'If fromJson or toJson are set, wrapped must be Wrapped.none!',
+      );
+    }
+  }
 }

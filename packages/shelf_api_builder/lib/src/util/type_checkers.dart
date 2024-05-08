@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:meta/meta.dart';
+import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 

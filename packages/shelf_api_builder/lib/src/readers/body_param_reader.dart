@@ -11,11 +11,15 @@ class BodyParamReader with SerializableReader {
   @override
   final ConstantReader constantReader;
 
-  BodyParamReader(this.constantReader)
-      : assert(
-          constantReader.instanceOf(const TypeChecker.fromRuntime(BodyParam)),
-          'Can only apply BodyParamReader on BodyParam annotations.',
-        );
+  BodyParamReader(this.constantReader) {
+    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(BodyParam))) {
+      throw ArgumentError.value(
+        constantReader,
+        'constantReader',
+        'Can only apply BodyParamReader on BodyParam annotations.',
+      );
+    }
+  }
 }
 
 @internal

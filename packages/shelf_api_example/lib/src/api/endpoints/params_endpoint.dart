@@ -53,12 +53,14 @@ class ParamsEndpoint extends ShelfEndpoint {
   @Get('/query/custom')
   Map<String, dynamic> getQueryCustom({
     @QueryParam(name: 'named_value') required String namedValue,
-    @QueryParam(parse: parseString) required String parsedValue,
+    @QueryParam(parse: parseString, stringify: stringifyString)
+    required String parsedValue,
     @QueryParam(
       name: 'list_value',
       parse: parseStringList,
+      stringify: stringifyStringList,
     )
-    required List<String> parsedListValue,
+    List<String>? parsedListValue,
   }) =>
       {
         'namedValue': namedValue,

@@ -6,7 +6,6 @@ import 'endpoint_query_parameter.dart';
 import 'endpoint_response.dart';
 
 @internal
-@immutable
 class EndpointMethod {
   final String name;
   final String httpMethod;
@@ -16,7 +15,7 @@ class EndpointMethod {
   final List<EndpointPathParameter> pathParameters;
   final List<EndpointQueryParameter> queryParameters;
 
-  const EndpointMethod({
+  EndpointMethod({
     required this.name,
     required this.httpMethod,
     required this.path,
@@ -27,4 +26,6 @@ class EndpointMethod {
   });
 
   bool get isAsync => response.isAsync;
+
+  bool get isStream => response.responseType.isStream;
 }
