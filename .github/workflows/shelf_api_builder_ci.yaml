@@ -17,6 +17,13 @@ jobs:
       workingDirectory: packages/shelf_api_builder
       buildRunner: false
       unitTestPaths: ""
+      integrationTestPaths: -P integration
+      integrationTestSetup: >-
+        {
+          "linux": "bash ../shelf_api_example/tool/build-integration.sh",
+          "macos": "bash ../shelf_api_example/tool/build-integration.sh",
+          "windows": "bash ../shelf_api_example/tool/build-integration.sh"
+        }
 
   # cd:
   #   name: CD

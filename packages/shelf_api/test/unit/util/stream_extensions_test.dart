@@ -1,3 +1,6 @@
+// ignore_for_file: discarded_futures
+
+import 'dart:async';
 import 'dart:io';
 
 import 'package:shelf/shelf.dart';
@@ -7,6 +10,39 @@ import 'package:test/test.dart';
 
 void main() {
   group('ShelfApiStreamX', () {
+    test('registers callback that is invoked when stream is done', () {
+      final testStream = Stream.fromIterable([1, 2, 3]);
+
+      final sut = testStream.onFinished(expectAsync0(() {}));
+
+      expect(sut, emitsInOrder([1, 2, 3, emitsDone]));
+    });
+
+    test('registers callback that is invoked when stream is canceled', () {
+      final testController = StreamController<int>();
+      addTearDown(testController.close);
+
+      final sut = testController.stream.onFinished(expectAsync0(() {}));
+      late StreamSubscription sub;
+      sub = sut.listen(
+        expectAsync1(
+          count: 2,
+          (event) {
+            if (event == 2) {
+              sub.cancel();
+            }
+          },
+        ),
+        onDone: () => fail('onDone should not be called'),
+      );
+
+      testController
+        ..add(1)
+        ..add(2);
+    });
+  });
+
+  group('ShelfApiByteStreamX', () {
     group('collect', () {
       group('(without request)', () {
         test('merges stream into single byte array', () async {
