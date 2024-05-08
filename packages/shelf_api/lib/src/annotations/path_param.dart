@@ -15,10 +15,23 @@ class PathParam {
   /// ```dart
   /// T Function(String)
   /// ```
-  final Function parse;
+  final Function? parse;
+
+  /// A custom toString function.
+  ///
+  /// By default, path parameters are converted to a string via their
+  /// [Object.toString] implementation. In case you cannot override the toString
+  /// method, you can use any static or top level method with the following
+  /// signature:
+  ///
+  /// ```dart
+  /// String Function(T)
+  /// ```
+  final Function? stringify;
 
   /// Constructor.
   const PathParam({
-    required this.parse,
+    this.parse,
+    this.stringify,
   });
 }

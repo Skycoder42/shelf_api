@@ -6,6 +6,7 @@ import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
+import '../base/expression_builder.dart';
 import '../common/from_json_builder.dart';
 
 @internal
@@ -22,7 +23,7 @@ final class BodyBuilder {
       : const Code('');
 
   Expression? get parameter =>
-      _methodBody != null ? _BodyParamBuilder(_methodBody).build() : null;
+      _methodBody != null ? _BodyParamBuilder(_methodBody) : null;
 }
 
 final class _BodyVariableBuilder extends CodeBuilder {
@@ -102,11 +103,12 @@ final class _BodyVariableBuilder extends CodeBuilder {
   }
 }
 
-final class _BodyParamBuilder {
+final class _BodyParamBuilder extends ExpressionBuilder {
   final EndpointBody _methodBody;
 
   const _BodyParamBuilder(this._methodBody);
 
+  @override
   Expression build() {
     if (_methodBody.bodyType != EndpointBodyType.json) {
       return BodyBuilder._bodyRef;

@@ -10,12 +10,14 @@ class EndpointPathParameter {
   final OpaqueType type;
   final bool isString;
   final OpaqueConstant? customParse;
+  final OpaqueConstant? customToString;
 
   const EndpointPathParameter({
     required this.name,
     required this.type,
     required this.isString,
     required this.customParse,
+    required this.customToString,
   });
 
   String get handlerParamName => '\$path\$$name';

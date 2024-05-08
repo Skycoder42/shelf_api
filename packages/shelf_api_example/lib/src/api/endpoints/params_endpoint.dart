@@ -9,7 +9,7 @@ class ParamsEndpoint extends ShelfEndpoint {
 
   @Get('/path/custom/<c1>/sub/<c2|.*>')
   List<dynamic> getPathCustom(
-    @PathParam(parse: parseString) String c1,
+    @PathParam(parse: parseString, stringify: stringifyString) String c1,
     Uri c2,
   ) =>
       [c1, c2.toString()];
@@ -80,6 +80,11 @@ class ParamsEndpoint extends ShelfEndpoint {
 
   static String parseString(String s) => s * 3;
 
+  static String stringifyString(String s) => s.toUpperCase();
+
   static List<String> parseStringList(List<String> s) =>
       s.map(parseString).toList();
+
+  static List<String> stringifyStringList(List<String> s) =>
+      s.map(stringifyString).toList();
 }

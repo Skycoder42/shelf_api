@@ -17,11 +17,23 @@ class PathParamReader {
           'Can only apply PathParamReader on PathParam annotations.',
         );
 
-  Future<OpaqueConstant> parse(BuildStep buildStep) async =>
-      await OpaqueConstant.revived(
-        buildStep,
-        constantReader.read('parse').revive(),
-      );
+  bool get hasParse => !constantReader.read('parse').isNull;
+
+  Future<OpaqueConstant?> parse(BuildStep buildStep) async {
+    final parseReader = constantReader.read('parse');
+    return parseReader.isNull
+        ? null
+        : await OpaqueConstant.revived(buildStep, parseReader.revive());
+  }
+
+  bool get hasStringify => !constantReader.read('stringify').isNull;
+
+  Future<OpaqueConstant?> stringify(BuildStep buildStep) async {
+    final stringifyReader = constantReader.read('stringify');
+    return stringifyReader.isNull
+        ? null
+        : await OpaqueConstant.revived(buildStep, stringifyReader.revive());
+  }
 }
 
 @internal

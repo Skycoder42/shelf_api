@@ -36,13 +36,22 @@ class ApiMethod {
   ///
   /// You can use this in case the response type does not have a fromJson
   /// constructor or you need to customize the default deserialization behavior
-  /// for it.
+  /// for it. It must have the following signature:
+  ///
+  /// ```dart
+  /// T Function(dynamic)
+  /// ```
   final Function? fromJson;
 
   /// Custom serialization function for the response.
   ///
   /// You can use this in case the response type does not have a toJson method
-  /// or you need to customize the default serialization behavior for it.
+  /// or you need to customize the default serialization behavior for it. It
+  /// must have the following signature:
+  ///
+  /// ```dart
+  /// dynamic Function(T)
+  /// ```
   final Function? toJson;
 
   /// Constructor.

@@ -74,6 +74,7 @@ class PathAnalyzer {
         type: OpaqueDartType(param.type),
         isString: param.type.isDartCoreString,
         customParse: await pathParam?.parse(_buildStep),
+        customToString: await pathParam?.stringify(_buildStep),
       );
     }
 

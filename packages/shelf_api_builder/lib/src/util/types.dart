@@ -69,6 +69,12 @@ abstract base class Types {
       ..url = 'package:dio/dio.dart',
   );
 
+  static final TypeReference headers = TypeReference(
+    (b) => b
+      ..symbol = 'Headers'
+      ..url = 'package:dio/dio.dart',
+  );
+
   static final TypeReference responseBody = TypeReference(
     (b) => b
       ..symbol = 'ResponseBody'

@@ -5,13 +5,14 @@ import '../../models/endpoint.dart';
 import '../../models/endpoint_method.dart';
 import '../../util/code/try.dart';
 import '../../util/types.dart';
+import '../base/spec_builder.dart';
 import 'body_builder.dart';
 import 'path_builder.dart';
 import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
-final class ApiHandlerBuilder {
+final class ApiHandlerBuilder extends SpecBuilder<Method> {
   static const _endpointRef = Reference(r'$endpoint');
   static const _requestRef = Reference(r'$request');
 
@@ -29,6 +30,7 @@ final class ApiHandlerBuilder {
     this._method,
   );
 
+  @override
   Method build() => Method(
         (b) => b
           ..name = handlerMethodName(_endpoint, _method)

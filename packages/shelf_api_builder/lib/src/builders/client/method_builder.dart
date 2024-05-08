@@ -82,6 +82,13 @@ final class MethodBuilder extends SpecBuilder<Method> {
           ..type = Types.fromType(body.paramType),
       );
     }
+    for (final pathParam in _method.pathParameters) {
+      yield Parameter(
+        (b) => b
+          ..name = pathParam.name
+          ..type = Types.fromType(pathParam.type),
+      );
+    }
   }
 
   Iterable<Parameter> _buildOptionalParameters() sync* {
