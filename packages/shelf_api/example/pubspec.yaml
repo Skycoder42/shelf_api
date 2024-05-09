@@ -1,4 +1,4 @@
-name: shelf_api_builder_example
+name: shelf_api_example
 publish_to: none
 
 environment:
@@ -10,26 +10,16 @@ platforms:
   windows:
 
 dependencies:
-  dio: ^5.4.3+1
   riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
   shelf: ^1.4.1
   shelf_api:
+    path: ..
   shelf_router: ^1.1.4
 
 dev_dependencies:
   build_runner: ^2.4.9
-  custom_lint: ^0.6.4
-  dart_pre_commit: ^5.3.0
-  dart_test_tools: ^5.10.1
   riverpod_generator: ^2.4.0
-  shelf_api_builder:
-
-dependency_overrides:
-  shelf_api:
-    path: ../shelf_api
-  shelf_api_builder:
-    path: ../shelf_api_builder
 
 dart_pre_commit:
   flutter-compat: false

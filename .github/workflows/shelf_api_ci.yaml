@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - "packages/shelf_api/**"
-      - "packages/shelf_api_example/**"
       - ".github/workflows/shelf_api_ci.yaml"
       - ".github/workflows/shelf_api_cd.yaml"
 
@@ -22,9 +21,9 @@ jobs:
       integrationTestPaths: -P integration
       integrationTestSetup: >-
         {
-          "linux": "bash ../shelf_api_example/tool/build-integration.sh",
-          "macos": "bash ../shelf_api_example/tool/build-integration.sh",
-          "windows": "bash ../shelf_api_example/tool/build-integration.sh"
+          "linux": "bash tool/build-integration.sh",
+          "macos": "bash tool/build-integration.sh",
+          "windows": "bash tool/build-integration.sh"
         }
 
   # cd:
