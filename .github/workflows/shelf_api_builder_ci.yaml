@@ -10,11 +10,19 @@ on:
       - ".github/workflows/shelf_api_builder_cd.yaml"
 
 jobs:
+  package_shelf_api:
+    name: Package shelf_api
+    uses: Skycoder42/dart_test_tools/.github/workflows/package.yml@main
+    with:
+      workingDirectory: packages/shelf_api
+      buildRunner: true
+
   ci:
     name: CI
     uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
     with:
       workingDirectory: packages/shelf_api_builder
+      artifactDependencies: shelf_api
       removePubspecOverrides: false
       buildRunner: false
       unitTestPaths: ""
