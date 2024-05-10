@@ -6,22 +6,16 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_api/shelf_api.dart';
-import 'package:shelf_api_builder_example/src/api/example_api.api.dart';
-import 'package:shelf_api_builder_example/src/format_handler.dart';
-import 'package:shelf_api_builder_example/src/riverpod/riverpod_request_handler.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:shelf_api_builder_example/src/example_api.api.dart';
 
 void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');
-  final router = Router()
-    ..get('/riverpod', riverpodRequestHandler)
-    ..get('/format', formatHandler)
-    ..mount('/', ExampleApi().call);
 
   final app = const Pipeline()
+      .addMiddleware(logRequests())
       .addMiddleware(rivershelf())
       .addMiddleware(formatExceptionHandler())
-      .addHandler(router.call);
+      .addHandler(ExampleApi().call);
 
   final server = await serve(app, 'localhost', port);
   print('Serving at http://${server.address.host}:${server.port}');
