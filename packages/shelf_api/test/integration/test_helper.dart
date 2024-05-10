@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -25,10 +26,34 @@ class ExampleServer {
     final process = await Process.start(
       runnerTemp.uri.resolve('shelf-api-example-server.exe').toFilePath(),
       [port.toString()],
-      mode: ProcessStartMode.inheritStdio,
     );
 
-    return ExampleServer._(process, port);
+    try {
+      process.stderr
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .listen((l) => printOnFailure('ERR: $l'));
+
+      final completer = Completer<void>();
+      process.stdout
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())
+          .map((line) {
+        if (!completer.isCompleted && line.startsWith('Serving at')) {
+          completer.complete(null);
+        }
+        return line;
+      }).listen((l) => printOnFailure('OUT: $l'));
+
+      await completer.future.timeout(const Duration(seconds: 5));
+
+      return ExampleServer._(process, port);
+
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      process.kill(ProcessSignal.sigkill);
+      rethrow;
+    }
   }
 
   Future<String> get(Uri url) async {
