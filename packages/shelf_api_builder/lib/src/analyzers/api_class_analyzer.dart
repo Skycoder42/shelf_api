@@ -10,10 +10,11 @@ import 'endpoint_analyzer.dart';
 
 @internal
 class ApiClassAnalyzer {
+  final BuildStep _buildStep;
   final EndpointAnalyzer _endpointAnalyzer;
 
-  ApiClassAnalyzer(BuildStep buildStep)
-      : _endpointAnalyzer = EndpointAnalyzer(buildStep);
+  ApiClassAnalyzer(this._buildStep)
+      : _endpointAnalyzer = EndpointAnalyzer(_buildStep);
 
   Future<ApiClass> analyzeApiClass(
     ClassElement clazz,
@@ -27,7 +28,7 @@ class ApiClassAnalyzer {
     }
 
     return ApiClass(
-      classType: OpaqueClassType(clazz),
+      classType: OpaqueClassType(_buildStep, clazz),
       className: clazz.name,
       endpoints: [
         for (final endpoint in shelfApi.endpoints)

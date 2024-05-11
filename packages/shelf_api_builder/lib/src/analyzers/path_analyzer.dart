@@ -71,7 +71,7 @@ class PathAnalyzer {
       final pathParam = param.pathParamAnnotation;
       yield EndpointPathParameter(
         name: param.name,
-        type: OpaqueDartType(param.type),
+        type: OpaqueDartType(_buildStep, param.type),
         isString: param.type.isDartCoreString,
         customParse: await pathParam?.parse(_buildStep),
         customToString: await pathParam?.stringify(_buildStep),

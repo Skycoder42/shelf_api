@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - "packages/shelf_api_builder/**"
-      - "packages/shelf_api_example/**"
       - ".github/workflows/shelf_api_builder_ci.yaml"
       - ".github/workflows/shelf_api_builder_cd.yaml"
 
@@ -20,6 +19,8 @@ jobs:
   ci:
     name: CI
     uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    needs: 
+      - package_shelf_api
     with:
       workingDirectory: packages/shelf_api_builder
       artifactDependencies: shelf_api

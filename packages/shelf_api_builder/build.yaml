@@ -10,3 +10,12 @@ builders:
         - ".client.dart"
     auto_apply: dependents
     build_to: source
+
+targets:
+  $default:
+    builders:
+      shelf_api_builder:
+        enabled: true
+        generate_for:
+          include:
+            - example/**

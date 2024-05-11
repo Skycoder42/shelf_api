@@ -13,10 +13,11 @@ import 'serializable_analyzer.dart';
 
 @internal
 class BodyAnalyzer {
+  final BuildStep _buildStep;
   final SerializableAnalyzer _serializableAnalyzer;
 
-  BodyAnalyzer(BuildStep buildStep)
-      : _serializableAnalyzer = SerializableAnalyzer(buildStep);
+  BodyAnalyzer(this._buildStep)
+      : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointBody?> analyzeBody(MethodElement method) async {
     final result = _findBodyParam(method);
@@ -38,13 +39,13 @@ class BodyAnalyzer {
     } else if (paramType.isDartCoreString) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
-        paramType: OpaqueDartType(param.type),
+        paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.text,
       );
     } else if (TypeCheckers.uint8List.isAssignableFrom(paramType.element!)) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
-        paramType: OpaqueDartType(param.type),
+        paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.binary,
       );
     } else if (paramType.isDartAsyncStream) {
@@ -111,13 +112,13 @@ class BodyAnalyzer {
     final [streamType] = paramType.typeArgumentsOf(TypeCheckers.stream)!;
     if (streamType.isDartCoreString && !streamType.isNullableType) {
       return EndpointBody(
-        paramType: OpaqueDartType(param.type),
+        paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.textStream,
       );
     } else if (TypeCheckers.intList.isExactly(streamType.element!) &&
         !streamType.isNullableType) {
       return EndpointBody(
-        paramType: OpaqueDartType(param.type),
+        paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.binaryStream,
       );
     } else {

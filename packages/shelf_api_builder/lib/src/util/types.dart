@@ -180,13 +180,18 @@ abstract base class Types {
       switch (type) {
         OpaqueSerializableType(serializableType: final type) =>
           _fromSerializableType(type, isNull),
-        OpaqueDartType(dartType: final dartType) =>
-          _fromDartType(dartType, isNull),
-        OpaqueClassType(element: final element) => _fromClass(element, isNull),
+        final OpaqueDartType dartType =>
+          _fromDartType(dartType.dartType, dartType.uri, isNull),
+        final OpaqueClassType classType =>
+          _fromClass(classType.element, classType.uri, isNull),
         OpaqueVoidType() => void$,
       };
 
-  static TypeReference _fromDartType(DartType dartType, [bool? isNull]) {
+  static TypeReference _fromDartType(
+    DartType dartType, [
+    Uri? uri,
+    bool? isNull,
+  ]) {
     if (dartType is VoidType || dartType.isDartCoreNull) {
       return void$;
     } else if (dartType is DynamicType) {
@@ -197,7 +202,7 @@ abstract base class Types {
           b
             ..symbol = dartType.element!.name
             ..isNullable = isNull ?? dartType.isNullableType
-            ..url = dartType.element?.librarySource?.uri.toString();
+            ..url = uri?.toString();
 
           if (dartType is InterfaceType) {
             b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -207,13 +212,13 @@ abstract base class Types {
     }
   }
 
-  static TypeReference _fromClass(ClassElement clazz, bool? isNull) =>
+  static TypeReference _fromClass(ClassElement clazz, Uri? uri, bool? isNull) =>
       TypeReference(
         (b) {
           b
             ..symbol = clazz.name
             ..isNullable = isNull
-            ..url = clazz.librarySource.uri.toString();
+            ..url = uri?.toString();
         },
       );
 

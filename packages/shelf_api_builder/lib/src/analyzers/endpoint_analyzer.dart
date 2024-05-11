@@ -12,10 +12,11 @@ import '../util/type_checkers.dart';
 
 @internal
 class EndpointAnalyzer {
+  final BuildStep _buildStep;
   final MethodsAnalyzer _methodsAnalyzer;
 
-  EndpointAnalyzer(BuildStep buildStep)
-      : _methodsAnalyzer = MethodsAnalyzer(buildStep);
+  EndpointAnalyzer(this._buildStep)
+      : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
 
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,
@@ -32,7 +33,7 @@ class EndpointAnalyzer {
 
     final apiEndpoint = endpointElement.apiEndpointAnnotation;
     return Endpoint(
-      endpointType: OpaqueClassType(endpointElement),
+      endpointType: OpaqueClassType(_buildStep, endpointElement),
       name: endpointElement.name,
       path: apiEndpoint?.path,
       methods: await _methodsAnalyzer.analyzeMethods(endpointElement),

@@ -56,7 +56,7 @@ class QueryAnalyzer {
     return EndpointQueryParameter(
       paramName: param.name,
       queryName: queryParam?.name ?? param.name,
-      type: OpaqueDartType(paramType),
+      type: OpaqueDartType(_buildStep, paramType),
       isString: paramType.isDartCoreString,
       isList: isList,
       isOptional: param.isOptional,

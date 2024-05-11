@@ -13,10 +13,11 @@ import 'serializable_analyzer.dart';
 
 @internal
 class ResponseAnalyzer {
+  final BuildStep _buildStep;
   final SerializableAnalyzer _serializableAnalyzer;
 
-  ResponseAnalyzer(BuildStep buildStep)
-      : _serializableAnalyzer = SerializableAnalyzer(buildStep);
+  ResponseAnalyzer(this._buildStep)
+      : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointResponse> analyzeResponse(
     MethodElement method,
@@ -48,19 +49,19 @@ class ResponseAnalyzer {
     } else if (returnType is VoidType) {
       return EndpointResponse(
         responseType: EndpointResponseType.noContent,
-        returnType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(_buildStep, returnType),
       );
     } else if (returnType.isDartCoreString) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.text,
-        returnType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(_buildStep, returnType),
       );
     } else if (TypeCheckers.uint8List.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.binary,
-        returnType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(_buildStep, returnType),
       );
     } else if (TypeCheckers.tResponse.isExactly(returnType.element!)) {
       _ensureNotNullable(returnType, method);
@@ -138,12 +139,12 @@ class ResponseAnalyzer {
     if (streamType.isDartCoreString) {
       return EndpointResponse(
         responseType: EndpointResponseType.textStream,
-        returnType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(_buildStep, returnType),
       );
     } else if (TypeCheckers.intList.isAssignableFrom(streamType.element!)) {
       return EndpointResponse(
         responseType: EndpointResponseType.binaryStream,
-        returnType: OpaqueDartType(returnType),
+        returnType: OpaqueDartType(_buildStep, returnType),
       );
     } else {
       throw InvalidGenerationSource(

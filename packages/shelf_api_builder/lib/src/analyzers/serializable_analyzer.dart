@@ -33,7 +33,7 @@ class SerializableAnalyzer {
   ) async {
     if (isCustom(serializable)) {
       return SerializableType(
-        dartType: OpaqueDartType(type),
+        dartType: OpaqueDartType(_buildStep, type),
         wrapped: Wrapped.none,
         isNullable: type.isNullableType,
         jsonType: _jsonType(element, type, serializable),
@@ -46,7 +46,7 @@ class SerializableAnalyzer {
       return await _analyzeJsonMap(element, type, serializable);
     } else {
       return SerializableType(
-        dartType: OpaqueDartType(type),
+        dartType: OpaqueDartType(_buildStep, type),
         wrapped: Wrapped.none,
         isNullable: type.isNullableType,
         jsonType: _jsonType(element, type, serializable),
@@ -70,7 +70,7 @@ class SerializableAnalyzer {
     }
 
     return SerializableType(
-      dartType: OpaqueDartType(listType),
+      dartType: OpaqueDartType(_buildStep, listType),
       wrapped: Wrapped.list,
       isNullable: type.isNullableType,
       jsonType: _jsonType(element, listType, serializable),
@@ -101,7 +101,7 @@ class SerializableAnalyzer {
     }
 
     return SerializableType(
-      dartType: OpaqueDartType(valueType),
+      dartType: OpaqueDartType(_buildStep, valueType),
       wrapped: Wrapped.map,
       isNullable: type.isNullableType,
       jsonType: _jsonType(element, valueType, serializable),
@@ -158,6 +158,6 @@ class SerializableAnalyzer {
       );
     }
 
-    return OpaqueDartType(firstParam.type);
+    return OpaqueDartType(_buildStep, firstParam.type);
   }
 }
