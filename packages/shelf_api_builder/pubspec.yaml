@@ -2,6 +2,7 @@ name: shelf_api_builder
 description: The code generator for the shelf_api package. Check it out for more details.
 version: 1.0.0
 homepage: https://github.com/Skycoder42/shelf_api
+publish_to: none # TODO remove
 
 environment:
   sdk: ^3.3.0
