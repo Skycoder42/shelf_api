@@ -24,8 +24,7 @@ jobs:
     with:
       workingDirectory: packages/shelf_api_builder
       artifactDependencies: shelf_api
-      removePubspecOverrides: false
-      buildRunner: false
+      buildRunner: true
       unitTestPaths: ""
       integrationTestPaths: -P integration
       integrationTestSetup: >-
