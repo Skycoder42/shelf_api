@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:mockito/mockito.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_api/src/api/format_exception_handler.dart';
+import 'package:shelf_api/src/api/handle_format_exceptions.dart';
 import 'package:test/test.dart';
 
 class FakeRequest extends Fake implements Request {}
@@ -16,10 +16,10 @@ void main() {
     final testRequest = FakeRequest();
     final testResponse = FakeResponse();
 
-    late FormatExceptionHandlerMiddleware sut;
+    late Middleware sut;
 
     setUp(() {
-      sut = FormatExceptionHandlerMiddleware();
+      sut = handleFormatExceptions();
     });
 
     test('returns response as is', () {
@@ -45,11 +45,14 @@ void main() {
       expect(result.readAsString(), completion(testException.message));
       expect(
         result.context,
-        containsPair(formatExceptionOriginalExceptionKey, testException),
+        containsPair(handleFormatExceptionsOriginalExceptionKey, testException),
       );
       expect(
         result.context,
-        containsPair(formatExceptionOriginalStackTraceKey, isA<StackTrace>()),
+        containsPair(
+          handleFormatExceptionsOriginalStackTraceKey,
+          isA<StackTrace>(),
+        ),
       );
     });
   });

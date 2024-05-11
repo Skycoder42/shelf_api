@@ -20,7 +20,7 @@ void main(List<String> args) async {
   final app = const Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(rivershelf())
-      .addMiddleware(formatExceptionHandler())
+      .addMiddleware(handleFormatExceptions())
       .addHandler(router.call);
 
   final server = await serve(app, 'localhost', port);

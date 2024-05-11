@@ -1,19 +1,18 @@
-import 'package:meta/meta.dart';
 import 'package:shelf/shelf.dart';
 
 /// A key to get the original [FormatException] from [Request.context].
 ///
 /// Can only be used if the response was created by the
-/// [formatExceptionHandler] middleware.
-const formatExceptionOriginalExceptionKey =
-    'formatExceptionHandler.originalException';
+/// [handleFormatExceptions] middleware.
+const handleFormatExceptionsOriginalExceptionKey =
+    'handleFormatExceptions.originalException';
 
 /// A key to get the original [StackTrace] from [Request.context].
 ///
 /// Can only be used if the response was created by the
-/// [formatExceptionHandler] middleware.
-const formatExceptionOriginalStackTraceKey =
-    'formatExceptionHandler.originalStackTrace';
+/// [handleFormatExceptions] middleware.
+const handleFormatExceptionsOriginalStackTraceKey =
+    'handleFormatExceptions.originalStackTrace';
 
 /// A middleware that handles [FormatException]s
 ///
@@ -22,13 +21,11 @@ const formatExceptionOriginalStackTraceKey =
 ///
 /// The original [FormatException] and [StackTrace] will also be stored in
 /// the [Response.context] in case further logging should take place. The keys
-/// are: [formatExceptionOriginalExceptionKey] and
-/// [formatExceptionOriginalStackTraceKey]
-Middleware formatExceptionHandler() => FormatExceptionHandlerMiddleware().call;
+/// are: [handleFormatExceptionsOriginalExceptionKey] and
+/// [handleFormatExceptionsOriginalStackTraceKey]
+Middleware handleFormatExceptions() => _HandleFormatExceptionsMiddleware().call;
 
-@internal
-@visibleForTesting
-class FormatExceptionHandlerMiddleware {
+class _HandleFormatExceptionsMiddleware {
   Handler call(Handler next) => (request) async {
         try {
           return await next(request);
@@ -36,8 +33,8 @@ class FormatExceptionHandlerMiddleware {
           return Response.badRequest(
             body: e.message,
             context: {
-              formatExceptionOriginalExceptionKey: e,
-              formatExceptionOriginalStackTraceKey: s,
+              handleFormatExceptionsOriginalExceptionKey: e,
+              handleFormatExceptionsOriginalStackTraceKey: s,
             },
           );
         }

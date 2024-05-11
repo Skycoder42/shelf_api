@@ -23,13 +23,13 @@ void main() {
     final mockRequest = MockRequest();
 
     late ProviderContainer testProviderContainer;
-    late RivershelfMiddleware sut;
+    late Middleware sut;
 
     setUp(() {
       reset(mockRequest);
       testProviderContainer = ProviderContainer();
 
-      sut = RivershelfMiddleware(parent: testProviderContainer);
+      sut = rivershelf(parent: testProviderContainer);
     });
 
     tearDown(() {
@@ -39,20 +39,6 @@ void main() {
     test('creates pipeline with given handler', () {
       final testResponse = FakeResponse();
       final newHandler = sut(
-        expectAsync1((request) {
-          expect(request, isNot(same(mockRequest)));
-          return testResponse;
-        }),
-      );
-
-      expect(newHandler(mockRequest), completion(testResponse));
-    });
-
-    test('middleware method creates new instance of middleware', () {
-      final middleware = rivershelf(parent: testProviderContainer);
-
-      final testResponse = FakeResponse();
-      final newHandler = middleware(
         expectAsync1((request) {
           expect(request, isNot(same(mockRequest)));
           return testResponse;
@@ -73,7 +59,7 @@ void main() {
 
       expect(
         context,
-        containsPair(RivershelfMiddleware.refKey, isA<EndpointRef>()),
+        containsPair(rivershelfRefKey, isA<EndpointRef>()),
       );
     });
 
@@ -86,8 +72,7 @@ void main() {
       final VerificationResult(captured: [Map<String, Object?> context]) =
           verify(mockRequest.change(context: captureAnyNamed('context')));
 
-      final container =
-          (context[RivershelfMiddleware.refKey]! as EndpointRef).container;
+      final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(container, isNot(testProviderContainer));
       expect(container.depth, 2);
 
@@ -108,8 +93,7 @@ void main() {
       final VerificationResult(captured: [Map<String, Object?> context]) =
           verify(mockRequest.change(context: captureAnyNamed('context')));
 
-      final container =
-          (context[RivershelfMiddleware.refKey]! as EndpointRef).container;
+      final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(
         () => container.read(requestProvider),
         throwsA(
@@ -136,7 +120,7 @@ void main() {
         HttpMethod.get,
         Uri.http('localhost', '/'),
         context: {
-          RivershelfMiddleware.refKey: testRef,
+          rivershelfRefKey: testRef,
         },
       );
 

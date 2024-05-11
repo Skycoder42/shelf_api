@@ -1,8 +1,13 @@
-import 'package:meta/meta.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shelf/shelf.dart';
 
 import 'endpoint_ref.dart';
+
+/// A key to get the original [EndpointRef] from [Request.context].
+///
+/// Can only be used if the response was created by the
+/// [rivershelf] middleware.
+const rivershelfRefKey = 'rivershelf.ref';
 
 /// A middleware to make riverpod available for route handlers.
 ///
@@ -14,7 +19,7 @@ Middleware rivershelf({
   List<Override> overrides = const [],
   List<ProviderObserver>? observers,
 }) =>
-    RivershelfMiddleware(
+    _RivershelfMiddleware(
       parent: parent,
       overrides: overrides,
       observers: observers,
@@ -27,22 +32,18 @@ extension RequestRivershelfExtension on Request {
   /// Only works if the [rivershelf] middleware is available in this context.
   EndpointRef get ref {
     assert(
-      context[RivershelfMiddleware.refKey] is EndpointRef,
+      context[rivershelfRefKey] is EndpointRef,
       'Cannot use request.ref without registering the rivershelf '
       'middleware first!',
     );
-    return context[RivershelfMiddleware.refKey]! as EndpointRef;
+    return context[rivershelfRefKey]! as EndpointRef;
   }
 }
 
-@internal
-@visibleForTesting
-class RivershelfMiddleware {
-  static const refKey = 'rivershelf.ref';
-
+class _RivershelfMiddleware {
   final ProviderContainer _providerContainer;
 
-  RivershelfMiddleware({
+  _RivershelfMiddleware({
     ProviderContainer? parent,
     List<Override> overrides = const [],
     List<ProviderObserver>? observers,
@@ -65,7 +66,7 @@ class RivershelfMiddleware {
           final changedRequest = request.change(
             context: {
               ...request.context,
-              refKey: endpointRef,
+              rivershelfRefKey: endpointRef,
             },
           );
           return await next(changedRequest);
