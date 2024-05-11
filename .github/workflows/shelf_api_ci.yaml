@@ -19,12 +19,6 @@ jobs:
       coverageExclude: >-
         "**/*.g.dart"
       integrationTestPaths: -P integration
-      integrationTestSetup: >-
-        {
-          "linux": "bash tool/build-integration.sh",
-          "macos": "bash tool/build-integration.sh",
-          "windows": "bash tool/build-integration.sh"
-        }
 
   # cd:
   #   name: CD

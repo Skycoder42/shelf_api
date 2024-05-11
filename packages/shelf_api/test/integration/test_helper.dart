@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:dart_test_tools/tools.dart';
 import 'package:test/test.dart';
 
 class ExampleServer {
@@ -21,12 +20,12 @@ class ExampleServer {
         _client = HttpClient();
 
   static Future<ExampleServer> start() async {
-    final runnerTemp = Github.env.runnerTemp;
     final port = 8000 + Random.secure().nextInt(999);
-    final process = await Process.start(
-      runnerTemp.uri.resolve('shelf-api-example-server.exe').toFilePath(),
-      [port.toString()],
-    );
+    final process = await Process.start('dart', [
+      'run',
+      'example/main.dart',
+      port.toString(),
+    ]);
 
     try {
       process.stderr
