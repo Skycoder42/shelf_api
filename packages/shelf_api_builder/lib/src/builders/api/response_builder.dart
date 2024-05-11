@@ -103,7 +103,7 @@ final class ResponseBuilder extends CodeBuilder {
               .property(typeName)
               .property('toString')
               .call(const []),
-          if (encoding != null) 'encoding': encoding,
         }),
+        if (encoding != null) 'encoding': encoding,
       };
 }

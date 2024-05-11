@@ -53,6 +53,8 @@ final class _BodyVariableBuilder extends CodeBuilder {
         bodyExpr = _requestRef
             .property('read')
             .call(const [])
+            .property('cast')
+            .call(const [], const {}, [Types.list(Types.int$)])
             .property('transform')
             .call([Constants.utf8.property('decoder')]);
       case EndpointBodyType.binaryStream:

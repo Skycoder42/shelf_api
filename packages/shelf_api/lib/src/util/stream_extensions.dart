@@ -19,8 +19,8 @@ extension ShelfApiStreamX<T> on Stream<T> {
       return callback();
     }
 
-    return transform(
-      DoStreamTransformer(
+    return cast<T>().transform(
+      DoStreamTransformer<T>(
         onCancel: finishedCallback,
         onDone: finishedCallback,
       ),

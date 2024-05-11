@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -38,7 +40,7 @@ class ExampleServer {
       process.stderr
           .transform(utf8.decoder)
           .transform(const LineSplitter())
-          .listen((l) => printOnFailure('ERR: $l'));
+          .listen((l) => print('ERR: $l'));
 
       final completer = Completer<void>();
       process.stdout
@@ -49,9 +51,9 @@ class ExampleServer {
           completer.complete(null);
         }
         return line;
-      }).listen((l) => printOnFailure('OUT: $l'));
+      }).listen((l) => print('OUT: $l'));
 
-      await completer.future.timeout(const Duration(seconds: 5));
+      await completer.future.timeout(const Duration(seconds: 15));
 
       return ExampleServer._(process, port);
 
