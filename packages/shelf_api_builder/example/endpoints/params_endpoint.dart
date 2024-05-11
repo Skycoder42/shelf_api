@@ -7,7 +7,7 @@ class ParamsEndpoint extends ShelfEndpoint {
   @Get(r'/path/simple/<p1>/sub/<p2|\d+>')
   List<dynamic> getPathSimple(String p1, int p2) => [p1, p2];
 
-  @Get('/path/custom/<c1>/sub/<c2|.*>')
+  @Get(r'/path/custom/<c1>/sub/<c2|[^\/].*>')
   List<dynamic> getPathCustom(
     @PathParam(parse: parseString, stringify: stringifyString) String c1,
     Uri c2,

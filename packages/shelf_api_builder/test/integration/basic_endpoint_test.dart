@@ -13,7 +13,7 @@ void main() {
     await server.stop();
   });
 
-  test('basic endpoint returns data', () async {
+  test('/ endpoint returns data', () async {
     final response = await server.apiClient.basicGet();
     expect(response, 'Hello, World!');
   });

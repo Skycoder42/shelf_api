@@ -12,7 +12,8 @@ import '../readers/path_param_reader.dart';
 
 @internal
 class PathAnalyzer {
-  final _pathParamRegexp = RegExp(r'^<(\w+)(?:\|.+?)?>$');
+  // Based on https://github.com/dart-lang/shelf/blob/master/pkgs/shelf_router/lib/src/router_entry.dart#L31
+  final _pathParamRegexp = RegExp(r'<([^>|]+)(?:\|[^>]*)?>');
 
   final BuildStep _buildStep;
 
@@ -28,10 +29,8 @@ class PathAnalyzer {
     MethodElement method,
     ApiMethodReader apiMethod,
   ) async* {
-    final pathParamMatches = apiMethod.path
-        .split('/')
-        .map(_pathParamRegexp.firstMatch)
-        .whereType<RegExpMatch>()
+    final pathParamMatches = _pathParamRegexp
+        .allMatches(apiMethod.path)
         .map((match) => match[1]!)
         .toList();
 
