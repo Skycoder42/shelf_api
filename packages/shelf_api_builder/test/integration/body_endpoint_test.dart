@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_test_tools/test.dart';
@@ -59,6 +60,19 @@ void main() {
     const testBody = BasicModel(123);
     final response = await server.apiClient.bodyGetJson(testBody);
     expect(response, testBody);
+  });
+
+  test('/json returns bad request if request is empty', () async {
+    expect(
+      () => server.dio.get('/api/v1/body/json'),
+      throwsA(
+        isA<DioException>().having(
+          (m) => m.response?.statusCode,
+          'statusCode',
+          HttpStatus.badRequest,
+        ),
+      ),
+    );
   });
 
   test('/json/list returns body as sent', () async {

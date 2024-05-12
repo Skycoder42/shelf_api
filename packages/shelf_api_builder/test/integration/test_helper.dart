@@ -12,10 +12,10 @@ import '../../example/example_api.client.dart';
 
 class ExampleServer {
   final Process _process;
-  final Dio _client;
+  final Dio dio;
 
   ExampleServer._(this._process, int port)
-      : _client = Dio(
+      : dio = Dio(
           BaseOptions(
             baseUrl: Uri(
               scheme: 'http',
@@ -26,7 +26,7 @@ class ExampleServer {
           ),
         );
 
-  ExampleApiClient get apiClient => ExampleApiClient.dio(_client);
+  ExampleApiClient get apiClient => ExampleApiClient.dio(dio);
 
   static Future<ExampleServer> start() async {
     final port = 8000 + Random.secure().nextInt(999);
@@ -65,7 +65,7 @@ class ExampleServer {
   }
 
   Future<void> stop() async {
-    _client.close(force: true);
+    dio.close(force: true);
 
     expect(_process.kill(), isTrue);
     await _process.exitCode.timeout(
