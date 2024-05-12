@@ -41,15 +41,24 @@ class QueryAnalyzer {
 
     var isList = false;
     if (param.type.isDartCoreList) {
-      isList = true;
+      if (param.type.isNullableType) {
+        throw InvalidGenerationSource(
+          'Query parameters for list values cannot be nullable lists!',
+          todo: 'Make list param non nullable.',
+          element: param,
+        );
+      }
+
       [paramType] = paramType.typeArgumentsOf(TypeCheckers.list)!;
       if (paramType.isNullableType) {
         throw InvalidGenerationSource(
-          'Query parameters for list values cannot be nullable lists!',
+          'Query parameters for list values cannot have nullable list values!',
           todo: 'Make list param type $paramType non nullable.',
           element: param,
         );
       }
+
+      isList = true;
     }
 
     final queryParam = param.queryParamAnnotation;
@@ -58,6 +67,7 @@ class QueryAnalyzer {
       queryName: queryParam?.name ?? param.name,
       type: OpaqueDartType(_buildStep, paramType),
       isString: paramType.isDartCoreString,
+      isDateTime: TypeCheckers.dateTime.isExactlyType(paramType),
       isList: isList,
       isOptional: param.isOptional,
       defaultValue: param.defaultValueCode,

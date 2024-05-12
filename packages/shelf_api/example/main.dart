@@ -18,9 +18,9 @@ void main(List<String> args) async {
     ..get('/format', formatHandler);
 
   final app = const Pipeline()
+      .addMiddleware(handleFormatExceptions())
       .addMiddleware(logRequests())
       .addMiddleware(rivershelf())
-      .addMiddleware(handleFormatExceptions())
       .addHandler(router.call);
 
   final server = await serve(app, 'localhost', port);

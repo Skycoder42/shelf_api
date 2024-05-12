@@ -51,11 +51,13 @@ final class PathBuilder extends ExpressionBuilder {
       RegExp('<${RegExp.escape(pathParam.name)}(?:\\|.+?)?>');
 
   Expression _paramValue(EndpointPathParameter pathParam) {
+    final paramRef = refer(pathParam.name);
     if (pathParam.customToString case final OpaqueConstant customToString) {
-      return Constants.fromConstant(customToString)
-          .call([refer(pathParam.name)]);
+      return Constants.fromConstant(customToString).call([paramRef]);
+    } else if (pathParam.isDateTime) {
+      return paramRef.property('toIso8601String').call(const []);
     } else {
-      return refer(pathParam.name);
+      return paramRef;
     }
   }
 }

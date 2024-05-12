@@ -12,9 +12,9 @@ void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');
 
   final app = const Pipeline()
+      .addMiddleware(handleFormatExceptions())
       .addMiddleware(logRequests())
       .addMiddleware(rivershelf())
-      .addMiddleware(handleFormatExceptions())
       .addHandler(ExampleApi().call);
 
   final server = await serve(app, 'localhost', port);

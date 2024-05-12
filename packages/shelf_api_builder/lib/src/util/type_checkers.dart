@@ -11,6 +11,8 @@ abstract base class TypeCheckers {
 
   static const map = TypeChecker.fromRuntime(Map);
 
+  static const dateTime = TypeChecker.fromRuntime(DateTime);
+
   static const future = TypeChecker.fromRuntime(Future);
 
   static const stream = TypeChecker.fromRuntime(Stream);

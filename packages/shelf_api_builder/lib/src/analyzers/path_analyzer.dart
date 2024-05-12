@@ -9,6 +9,7 @@ import '../models/opaque_type.dart';
 import '../readers/api_method_reader.dart';
 import '../readers/body_param_reader.dart';
 import '../readers/path_param_reader.dart';
+import '../util/type_checkers.dart';
 
 @internal
 class PathAnalyzer {
@@ -68,10 +69,12 @@ class PathAnalyzer {
       }
 
       final pathParam = param.pathParamAnnotation;
+      final paramType = param.type;
       yield EndpointPathParameter(
         name: param.name,
-        type: OpaqueDartType(_buildStep, param.type),
-        isString: param.type.isDartCoreString,
+        type: OpaqueDartType(_buildStep, paramType),
+        isString: paramType.isDartCoreString,
+        isDateTime: TypeCheckers.dateTime.isExactlyType(paramType),
         customParse: await pathParam?.parse(_buildStep),
         customToString: await pathParam?.stringify(_buildStep),
       );

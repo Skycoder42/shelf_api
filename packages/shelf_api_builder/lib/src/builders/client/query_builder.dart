@@ -49,11 +49,17 @@ final class QueryBuilder extends ExpressionBuilder {
                       (b) => b..name = _valueRef.symbol!,
                     ),
                   )
-                  ..body = _valueRef.property('toString').call(const []).code,
+                  ..body = queryParam.isDateTime
+                      ? _valueRef
+                          .property('toIso8601String')
+                          .call(const []).code
+                      : _valueRef.property('toString').call(const []).code,
               ).closure,
             ])
             .property('toList')
             .call(const []);
+      } else if (queryParam.isDateTime) {
+        value = paramRef.property('toIso8601String').call(const []);
       } else {
         value = paramRef.property('toString').call(const []);
       }

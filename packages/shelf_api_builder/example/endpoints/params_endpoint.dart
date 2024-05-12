@@ -28,25 +28,23 @@ class ParamsEndpoint extends ShelfEndpoint {
         'oValue': oValue,
         'dValue': dValue,
         'uValue': uValue.toString(),
-        'dtValue': dtValue?.toString(),
+        'dtValue': dtValue?.toIso8601String(),
         's2Value': s2Value,
       };
 
   @Get('/query/list')
   Map<String, dynamic> getQueryList({
     required List<String> sValue,
-    List<int>? oValue,
-    List<double> dValue = const [4, 2, 0],
     required List<Uri> uValue,
-    List<DateTime>? dtValue,
+    List<int> iValue = const [1, 2, 3],
+    List<DateTime> dtValue = const [],
     List<String> s2Value = const ['s2'],
   }) =>
       {
         'sValue': sValue,
-        'oValue': oValue,
-        'dValue': dValue,
         'uValue': uValue.toString(),
-        'dtValue': dtValue?.toString(),
+        'iValue': iValue,
+        'dtValue': dtValue.toString(),
         's2Value': s2Value,
       };
 
@@ -60,7 +58,7 @@ class ParamsEndpoint extends ShelfEndpoint {
       parse: parseStringList,
       stringify: stringifyStringList,
     )
-    List<String>? parsedListValue,
+    List<String> parsedListValue = const ['unparsed', 'values'],
   }) =>
       {
         'namedValue': namedValue,
