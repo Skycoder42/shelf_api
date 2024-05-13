@@ -184,7 +184,7 @@ abstract base class Types {
           _fromDartType(dartType.dartType, dartType.uri, isNull),
         final OpaqueClassType classType =>
           _fromClass(classType.element, classType.uri, isNull),
-        OpaqueVoidType() => void$,
+        OpaqueDynamicType() => dynamic$,
       };
 
   static TypeReference _fromDartType(

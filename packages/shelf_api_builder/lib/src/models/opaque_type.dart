@@ -65,6 +65,6 @@ class OpaqueClassType extends OpaqueType {
 }
 
 @internal
-class OpaqueVoidType extends OpaqueType {
-  OpaqueVoidType();
+class OpaqueDynamicType extends OpaqueType {
+  OpaqueDynamicType();
 }

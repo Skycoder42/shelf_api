@@ -12,6 +12,9 @@ class BasicModel {
   dynamic toJson() => {'value': value};
 
   @override
+  String toString() => 'BasicModel($value)';
+
+  @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;

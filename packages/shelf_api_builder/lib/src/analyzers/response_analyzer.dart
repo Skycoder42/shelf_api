@@ -70,7 +70,7 @@ class ResponseAnalyzer {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.noContent,
-        returnType: OpaqueVoidType(),
+        returnType: OpaqueDynamicType(),
         isResponse: true,
       );
     } else {
