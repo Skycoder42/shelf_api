@@ -5,10 +5,7 @@ homepage: https://github.com/Skycoder42/shelf_api
 topics:
   - server
   - shelf
-  - backend
   - dio
-  - http
-  - network
   - rest
   - api
 
