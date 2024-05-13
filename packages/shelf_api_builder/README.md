@@ -1,39 +1,30 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# shelf_api
+[![CI/CD for shelf_api_builder](https://github.com/Skycoder42/shelf_api/actions/workflows/shelf_api_builder_ci.yaml/badge.svg)](https://github.com/Skycoder42/shelf_api/actions/workflows/shelf_api_builder_ci.yaml)
+[![Pub Version](https://img.shields.io/pub/v/shelf_api_builder)](https://pub.dev/packages/shelf_api_builder)
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+A code generator to create RESTful API endpoints to be integrated with shelf.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Table of contents
 
 ## Features
+- Code generation to build a [shelf](https://pub.dev/packages/shelf) based REST API
+- Supports various body types (text, binary, streams and JSON)
+- Supports custom path and query parameters (all string-parsable types)
+- Supports use of custom type converters
+- Automatic de/serialization of JSON types
+- Generates [dio](https://pub.dev/packages/dio) based API client for easy consumption.
+- Provides various middlewares via [shelf_api](https://pub.dev/packages/shelf_api) for convenient use:
+  - `rivershelf` to integrate [riverpod](https://pub.dev/packages/riverpod) with shelf.
+  - `handleFormatExceptions` to generate badRequest responses from `FormatException`s
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+## Installation
+As this is a code generation package, you need to install the following packages:
 
-## Getting started
+```yaml
+dependencies:
+  shelf_api: <latest>
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+dev_dependencies:
+  build_runner: <latest>
+  shelf_api_builder: <latest>
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
