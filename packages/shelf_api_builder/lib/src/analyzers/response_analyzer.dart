@@ -31,6 +31,14 @@ class ResponseAnalyzer {
     DartType returnType,
     bool allowAsync,
   ) async {
+    if (returnType is DynamicType) {
+      throw InvalidGenerationSource(
+        'Cannot generate code for dynamic return types',
+        todo: 'Use a specific type or return Response instead.',
+        element: method,
+      );
+    }
+
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
       return _analyzeFuture(method, apiMethod, returnType, allowAsync);
@@ -69,7 +77,7 @@ class ResponseAnalyzer {
     } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
-        responseType: EndpointResponseType.noContent,
+        responseType: EndpointResponseType.dynamic,
         returnType: OpaqueDynamicType(),
         isResponse: true,
       );

@@ -5,6 +5,8 @@ import 'package:shelf_api/shelf_api.dart';
 
 import '../basic_model.dart';
 
+// TODO introduce TResponseBody for client?
+
 @ApiEndpoint('/response/')
 class ResponseEndpoint extends ShelfEndpoint {
   ResponseEndpoint(super.request);
@@ -70,12 +72,14 @@ class ResponseEndpoint extends ShelfEndpoint {
       asNull ? null : const BasicModel(42);
 
   @Get('/async/response')
-  Future<Response> asyncResponse() async => Response.ok('Hello, World!');
+  Future<Response> asyncResponse({bool asNull = false}) async =>
+      Response.ok(asNull ? null : 'Hello, World!');
 
   @Get('/async/response/typed')
-  Future<TResponse<BasicModel?>> asyncTypedResponse(
-          {bool asNull = false}) async =>
-      TResponse.ok(asNull ? null : const BasicModel(24));
+  Future<TResponse<BasicModel?>> asyncTypedResponse({
+    bool asNull = false,
+  }) async =>
+      TResponse.ok(asNull ? null : const BasicModel(11));
 
   @Get('/stream/text')
   Stream<String> streamText() => Stream.value('Hello, World!');

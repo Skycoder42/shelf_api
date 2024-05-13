@@ -83,6 +83,7 @@ final class MethodBodyBuilder extends CodeBuilder {
         return Types.list(Types.int$);
       case EndpointResponseType.textStream:
       case EndpointResponseType.binaryStream:
+      case EndpointResponseType.dynamic:
         return Types.responseBody;
       case EndpointResponseType.json:
         return FromJsonBuilder(_method.response.serializableReturnType)
@@ -94,9 +95,9 @@ final class MethodBodyBuilder extends CodeBuilder {
         EndpointResponseType.noContent => literalNull,
         EndpointResponseType.text => Types.responseType.property('plain'),
         EndpointResponseType.binary => Types.responseType.property('bytes'),
-        EndpointResponseType.textStream =>
-          Types.responseType.property('stream'),
-        EndpointResponseType.binaryStream =>
+        EndpointResponseType.textStream ||
+        EndpointResponseType.binaryStream ||
+        EndpointResponseType.dynamic =>
           Types.responseType.property('stream'),
         EndpointResponseType.json => Types.responseType.property('json'),
       };

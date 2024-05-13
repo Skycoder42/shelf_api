@@ -64,6 +64,7 @@ final class MethodBuilder extends SpecBuilder<Method> {
 
     final innerType = switch (response.responseType) {
       EndpointResponseType.binary => Types.list(Types.int$),
+      EndpointResponseType.dynamic => Types.responseBody,
       _ => Types.fromType(response.returnType),
     };
 

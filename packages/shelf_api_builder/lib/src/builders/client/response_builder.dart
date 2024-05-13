@@ -55,6 +55,8 @@ final class ResponseBuilder extends CodeBuilder {
         yield _buildStreamReturn();
       case EndpointResponseType.json:
         yield* _buildJsonReturn();
+      case EndpointResponseType.dynamic:
+        yield _responseRef.property('data').nullChecked.returned.statement;
     }
   }
 

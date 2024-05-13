@@ -60,6 +60,10 @@ final class ResponseBuilder extends CodeBuilder {
             .statement;
       case EndpointResponseType.json:
         yield* _buildJson();
+      case EndpointResponseType.dynamic:
+        throw StateError(
+          'dynamic response type can only occur for response returns!',
+        );
     }
   }
 

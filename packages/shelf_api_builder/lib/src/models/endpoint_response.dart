@@ -10,7 +10,8 @@ enum EndpointResponseType {
   binary,
   textStream,
   binaryStream,
-  json;
+  json,
+  dynamic;
 
   bool get isStream => switch (this) {
         EndpointResponseType.textStream ||
