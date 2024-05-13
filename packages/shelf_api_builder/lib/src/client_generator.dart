@@ -11,14 +11,22 @@ import 'readers/shelf_api_reader.dart';
 
 @internal
 class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
-  const ClientGenerator();
+  final BuilderOptions options;
+
+  const ClientGenerator(this.options);
+
+  bool get isEnabled => options.config['generateClient'] as bool? ?? true;
 
   @override
-  Future<String> generateForAnnotatedElement(
+  Future<String?> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
+    if (!isEnabled) {
+      return null;
+    }
+
     if (element is! ClassElement || !element.isPrivate) {
       throw InvalidGenerationSourceError(
         'The $ShelfApi annotation can only be used on private classes.',

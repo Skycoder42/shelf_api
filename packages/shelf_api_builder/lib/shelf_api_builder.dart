@@ -6,14 +6,14 @@ import 'src/endpoint_generator.dart';
 
 /// The [EndpointGenerator] builder
 Builder shelfApiBuilder(BuilderOptions options) => LibraryBuilder(
-      const EndpointGenerator(),
+      EndpointGenerator(options),
       generatedExtension: '.api.dart',
       options: options,
     );
 
 /// The [ClientGenerator] builder
 Builder shelfApiClientBuilder(BuilderOptions options) => LibraryBuilder(
-      const ClientGenerator(),
+      ClientGenerator(options),
       generatedExtension: '.client.dart',
       options: options,
     );
