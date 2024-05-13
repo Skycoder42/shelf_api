@@ -18,7 +18,7 @@ class BodyEndpoint extends ShelfEndpoint {
   Stream<String> streamText(@bodyParam Stream<String> body) => body;
 
   @Get('/stream/binary')
-  Stream<List<int>> streamBinary(@bodyParam Stream<List<int>> body) => body;
+  Stream<List<int>> streamBinary(@bodyParam Stream<Uint8List> body) => body;
 
   @Get('/json')
   BasicModel getJson(@bodyParam BasicModel body) => body;

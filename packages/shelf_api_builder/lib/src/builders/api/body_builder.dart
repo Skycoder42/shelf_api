@@ -58,7 +58,9 @@ final class _BodyVariableBuilder extends CodeBuilder {
             .property('transform')
             .call([Constants.utf8.property('decoder')]);
       case EndpointBodyType.binaryStream:
-        bodyExpr = _requestRef.property('read').call(const []);
+        bodyExpr = _requestRef
+            .property('read')
+            .call(const []).asA(Types.stream(Types.uint8List));
       case EndpointBodyType.json:
         yield* _jsonCall();
         return;

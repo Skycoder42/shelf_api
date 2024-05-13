@@ -22,6 +22,7 @@ final class MethodBodyBuilder extends CodeBuilder {
   final Reference _dioRef;
   final Reference _optionsRef;
   final List<Reference> _extraParamsRefs;
+  final bool _isRaw;
 
   const MethodBodyBuilder(
     this._apiClass,
@@ -30,6 +31,7 @@ final class MethodBodyBuilder extends CodeBuilder {
     this._dioRef,
     this._optionsRef,
     this._extraParamsRefs,
+    this._isRaw,
   );
 
   @override
@@ -55,7 +57,7 @@ final class MethodBodyBuilder extends CodeBuilder {
       ],
     );
 
-    yield ResponseBuilder(_method.response, invocation.awaited);
+    yield ResponseBuilder(_method.response, invocation.awaited, _isRaw);
   }
 
   Map<String, Expression> get _options => {
@@ -80,7 +82,7 @@ final class MethodBodyBuilder extends CodeBuilder {
       case EndpointResponseType.text:
         return Types.string;
       case EndpointResponseType.binary:
-        return Types.list(Types.int$);
+        return Types.uint8List;
       case EndpointResponseType.textStream:
       case EndpointResponseType.binaryStream:
       case EndpointResponseType.dynamic:

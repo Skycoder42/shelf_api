@@ -34,7 +34,7 @@ final class MethodBuilder extends SpecBuilder<Method> {
   Method build() => Method(
         (b) => b
           ..name = _methodName
-          ..returns = _returnType
+          ..returns = _returnType(false)
           ..modifier = _method.response.responseType.isStream
               ? MethodModifier.asyncStar
               : MethodModifier.async
@@ -47,6 +47,25 @@ final class MethodBuilder extends SpecBuilder<Method> {
             _dioRef,
             _optionsRef,
             [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
+            false,
+          ),
+      );
+
+  Method buildRaw() => Method(
+        (b) => b
+          ..name = '${_methodName}Raw'
+          ..returns = _returnType(true)
+          ..modifier = MethodModifier.async
+          ..requiredParameters.addAll(_buildRequiredParameters())
+          ..optionalParameters.addAll(_buildOptionalParameters())
+          ..body = MethodBodyBuilder(
+            _apiClass,
+            _endpoint,
+            _method,
+            _dioRef,
+            _optionsRef,
+            [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
+            true,
           ),
       );
 
@@ -59,19 +78,21 @@ final class MethodBuilder extends SpecBuilder<Method> {
     return name + _method.name.pascal;
   }
 
-  TypeReference get _returnType {
+  TypeReference _returnType(bool isRaw) {
     final response = _method.response;
 
     final innerType = switch (response.responseType) {
-      EndpointResponseType.binary => Types.list(Types.int$),
+      EndpointResponseType.binaryStream => Types.stream(Types.uint8List),
       EndpointResponseType.dynamic => Types.responseBody,
       _ => Types.fromType(response.returnType),
     };
 
     if (response.responseType.isStream) {
-      return innerType;
+      return isRaw ? Types.future(Types.tResponseBody(innerType)) : innerType;
     } else {
-      return Types.future(innerType);
+      return isRaw
+          ? Types.future(Types.tResponseBody(innerType))
+          : Types.future(innerType);
     }
   }
 
@@ -80,7 +101,11 @@ final class MethodBuilder extends SpecBuilder<Method> {
       yield Parameter(
         (b) => b
           ..name = 'body'
-          ..type = Types.fromType(body.paramType),
+          ..type = switch (body.bodyType) {
+            EndpointBodyType.binaryStream =>
+              Types.stream(Types.list(Types.int$)),
+            _ => Types.fromType(body.paramType),
+          },
       );
     }
     for (final pathParam in _method.pathParameters) {

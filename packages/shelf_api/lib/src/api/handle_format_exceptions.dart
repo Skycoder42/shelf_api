@@ -1,7 +1,5 @@
 import 'package:shelf/shelf.dart';
 
-// TODO logging?
-
 /// A key to get the original [FormatException] from [Request.context].
 ///
 /// Can only be used if the response was created by the

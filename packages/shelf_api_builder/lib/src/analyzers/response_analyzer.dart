@@ -65,16 +65,16 @@ class ResponseAnalyzer {
         responseType: EndpointResponseType.text,
         returnType: OpaqueDartType(_buildStep, returnType),
       );
-    } else if (TypeCheckers.uint8List.isExactly(returnType.element!)) {
+    } else if (TypeCheckers.uint8List.isExactlyType(returnType)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.binary,
         returnType: OpaqueDartType(_buildStep, returnType),
       );
-    } else if (TypeCheckers.tResponse.isExactly(returnType.element!)) {
+    } else if (TypeCheckers.tResponse.isExactlyType(returnType)) {
       _ensureNotNullable(returnType, method);
       return await _analyzeTResponse(method, apiMethod, returnType);
-    } else if (TypeCheckers.response.isAssignableFrom(returnType.element!)) {
+    } else if (TypeCheckers.response.isAssignableFromType(returnType)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
         responseType: EndpointResponseType.dynamic,
@@ -149,7 +149,7 @@ class ResponseAnalyzer {
         responseType: EndpointResponseType.textStream,
         returnType: OpaqueDartType(_buildStep, returnType),
       );
-    } else if (TypeCheckers.intList.isAssignableFrom(streamType.element!)) {
+    } else if (TypeCheckers.intList.isAssignableFromType(streamType)) {
       return EndpointResponse(
         responseType: EndpointResponseType.binaryStream,
         returnType: OpaqueDartType(_buildStep, returnType),

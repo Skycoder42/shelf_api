@@ -2,6 +2,7 @@ import 'package:code_builder/code_builder.dart' hide MethodBuilder;
 import 'package:meta/meta.dart';
 
 import '../../models/api_class.dart';
+import '../../models/endpoint_response.dart';
 import '../../util/types.dart';
 import '../base/spec_builder.dart';
 import 'method_builder.dart';
@@ -37,7 +38,12 @@ final class ClientBuilder extends SpecBuilder<Class> {
   Iterable<Method> _buildMethods() sync* {
     for (final endpoint in _apiClass.endpoints) {
       for (final method in endpoint.methods) {
-        yield MethodBuilder(_apiClass, endpoint, method, _dioRef).build();
+        final methodBuilder =
+            MethodBuilder(_apiClass, endpoint, method, _dioRef);
+        yield methodBuilder.build();
+        if (method.response.responseType != EndpointResponseType.dynamic) {
+          yield methodBuilder.buildRaw();
+        }
       }
     }
   }

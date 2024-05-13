@@ -39,6 +39,12 @@ abstract base class Types {
       ..url = 'dart:io',
   );
 
+  static final TypeReference uint8List = TypeReference(
+    (b) => b
+      ..symbol = 'Uint8List'
+      ..url = 'dart:typed_data',
+  );
+
   static final TypeReference shelfRequest = TypeReference(
     (b) => b
       ..symbol = 'Request'
@@ -159,6 +165,12 @@ abstract base class Types {
           ..url = 'dart:async',
       );
 
+  static TypeReference stream([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'Stream'
+          ..types.add(type ?? Types.dynamic$),
+      );
+
   static TypeReference dioRequest([TypeReference? type]) => TypeReference(
         (b) => b
           ..symbol = 'Request'
@@ -171,6 +183,15 @@ abstract base class Types {
           ..symbol = 'Response'
           ..types.add(type ?? Types.dynamic$)
           ..url = 'package:dio/dio.dart',
+      );
+
+  static TypeReference tResponseBody([TypeReference? type]) => TypeReference(
+        (b) => b
+          ..symbol = 'TResponseBody'
+          ..types.addAll([
+            if (type != null) type,
+          ])
+          ..url = 'package:shelf_api/shelf_api_client.dart',
       );
 
   static TypeReference fromType(
@@ -202,7 +223,8 @@ abstract base class Types {
           b
             ..symbol = dartType.element!.name
             ..isNullable = isNull ?? dartType.isNullableType
-            ..url = uri?.toString();
+            ..url = uri?.toString() ??
+                dartType.element?.librarySource?.uri.toString();
 
           if (dartType is InterfaceType) {
             b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -218,7 +240,7 @@ abstract base class Types {
           b
             ..symbol = clazz.name
             ..isNullable = isNull
-            ..url = uri?.toString();
+            ..url = uri?.toString() ?? clazz.librarySource.uri.toString();
         },
       );
 

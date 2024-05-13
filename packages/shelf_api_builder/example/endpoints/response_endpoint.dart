@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 
 import '../basic_model.dart';
-
-// TODO introduce TResponseBody for client?
 
 @ApiEndpoint('/response/')
 class ResponseEndpoint extends ShelfEndpoint {
@@ -38,10 +37,21 @@ class ResponseEndpoint extends ShelfEndpoint {
   BasicModel jsonCustom() => const BasicModel(24);
 
   @Get('/response')
-  Response response() => Response.ok('Hello, World!');
+  Response response() => Response(
+        HttpStatus.accepted,
+        body: 'Hello, World!',
+        headers: const {
+          'X-Extra-Data': 'Extra Header Data',
+        },
+      );
 
   @Get('/response/typed')
-  TResponse<String> typedResponse() => TResponse.ok('Hello, World!');
+  TResponse<String> typedResponse() => TResponse.ok(
+        'Hello, World!',
+        headers: const {
+          'X-Extra-Data': 'Extra Header Data',
+        },
+      );
 
   @Get('/async/noContent')
   Future<void> asyncNoContent() async {}
@@ -72,14 +82,25 @@ class ResponseEndpoint extends ShelfEndpoint {
       asNull ? null : const BasicModel(42);
 
   @Get('/async/response')
-  Future<Response> asyncResponse({bool asNull = false}) async =>
-      Response.ok(asNull ? null : 'Hello, World!');
+  Future<Response> asyncResponse({bool asNull = false}) async => Response(
+        asNull ? HttpStatus.noContent : HttpStatus.ok,
+        body: asNull ? null : 'Hello, World!',
+        headers: {
+          'X-As-Null': asNull.toString(),
+        },
+      );
 
   @Get('/async/response/typed')
   Future<TResponse<BasicModel?>> asyncTypedResponse({
     bool asNull = false,
   }) async =>
-      TResponse.ok(asNull ? null : const BasicModel(11));
+      TResponse(
+        asNull ? HttpStatus.noContent : HttpStatus.ok,
+        body: asNull ? null : const BasicModel(11),
+        headers: {
+          'X-As-Null': asNull.toString(),
+        },
+      );
 
   @Get('/stream/text')
   Stream<String> streamText() => Stream.value('Hello, World!');

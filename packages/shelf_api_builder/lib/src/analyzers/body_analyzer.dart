@@ -42,7 +42,7 @@ class BodyAnalyzer {
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.text,
       );
-    } else if (TypeCheckers.uint8List.isAssignableFrom(paramType.element!)) {
+    } else if (TypeCheckers.uint8List.isAssignableFromType(paramType)) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
@@ -115,7 +115,7 @@ class BodyAnalyzer {
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.textStream,
       );
-    } else if (TypeCheckers.intList.isExactly(streamType.element!) &&
+    } else if (TypeCheckers.uint8List.isAssignableFromType(streamType) &&
         !streamType.isNullableType) {
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
@@ -123,7 +123,7 @@ class BodyAnalyzer {
       );
     } else {
       throw InvalidGenerationSource(
-        'Only Stream<String> or Stream<List<int>> are supported as stream '
+        'Only Stream<String> or Stream<Uint8List> are supported as stream '
         'body types.',
         element: param,
       );
