@@ -3,6 +3,8 @@ name: CI/CD for shelf_api
 on:
   workflow_dispatch:
   push:
+    tags-ignore:
+      - "*"
     paths:
       - "packages/shelf_api/**"
       - ".github/workflows/shelf_api_ci.yaml"

@@ -3,6 +3,8 @@ name: CI/CD for shelf_api_builder
 on:
   workflow_dispatch:
   push:
+    tags-ignore:
+      - "*"
     paths:
       - "packages/shelf_api_builder/**"
       - ".github/workflows/shelf_api_builder_ci.yaml"
@@ -19,7 +21,7 @@ jobs:
   ci:
     name: CI
     uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
-    needs: 
+    needs:
       - package_shelf_api
     with:
       workingDirectory: packages/shelf_api_builder
