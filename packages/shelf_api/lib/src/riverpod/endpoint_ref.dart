@@ -9,19 +9,19 @@ part 'endpoint_ref.g.dart';
 ///
 /// **Important:** This provider must be added as a dependency, as it will
 /// cause dependant providers to the valid only for the request itself. This
-/// means providers depending on [requestProvider] will be unique per
+/// means providers depending on [shelfRequestProvider] will be unique per
 /// request instead of being a global singleton.
 ///
 /// This can also be used to create request unique providers, even if the
 /// [Request] itself is not being used:
 ///
 /// ```dart
-/// @Riverpod(dependencies: [requestProvider])
+/// @Riverpod(dependencies: [shelfRequestProvider])
 /// MyValue myValue(MyValueRef ref) => MyValue(ref);
 /// ```
 @Riverpod(keepAlive: true, dependencies: [])
-Request request(RequestRef ref) => throw StateError(
-      'requestProvider can only be accessed via session.ref',
+Request shelfRequest(ShelfRequestRef ref) => throw StateError(
+      'shelfRequestProvider can only be accessed via session.ref',
     );
 
 /// An object that allows shelf request handlers to interact with providers.

@@ -57,7 +57,7 @@ class _RivershelfMiddleware {
         final container = ProviderContainer(
           parent: _providerContainer,
           overrides: [
-            requestProvider.overrideWithValue(request),
+            shelfRequestProvider.overrideWithValue(request),
           ],
         );
         final endpointRef = EndpointRef(container);

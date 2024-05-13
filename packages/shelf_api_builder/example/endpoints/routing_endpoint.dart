@@ -8,18 +8,18 @@ class RootRoutingEndpoint extends ShelfEndpoint {
   Response headRoot() => Response.ok(
         null,
         headers: {
-          'X-INFO': _logRequest(this.request),
+          'X-INFO': _logRequest(request),
         },
       );
 
   @Get('/')
-  String getRoot() => _logRequest(this.request);
+  String getRoot() => _logRequest(request);
 
   @Get('/path/open')
-  String getPathOpen() => _logRequest(this.request);
+  String getPathOpen() => _logRequest(request);
 
   @Get('/path/closed/')
-  String getPathClosed() => _logRequest(this.request);
+  String getPathClosed() => _logRequest(request);
 }
 
 @ApiEndpoint('/open')
@@ -27,13 +27,13 @@ class OpenRoutingEndpoint extends ShelfEndpoint {
   OpenRoutingEndpoint(super.request);
 
   @Delete('/')
-  String deleteRoot() => _logRequest(this.request);
+  String deleteRoot() => _logRequest(request);
 
   @Options('/path/open')
-  String optionsPathOpen() => _logRequest(this.request);
+  String optionsPathOpen() => _logRequest(request);
 
   @Patch('/path/closed/')
-  String patchPathClosed() => _logRequest(this.request);
+  String patchPathClosed() => _logRequest(request);
 }
 
 @ApiEndpoint('/closed/')
@@ -41,13 +41,13 @@ class ClosedRoutingEndpoint extends ShelfEndpoint {
   ClosedRoutingEndpoint(super.request);
 
   @Post('/')
-  String postRoot() => _logRequest(this.request);
+  String postRoot() => _logRequest(request);
 
   @Put('/path/open')
-  String putPathOpen() => _logRequest(this.request);
+  String putPathOpen() => _logRequest(request);
 
   @ApiMethod(HttpMethod.trace, '/path/closed/')
-  String tracePathClosed() => _logRequest(this.request);
+  String tracePathClosed() => _logRequest(request);
 }
 
 @ApiEndpoint('/')
@@ -55,13 +55,13 @@ class SlashRoutingEndpoint extends ShelfEndpoint {
   SlashRoutingEndpoint(super.request);
 
   @Post('/')
-  String postRoot() => _logRequest(this.request);
+  String postRoot() => _logRequest(request);
 
   @Post('/slash/open')
-  String postSlashOpen() => _logRequest(this.request);
+  String postSlashOpen() => _logRequest(request);
 
   @Post('/slash/closed/')
-  String postSlashClosed() => _logRequest(this.request);
+  String postSlashClosed() => _logRequest(request);
 }
 
 String _logRequest(Request request) =>

@@ -5,7 +5,7 @@ import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks([
-  MockSpec<RequestRef>(),
+  MockSpec<ShelfRequestRef>(),
   MockSpec<ProviderContainer>(),
   MockSpec<ProviderSubscription>(),
 ])
@@ -16,7 +16,7 @@ class _FakeProvider extends Fake implements ProviderBase, ProviderListenable {}
 
 void main() {
   group('requestContext', () {
-    final mockRef = MockRequestRef();
+    final mockRef = MockShelfRequestRef();
 
     setUp(() {
       reset(mockRef);
@@ -24,7 +24,7 @@ void main() {
 
     test('throws state error by default', () {
       expect(
-        () => request(mockRef),
+        () => shelfRequest(mockRef),
         throwsStateError,
       );
     });

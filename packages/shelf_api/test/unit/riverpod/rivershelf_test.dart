@@ -77,10 +77,10 @@ void main() {
       expect(container.depth, 2);
 
       expect(
-        () => testProviderContainer.read(requestProvider),
+        () => testProviderContainer.read(shelfRequestProvider),
         throwsStateError,
       );
-      final providedContext = container.read(requestProvider);
+      final providedContext = container.read(shelfRequestProvider);
       expect(providedContext, same(mockRequest));
     });
 
@@ -95,7 +95,7 @@ void main() {
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(
-        () => container.read(requestProvider),
+        () => container.read(shelfRequestProvider),
         throwsA(
           isStateError.having(
             (m) => m.message,
