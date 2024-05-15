@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_body.dart';
 import '../../util/code/if.dart';
+import '../../util/code/literal_string_builder.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -36,7 +39,7 @@ final class _BodyVariableBuilder extends CodeBuilder {
 
   @override
   Iterable<Code> build() sync* {
-    // TODO validate content type?
+    yield* _validateContentType();
 
     final Expression bodyExpr;
     switch (_methodBody.bodyType) {
@@ -67,6 +70,32 @@ final class _BodyVariableBuilder extends CodeBuilder {
     }
 
     yield declareFinal(BodyBuilder._bodyRef.symbol!).assign(bodyExpr).statement;
+  }
+
+  Iterable<Code> _validateContentType() sync* {
+    if (_methodBody.contentTypes.isEmpty) {
+      return;
+    }
+
+    yield If(
+      literalConstList(_methodBody.contentTypes)
+          .property('contains')
+          .call([_requestRef.property('mimeType')]).negate(),
+      Types.shelfResponse
+          .newInstance([
+            literalNum(HttpStatus.unsupportedMediaType),
+          ], {
+            'body': LiteralStringBuilder()
+              ..addTemplate(
+                'Expected content type to be any of '
+                '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
+                'but was "%type%"',
+                {'%type%': _requestRef.property('mimeType')},
+              ),
+          })
+          .returned
+          .statement,
+    );
   }
 
   Iterable<Code> _jsonCall() sync* {

@@ -12,11 +12,6 @@ topics:
 environment:
   sdk: ^3.3.0
 
-platforms:
-  linux:
-  macos:
-  windows:
-
 dependencies:
   dio: ^5.4.3+1
   meta: ^1.11.0

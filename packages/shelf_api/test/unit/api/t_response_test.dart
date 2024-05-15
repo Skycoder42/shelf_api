@@ -17,10 +17,12 @@ void _testResponseConstructor(
     Object? body, {
     Map<String, Object>? headers,
     Map<String, Object>? context,
+    Encoding? encoding,
   }) construct,
   Map<String, Object>? extraHeaders,
   bool hasBody = true,
   bool hasDefaultBody = false,
+  bool withEncoding = true,
 }) {
   group(name, () {
     test('correctly sets non body properties', () {
@@ -67,21 +69,27 @@ void _testResponseConstructor(
         sut.headers,
         containsPair(
           HttpHeaders.contentTypeHeader,
-          ContentType.text.toString(),
+          ContentType.text.mimeType,
         ),
       );
     });
 
-    test('correctly sets text body with headers', () {
+    test('correctly sets text body with headers and encoding', () {
       const testBody = 'test-body';
       const testHeaders = {'a': '1'};
-      final sut = construct(testBody, headers: testHeaders);
+      final sut = construct(
+        testBody,
+        headers: testHeaders,
+        encoding: withEncoding ? utf8 : null,
+      );
       expect(sut.readAsString(), completion(testBody));
       expect(
         sut.headers,
         containsPair(
           HttpHeaders.contentTypeHeader,
-          ContentType.text.toString(),
+          withEncoding
+              ? ContentType.text.toString()
+              : ContentType.text.mimeType,
         ),
       );
       expect(sut.headers, containsPair('a', '1'));
@@ -99,7 +107,7 @@ void _testResponseConstructor(
         sut.headers,
         containsPair(
           HttpHeaders.contentTypeHeader,
-          ContentType.text.toString(),
+          ContentType.text.mimeType,
         ),
       );
     });
@@ -138,7 +146,7 @@ void _testResponseConstructor(
         sut1.headers,
         containsPair(
           HttpHeaders.contentTypeHeader,
-          ContentType.json.toString(),
+          ContentType.json.mimeType,
         ),
       );
 
@@ -149,7 +157,7 @@ void _testResponseConstructor(
         sut2.headers,
         containsPair(
           HttpHeaders.contentTypeHeader,
-          ContentType.json.toString(),
+          ContentType.json.mimeType,
         ),
       );
     });
@@ -161,32 +169,36 @@ void main() {
     group('constructor', () {
       _testResponseConstructor(
         'new',
-        construct: (body, {context, headers}) => TResponse(
+        construct: (body, {context, headers, encoding}) => TResponse(
           HttpStatus.tooManyRequests,
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.tooManyRequests,
       );
 
       _testResponseConstructor(
         'ok',
-        construct: (body, {context, headers}) => TResponse.ok(
+        construct: (body, {context, headers, encoding}) => TResponse.ok(
           body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.ok,
       );
 
       _testResponseConstructor(
         'movedPermanently',
-        construct: (body, {context, headers}) => TResponse.movedPermanently(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse.movedPermanently(
           'test-location',
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.movedPermanently,
         extraHeaders: {
@@ -196,11 +208,12 @@ void main() {
 
       _testResponseConstructor(
         'found',
-        construct: (body, {context, headers}) => TResponse.found(
+        construct: (body, {context, headers, encoding}) => TResponse.found(
           'test-location',
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.found,
         extraHeaders: {
@@ -210,11 +223,12 @@ void main() {
 
       _testResponseConstructor(
         'seeOther',
-        construct: (body, {context, headers}) => TResponse.seeOther(
+        construct: (body, {context, headers, encoding}) => TResponse.seeOther(
           'test-location',
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.seeOther,
         extraHeaders: {
@@ -224,7 +238,8 @@ void main() {
 
       _testResponseConstructor(
         'notModified',
-        construct: (body, {context, headers}) => TResponse.notModified(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse.notModified(
           headers: headers,
           context: context,
         ),
@@ -234,10 +249,11 @@ void main() {
 
       _testResponseConstructor(
         'badRequest',
-        construct: (body, {context, headers}) => TResponse.badRequest(
+        construct: (body, {context, headers, encoding}) => TResponse.badRequest(
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.badRequest,
         hasDefaultBody: true,
@@ -245,10 +261,12 @@ void main() {
 
       _testResponseConstructor(
         'unauthorized',
-        construct: (body, {context, headers}) => TResponse.unauthorized(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse.unauthorized(
           body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.unauthorized,
         hasDefaultBody: true,
@@ -256,10 +274,11 @@ void main() {
 
       _testResponseConstructor(
         'forbidden',
-        construct: (body, {context, headers}) => TResponse.forbidden(
+        construct: (body, {context, headers, encoding}) => TResponse.forbidden(
           body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.forbidden,
         hasDefaultBody: true,
@@ -267,10 +286,11 @@ void main() {
 
       _testResponseConstructor(
         'notFound',
-        construct: (body, {context, headers}) => TResponse.notFound(
+        construct: (body, {context, headers, encoding}) => TResponse.notFound(
           body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.notFound,
         hasDefaultBody: true,
@@ -278,10 +298,12 @@ void main() {
 
       _testResponseConstructor(
         'internalServerError',
-        construct: (body, {context, headers}) => TResponse.internalServerError(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse.internalServerError(
           body: body,
           headers: headers,
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.internalServerError,
         hasDefaultBody: true,
@@ -296,13 +318,15 @@ void main() {
 
       _testResponseConstructor(
         'change',
-        construct: (body, {context, headers}) => testResponse.change(
+        construct: (body, {context, headers, encoding}) => testResponse.change(
           body: body,
           headers: {...testResponse.headers, ...?headers},
           context: context,
+          encoding: encoding,
         ),
         statusCode: HttpStatus.ok,
         hasDefaultBody: true,
+        withEncoding: false,
         extraHeaders: {
           'pre-change': '42',
         },

@@ -83,8 +83,8 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
 
     var invocation = _endpointRef.property(_method.name).call(
       [
-        if (bodyBuilder.parameter case final Expression param) param,
         ...pathBuilder.build(),
+        if (bodyBuilder.parameter case final Expression param) param,
       ],
       queryBuilder.parameters,
     );

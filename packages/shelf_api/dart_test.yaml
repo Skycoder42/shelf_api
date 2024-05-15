@@ -6,3 +6,4 @@ presets:
   integration:
     paths:
       - test/integration
+    test_on: vm

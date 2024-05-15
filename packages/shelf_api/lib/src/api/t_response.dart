@@ -1,10 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
 // ignore: implementation_imports
 import 'package:shelf/src/util.dart' show addHeader;
+
+import 'content_types.dart';
 
 /// A generic wrapper around [Response] used for code generation.
 class TResponse<T> extends Response {
@@ -160,11 +161,11 @@ class TResponse<T> extends Response {
   ) {
     final contentType = switch (body) {
       null => null,
-      String() => ContentType.text,
-      Stream<String>() => ContentType.text,
-      Uint8List() => ContentType.binary,
-      Stream<List<int>>() => ContentType.binary,
-      final _ => ContentType.json,
+      String() => ContentTypes.text,
+      Stream<String>() => ContentTypes.text,
+      Uint8List() => ContentTypes.binary,
+      Stream<List<int>>() => ContentTypes.binary,
+      final _ => ContentTypes.json,
     };
 
     if (contentType == null) {
@@ -173,8 +174,8 @@ class TResponse<T> extends Response {
 
     return addHeader(
       headers,
-      HttpHeaders.contentTypeHeader,
-      contentType.toString(),
+      'Content-Type',
+      contentType,
     );
   }
 }

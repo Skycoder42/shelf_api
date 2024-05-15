@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
@@ -27,7 +29,7 @@ final class ResponseBuilder extends CodeBuilder {
       case EndpointResponseType.noContent:
         yield _invocation.statement;
         yield Types.shelfResponse
-            .newInstance([Types.httpStatus.property('noContent')])
+            .newInstance([literalNum(HttpStatus.noContent)])
             .returned
             .statement;
       case EndpointResponseType.text:
@@ -103,10 +105,7 @@ final class ResponseBuilder extends CodeBuilder {
   ]) =>
       {
         'headers': literalMap({
-          Types.httpHeaders.property('contentTypeHeader'): Types.contentType
-              .property(typeName)
-              .property('toString')
-              .call(const []),
+          HttpHeaders.contentTypeHeader: Types.contentTypes.property(typeName),
         }),
         if (encoding != null) 'encoding': encoding,
       };

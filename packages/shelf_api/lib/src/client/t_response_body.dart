@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 
 /// A wrapper around a HTTP response for typed responses.
@@ -34,7 +32,7 @@ class TResponseBody<T> {
 
   /// Creates a TResponseBody from a [response] and the already decoded [data].
   TResponseBody.fromResponse(Response response, this.data)
-      : statusCode = response.statusCode ?? HttpStatus.ok,
+      : statusCode = response.statusCode ?? 200,
         statusMessage = response.statusMessage,
         isRedirect = response.isRedirect,
         redirects = response.redirects,

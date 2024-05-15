@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -35,22 +37,25 @@ class BodyAnalyzer {
           bodyParam,
         ),
         bodyType: EndpointBodyType.json,
+        contentTypes: bodyParam.contentTypes ?? [ContentType.json.mimeType],
       );
     } else if (paramType.isDartCoreString) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.text,
+        contentTypes: bodyParam.contentTypes ?? const [],
       );
     } else if (TypeCheckers.uint8List.isAssignableFromType(paramType)) {
       _ensureNotNullable(paramType, method);
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.binary,
+        contentTypes: bodyParam.contentTypes ?? const [],
       );
     } else if (paramType.isDartAsyncStream) {
       _ensureNotNullable(paramType, method);
-      return _analyzeStreamBody(param, paramType);
+      return _analyzeStreamBody(param, paramType, bodyParam);
     } else {
       return EndpointBody(
         paramType: await _serializableAnalyzer.analyzeType(
@@ -59,40 +64,46 @@ class BodyAnalyzer {
           bodyParam,
         ),
         bodyType: EndpointBodyType.json,
+        contentTypes: bodyParam.contentTypes ?? [ContentType.json.mimeType],
       );
     }
   }
 
   (ParameterElement, BodyParamReader)? _findBodyParam(MethodElement method) {
-    for (final param in method.parameters.skip(1)) {
+    final lastParam = method.parameters.where((p) => p.isPositional).lastOrNull;
+
+    for (final param in method.parameters) {
+      if (param == lastParam) {
+        continue;
+      }
+
       if (param.bodyParamAnnotation != null) {
         throw InvalidGenerationSource(
-          'Only the first parameter can be marked as body.',
-          todo: 'Move the parameter to the beginning of the method',
+          'Only the last positional parameter can be marked as body.',
+          todo: 'Move the parameter to the end of the method',
           element: param,
         );
       }
     }
 
-    final firstParam = method.parameters.firstOrNull;
-    if (firstParam == null) {
+    if (lastParam == null) {
       return null;
     }
 
-    final bodyParam = firstParam.bodyParamAnnotation;
+    final bodyParam = lastParam.bodyParamAnnotation;
     if (bodyParam == null) {
       return null;
     }
 
-    if (!firstParam.isRequiredPositional) {
+    if (!lastParam.isRequiredPositional) {
       throw InvalidGenerationSource(
         'The body parameter must be required positional.',
         todo: 'Turn the parameter into a non optional positional parameter',
-        element: firstParam,
+        element: lastParam,
       );
     }
 
-    return (firstParam, bodyParam);
+    return (lastParam, bodyParam);
   }
 
   void _ensureNotNullable(DartType paramType, MethodElement method) {
@@ -108,18 +119,21 @@ class BodyAnalyzer {
   EndpointBody _analyzeStreamBody(
     ParameterElement param,
     DartType paramType,
+    BodyParamReader bodyParam,
   ) {
     final [streamType] = paramType.typeArgumentsOf(TypeCheckers.stream)!;
     if (streamType.isDartCoreString && !streamType.isNullableType) {
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.textStream,
+        contentTypes: bodyParam.contentTypes ?? const [],
       );
     } else if (TypeCheckers.uint8List.isAssignableFromType(streamType) &&
         !streamType.isNullableType) {
       return EndpointBody(
         paramType: OpaqueDartType(_buildStep, param.type),
         bodyType: EndpointBodyType.binaryStream,
+        contentTypes: bodyParam.contentTypes ?? const [],
       );
     } else {
       throw InvalidGenerationSource(

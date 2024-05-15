@@ -35,11 +35,20 @@ class PathAnalyzer {
         .map((match) => match[1]!)
         .toList();
 
-    final positionalParams = method.parameters
-        .where((p) => p.isPositional)
-        .where((p) => p.bodyParamAnnotation == null);
+    for (final param in method.parameters.where((p) => p.isPositional)) {
+      if (param.bodyParamAnnotation != null) {
+        if (pathParamMatches.isEmpty) {
+          continue;
+        }
 
-    for (final param in positionalParams) {
+        throw InvalidGenerationSource(
+          'Found ${pathParamMatches.length} remaining path parameter in URL '
+          'template, positional parameter is marked as bodyParam',
+          todo: 'Ensure parameters always occur before the body parameter',
+          element: method,
+        );
+      }
+
       if (!param.isRequired || param.type.isNullableType) {
         throw InvalidGenerationSource(
           'Path parameters cannot be optional nullable.',

@@ -97,6 +97,13 @@ final class MethodBuilder extends SpecBuilder<Method> {
   }
 
   Iterable<Parameter> _buildRequiredParameters() sync* {
+    for (final pathParam in _method.pathParameters) {
+      yield Parameter(
+        (b) => b
+          ..name = pathParam.name
+          ..type = Types.fromType(pathParam.type),
+      );
+    }
     if (_method.body case final EndpointBody body) {
       yield Parameter(
         (b) => b
@@ -106,13 +113,6 @@ final class MethodBuilder extends SpecBuilder<Method> {
               Types.stream(Types.list(Types.int$)),
             _ => Types.fromType(body.paramType),
           },
-      );
-    }
-    for (final pathParam in _method.pathParameters) {
-      yield Parameter(
-        (b) => b
-          ..name = pathParam.name
-          ..type = Types.fromType(pathParam.type),
       );
     }
   }

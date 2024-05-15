@@ -44,9 +44,8 @@ class MethodsAnalyzer {
         name: method.name,
         httpMethod: apiMethod.method,
         path: apiMethod.path,
-        // TODO path parameters BEFORE the body
-        body: await _bodyAnalyzer.analyzeBody(method),
         pathParameters: await _pathAnalyzer.analyzePath(method, apiMethod),
+        body: await _bodyAnalyzer.analyzeBody(method),
         queryParameters: await _queryAnalyzer.analyzeQuery(method),
         response: await _responseAnalyzer.analyzeResponse(method, apiMethod),
       );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
 
@@ -63,15 +65,17 @@ final class MethodBodyBuilder extends CodeBuilder {
   Map<String, Expression> get _options => {
         'method': literalString(_method.httpMethod),
         'responseType': _responseType,
-        if (_method.body?.bodyType case final EndpointBodyType bodyType)
+        if (_method.body?.contentTypes case [final firstContentType, ...])
+          'contentType': literalString(firstContentType)
+        else if (_method.body?.bodyType case final EndpointBodyType bodyType)
           'contentType': switch (bodyType) {
             EndpointBodyType.text ||
             EndpointBodyType.textStream =>
-              Types.headers.property('textPlainContentType'),
+              literalString(ContentType.text.mimeType),
             EndpointBodyType.binary ||
             EndpointBodyType.binaryStream =>
-              literalString('application/octet-stream'),
-            EndpointBodyType.json => Types.headers.property('jsonContentType'),
+              literalString(ContentType.binary.mimeType),
+            EndpointBodyType.json => literalString(ContentType.json.mimeType),
           },
       };
 

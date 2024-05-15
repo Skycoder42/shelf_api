@@ -21,24 +21,6 @@ abstract base class Types {
 
   static final uri = TypeReference((b) => b..symbol = 'Uri');
 
-  static final TypeReference httpStatus = TypeReference(
-    (b) => b
-      ..symbol = 'HttpStatus'
-      ..url = 'dart:io',
-  );
-
-  static final TypeReference httpHeaders = TypeReference(
-    (b) => b
-      ..symbol = 'HttpHeaders'
-      ..url = 'dart:io',
-  );
-
-  static final TypeReference contentType = TypeReference(
-    (b) => b
-      ..symbol = 'ContentType'
-      ..url = 'dart:io',
-  );
-
   static final TypeReference uint8List = TypeReference(
     (b) => b
       ..symbol = 'Uint8List'
@@ -72,12 +54,6 @@ abstract base class Types {
   static final TypeReference responseType = TypeReference(
     (b) => b
       ..symbol = 'ResponseType'
-      ..url = 'package:dio/dio.dart',
-  );
-
-  static final TypeReference headers = TypeReference(
-    (b) => b
-      ..symbol = 'Headers'
       ..url = 'package:dio/dio.dart',
   );
 
@@ -132,6 +108,12 @@ abstract base class Types {
   static final TypeReference endpointRef = TypeReference(
     (b) => b
       ..symbol = 'EndpointRef'
+      ..url = 'package:shelf_api/shelf_api.dart',
+  );
+
+  static final TypeReference contentTypes = TypeReference(
+    (b) => b
+      ..symbol = 'ContentTypes'
       ..url = 'package:shelf_api/shelf_api.dart',
   );
 

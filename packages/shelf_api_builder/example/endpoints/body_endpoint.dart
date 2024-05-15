@@ -11,6 +11,10 @@ class BodyEndpoint extends ShelfEndpoint {
   @Get('/text')
   String getText(@bodyParam String body) => body;
 
+  @Get('/text/custom')
+  String getTextCustom(@BodyParam(contentTypes: ['text/xml']) String body) =>
+      body;
+
   @Get('/binary')
   Uint8List getBinary(@bodyParam Uint8List body) => body;
 
@@ -33,6 +37,7 @@ class BodyEndpoint extends ShelfEndpoint {
   @Get('/json/custom')
   BasicModel getJsonCustom(
     @BodyParam(
+      contentTypes: ['application/x-json'],
       fromJson: BasicModel.fromJsonX,
       toJson: BasicModel.toJsonX,
     )
@@ -52,6 +57,7 @@ class BodyEndpoint extends ShelfEndpoint {
   @Get('/json/null/custom')
   BasicModel? getJsonNullCustom(
     @BodyParam(
+      contentTypes: [],
       fromJson: BasicModel.fromJsonX,
       toJson: BasicModel.toJsonX,
     )

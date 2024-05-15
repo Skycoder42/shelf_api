@@ -77,17 +77,15 @@ void main() {
           expect(result, [1, 2, 3, 4, 5, 6]);
         });
 
-        test('throws if data is more than content length', () {
+        test('truncates data if data is more than content length', () async {
           final testStream = Stream.fromIterable([
             [1, 2],
             [3, 4, 5],
             [6, 7],
           ]);
 
-          expect(
-            () async => testStream.collect(request),
-            throwsA(isA<HttpException>()),
-          );
+          final result = await testStream.collect(request);
+          expect(result, [1, 2, 3, 4, 5, 6]);
         });
 
         test('returns zero-initialized oversized array', () async {

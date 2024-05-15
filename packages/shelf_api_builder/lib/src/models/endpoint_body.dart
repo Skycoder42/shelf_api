@@ -21,10 +21,12 @@ enum EndpointBodyType {
 class EndpointBody {
   final OpaqueType paramType;
   final EndpointBodyType bodyType;
+  final List<String> contentTypes;
 
   EndpointBody({
     required this.paramType,
     required this.bodyType,
+    required this.contentTypes,
   }) {
     if (bodyType == EndpointBodyType.json &&
         paramType is! OpaqueSerializableType) {

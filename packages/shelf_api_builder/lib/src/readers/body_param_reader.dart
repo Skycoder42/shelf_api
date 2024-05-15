@@ -20,6 +20,16 @@ class BodyParamReader with SerializableReader {
       );
     }
   }
+
+  List<String>? get contentTypes {
+    final contentTypesReader = constantReader.read('contentTypes');
+    return contentTypesReader.isNull
+        ? null
+        : contentTypesReader.listValue
+            .map(ConstantReader.new)
+            .map((r) => r.stringValue)
+            .toList();
+  }
 }
 
 @internal
