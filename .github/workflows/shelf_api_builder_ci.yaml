@@ -30,13 +30,13 @@ jobs:
       unitTestPaths: ""
       integrationTestPaths: -P integration
 
-  # cd:
-  #   name: CD
-  #   uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
-  #   needs:
-  #     - ci
-  #   with:
-  #     workingDirectory: packages/shelf_api_builder
-  #     tagPrefix: shelf_api_builder-v
-  #   secrets:
-  #     githubToken: ${{ secrets.GH_PAT }}
+  cd:
+    name: CD
+    uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
+    needs:
+      - ci
+    with:
+      workingDirectory: packages/shelf_api_builder
+      tagPrefix: shelf_api_builder-v
+    secrets:
+      githubToken: ${{ secrets.GH_PAT }}

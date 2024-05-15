@@ -1,6 +1,6 @@
 name: shelf_api_builder
 description: A code generator to create RESTful API endpoints to be integrated with shelf.
-version: 1.0.0
+version: 1.0.0+1
 homepage: https://github.com/Skycoder42/shelf_api
 topics:
   - server

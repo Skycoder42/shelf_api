@@ -57,7 +57,9 @@ basically REST-Controllers, that can serve multiple routes. These Endpoints are 
 which is used by the generator to create the shelf handler from the Endpoints as well as the Dio client wrapper.
 Finally, you will have to mount the handler as part of your shelf server setup.
 
-> **Note:** You can check out the [Example](./example) to get a full example that showcases most of the features.
+> **Note:** You can check out the
+[Example](https://github.com/Skycoder42/shelf_api/tree/main/packages/shelf_api_builder/example) to get a full example
+that showcases most of the features.
 
 ### 1. Creating Endpoints
 Endpoint definitions are fairly straight forward:
