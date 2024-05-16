@@ -1,2 +1,1 @@
-# shelf_api
-A package to declare rest API endpoints that generate into shelf handlers.
+packages/shelf_api_builder/README.md

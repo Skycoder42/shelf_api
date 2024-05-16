@@ -32,21 +32,9 @@ final class ClientBuilder extends SpecBuilder<Class> {
           ..constructors.add(_buildDefaultConstructor())
           ..constructors.add(_buildOptionsConstructor())
           ..constructors.add(_buildDioConstructor())
-          ..methods.addAll(_buildMethods()),
+          ..methods.addAll(_buildMethods())
+          ..methods.add(_buildClose()),
       );
-
-  Iterable<Method> _buildMethods() sync* {
-    for (final endpoint in _apiClass.endpoints) {
-      for (final method in endpoint.methods) {
-        final methodBuilder =
-            MethodBuilder(_apiClass, endpoint, method, _dioRef);
-        yield methodBuilder.build();
-        if (method.response.responseType != EndpointResponseType.dynamic) {
-          yield methodBuilder.buildRaw();
-        }
-      }
-    }
-  }
 
   Constructor _buildDefaultConstructor() => Constructor(
         (b) => b
@@ -99,5 +87,36 @@ final class ClientBuilder extends SpecBuilder<Class> {
                 ..toThis = true,
             ),
           ),
+      );
+
+  Iterable<Method> _buildMethods() sync* {
+    for (final endpoint in _apiClass.endpoints) {
+      for (final method in endpoint.methods) {
+        final methodBuilder =
+            MethodBuilder(_apiClass, endpoint, method, _dioRef);
+        yield methodBuilder.build();
+        if (method.response.responseType != EndpointResponseType.dynamic) {
+          yield methodBuilder.buildRaw();
+        }
+      }
+    }
+  }
+
+  Method _buildClose() => Method(
+        (b) => b
+          ..name = 'close'
+          ..returns = Types.void$
+          ..optionalParameters.add(
+            Parameter(
+              (b) => b
+                ..name = 'force'
+                ..type = Types.bool$
+                ..named = true
+                ..defaultTo = literalFalse.code,
+            ),
+          )
+          ..body = _dioRef.property('close').call(const [], {
+            'force': refer('force'),
+          }).code,
       );
 }

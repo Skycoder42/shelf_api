@@ -42,6 +42,7 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
     final library = Library(
       (b) => b
         ..ignoreForFile.add('type=lint')
+        ..ignoreForFile.add('unused_import')
         ..directives.add(
           Directive.import('package:shelf_api/builder_utils.dart'),
         )
