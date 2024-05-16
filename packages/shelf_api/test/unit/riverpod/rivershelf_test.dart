@@ -48,6 +48,20 @@ void main() {
       expect(newHandler(mockRequest), completion(testResponse));
     });
 
+    test('creates pipeline with existing container', () {
+      sut = rivershelfContainer(testProviderContainer);
+
+      final testResponse = FakeResponse();
+      final newHandler = sut(
+        expectAsync1((request) {
+          expect(request, isNot(same(mockRequest)));
+          return testResponse;
+        }),
+      );
+
+      expect(newHandler(mockRequest), completion(testResponse));
+    });
+
     test('registers endpoint ref on context', () {
       final testResponse = FakeResponse();
       final newHandler = sut(expectAsync1((context) => testResponse));
