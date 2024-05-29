@@ -10,14 +10,16 @@
 				"github.vscode-github-actions",
 				"Gruntfuggly.todo-tree",
 				"mhutchie.git-graph",
+				"ms-vscode.live-server",
 				"redhat.vscode-yaml",
 				"robert-brunhage.flutter-riverpod-snippets",
-				"ryanluker.vscode-coverage-gutters",
 				"streetsidesoftware.code-spell-checker",
 				"streetsidesoftware.code-spell-checker-german",
 				"timonwong.shellcheck"
 			],
 			"settings": {
+				"dart.sdkPath": "/home/vscode/flutter/bin/cache/dart-sdk",
+				"dart.flutterSdkPath": "/home/vscode/flutter",
 				"terminal.integrated.defaultProfile.linux": "zsh"
 			}
 		}
