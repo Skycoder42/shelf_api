@@ -4,9 +4,11 @@ import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
+import 'middleware_reader.dart';
 
 @internal
-class ApiEndpointReader {
+class ApiEndpointReader with MiddlewareReader {
+  @override
   final ConstantReader constantReader;
 
   ApiEndpointReader(this.constantReader) {

@@ -41,6 +41,18 @@ abstract base class Types {
       ..url = 'package:shelf/shelf.dart',
   );
 
+  static final TypeReference handler = TypeReference(
+    (b) => b
+      ..symbol = 'Handler'
+      ..url = 'package:shelf/shelf.dart',
+  );
+
+  static final TypeReference pipeline = TypeReference(
+    (b) => b
+      ..symbol = 'Pipeline'
+      ..url = 'package:shelf/shelf.dart',
+  );
+
   static final TypeReference router = TypeReference(
     (b) => b
       ..symbol = 'Router'

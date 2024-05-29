@@ -21,6 +21,13 @@ void main() {
     expect(response, 'Hello, World!');
   });
 
+  test('/ endpoint applies global middleware', () async {
+    final response = await server.apiClient.basicGetRaw();
+    expect(response.statusCode, HttpStatus.ok);
+    expect(response.headers.map, containsPair('X-Api', ['shelf_api']));
+    expect(response.headers.map, containsPair('X-Middleware', ['Api']));
+  });
+
   test('/complex endpoint returns minimal data', () async {
     final response = await server.apiClient.basicComplexExampleRaw(
       42,
@@ -34,6 +41,8 @@ void main() {
       containsPair(HttpHeaders.locationHeader, ['/examples/42']),
     );
     expect(response.headers.map, isNot(contains('x-extra')));
+    expect(response.headers.map, containsPair('X-Api', ['shelf_api']));
+    expect(response.headers.map, containsPair('X-Middleware', ['Api']));
   });
 
   test('/complex endpoint returns full data', () async {
@@ -52,5 +61,7 @@ void main() {
       containsPair(HttpHeaders.locationHeader, ['/examples/25']),
     );
     expect(response.headers.map, containsPair('x-extra', [testExtra]));
+    expect(response.headers.map, containsPair('X-Api', ['shelf_api']));
+    expect(response.headers.map, containsPair('X-Middleware', ['Api']));
   });
 }

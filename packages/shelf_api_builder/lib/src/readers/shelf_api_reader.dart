@@ -3,8 +3,11 @@ import 'package:meta/meta.dart';
 import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'middleware_reader.dart';
+
 @internal
-class ShelfApiReader {
+class ShelfApiReader with MiddlewareReader {
+  @override
   final ConstantReader constantReader;
 
   ShelfApiReader(this.constantReader) {

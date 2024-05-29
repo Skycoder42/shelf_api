@@ -35,6 +35,7 @@ class ApiClassAnalyzer {
           await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),
       ],
       basePath: shelfApi.basePath,
+      middleware: await shelfApi.middleware(_buildStep),
     );
   }
 }
