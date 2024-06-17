@@ -27,7 +27,7 @@ Request shelfRequest(ShelfRequestRef ref) => throw StateError(
 /// An object that allows shelf request handlers to interact with providers.
 class EndpointRef {
   /// @nodoc
-  @visibleForTesting
+  @internal
   final ProviderContainer container;
 
   final _keepAliveSubs = <ProviderListenable, ProviderSubscription>{};

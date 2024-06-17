@@ -16,7 +16,12 @@ import 'rivershelf_test.mocks.dart';
 
 class FakeResponse extends Fake implements Response {}
 
-class FakeEndpointRef extends Fake implements EndpointRef {}
+class FakeEndpointRef extends Fake implements EndpointRef {
+  @override
+  final ProviderContainer container;
+
+  FakeEndpointRef(this.container);
+}
 
 void main() {
   group('RivershelfMiddleware', () {
@@ -124,12 +129,23 @@ void main() {
   group('RequestRivershelfExtension', () {
     final mockRequest = MockRequest();
 
+    late ProviderContainer testProviderContainer;
+
     setUp(() {
       reset(mockRequest);
+      testProviderContainer = ProviderContainer(
+        overrides: [
+          shelfRequestProvider.overrideWithValue(MockRequest()),
+        ],
+      );
     });
 
-    test('ref returns EndpointRef of request context', () {
-      final testRef = FakeEndpointRef();
+    tearDown(() {
+      testProviderContainer.dispose();
+    });
+
+    test('ref returns EndpointRef of request context and updates override', () {
+      final testRef = FakeEndpointRef(testProviderContainer);
       final request = Request(
         HttpMethod.get,
         Uri.http('localhost', '/'),
@@ -139,6 +155,30 @@ void main() {
       );
 
       expect(request.ref, same(testRef));
+      expect(testProviderContainer.read(shelfRequestProvider), same(request));
+    });
+
+    test('ref only updates override once', () {
+      final testRef = FakeEndpointRef(testProviderContainer);
+      final request = Request(
+        HttpMethod.get,
+        Uri.http('localhost', '/'),
+        context: {
+          rivershelfRefKey: testRef,
+        },
+      );
+
+      expect(request.ref, same(testRef));
+
+      testProviderContainer.updateOverrides([
+        shelfRequestProvider.overrideWithValue(mockRequest),
+      ]);
+
+      expect(request.ref, same(testRef));
+      expect(
+        testProviderContainer.read(shelfRequestProvider),
+        same(mockRequest),
+      );
     });
 
     test('asserts if not ref is available', () {

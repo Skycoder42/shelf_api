@@ -43,16 +43,39 @@ Middleware rivershelfContainer(ProviderContainer container) =>
 
 /// An extension on [Request] to access the [EndpointRef].
 extension RequestRivershelfExtension on Request {
+  static final _requestOverrides = Expando<bool>(
+    'RequestRivershelfExtension.requestOverrides',
+  );
+
   /// Returns the associated [EndpointRef].
   ///
   /// Only works if the [rivershelf] middleware is available in this context.
+  ///
+  /// Note: In addition to fetching the [ref], this also ensures that
+  /// [ProviderContainer]s [Request] is up to date. If not, the
+  /// [shelfRequestProvider] is updated with this request to make the newest
+  /// value available. This has no effect on normal providers, but request
+  /// providers may be invalidated because of this. Usually, this should not
+  /// affect use in any way, but if a middleware interacts with a request scoped
+  /// provider and updates it, then that provider may be destroyed and recreated
+  /// if accessed from withing the actual handler. If this is a problem, ensure
+  /// that you provider can retain it's state even when rebuild.
   EndpointRef get ref {
     assert(
       context[rivershelfRefKey] is EndpointRef,
       'Cannot use request.ref without registering the rivershelf '
       'middleware first!',
     );
-    return context[rivershelfRefKey]! as EndpointRef;
+    final endpointRef = context[rivershelfRefKey]! as EndpointRef;
+
+    if (!(_requestOverrides[this] ?? false)) {
+      _requestOverrides[this] = true;
+      endpointRef.container.updateOverrides([
+        shelfRequestProvider.overrideWithValue(this),
+      ]);
+    }
+
+    return endpointRef;
   }
 }
 
