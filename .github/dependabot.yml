@@ -4,11 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-  - package-ecosystem: "pub"
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: "pub"
+    directory: "/packages/shelf_api"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pub"
+    directory: "/packages/shelf_api_builder"
     schedule:
       interval: "weekly"
