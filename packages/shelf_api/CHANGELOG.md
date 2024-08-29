@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.2] - 2024-08-29
 ### Changed
 - Updated dependencies
+- Updated min dart sdk to 3.5.0
 
 ## [1.2.1] - 2024-06-17
 ### Changed
 - Updated dependencies
-- Updated min dart sdk to 3.5.0
 
 ### Fixed
 - Ensure request provider is always up to date with the newest request

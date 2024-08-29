@@ -18,6 +18,7 @@ final class ResponseBuilder extends CodeBuilder {
   final Expression _invocation;
   final bool _isRaw;
 
+  // ignore: avoid_positional_boolean_parameters
   const ResponseBuilder(this._response, this._invocation, this._isRaw);
 
   @override

@@ -17,6 +17,7 @@ extension ExpressionX on Expression {
         ]),
       );
 
+  // ignore: avoid_positional_boolean_parameters
   Expression autoProperty(String name, bool isNullable) =>
       isNullable ? nullSafeProperty(name) : property(name);
 }

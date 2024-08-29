@@ -33,6 +33,7 @@ final class MethodBodyBuilder extends CodeBuilder {
     this._dioRef,
     this._optionsRef,
     this._extraParamsRefs,
+    // ignore: avoid_positional_boolean_parameters
     this._isRaw,
   );
 
