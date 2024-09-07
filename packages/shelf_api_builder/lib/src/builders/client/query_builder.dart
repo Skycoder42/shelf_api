@@ -49,19 +49,13 @@ final class QueryBuilder extends ExpressionBuilder {
                       (b) => b..name = _valueRef.symbol!,
                     ),
                   )
-                  ..body = queryParam.isDateTime
-                      ? _valueRef
-                          .property('toIso8601String')
-                          .call(const []).code
-                      : _valueRef.property('toString').call(const []).code,
+                  ..body = _convertToString(queryParam, _valueRef).code,
               ).closure,
             ])
             .property('toList')
             .call(const []);
-      } else if (queryParam.isDateTime) {
-        value = paramRef.property('toIso8601String').call(const []);
       } else {
-        value = paramRef.property('toString').call(const []);
+        value = _convertToString(queryParam, paramRef);
       }
 
       yield MapEntry(key, value);
@@ -85,5 +79,18 @@ final class QueryBuilder extends ExpressionBuilder {
         key.code,
       ]),
     );
+  }
+
+  Expression _convertToString(
+    EndpointQueryParameter param,
+    Expression value,
+  ) {
+    if (param.isEnum) {
+      return value.property('name');
+    } else if (param.isDateTime) {
+      return value.property('toIso8601String').call(const []);
+    } else {
+      return value.property('toString').call(const []);
+    }
   }
 }

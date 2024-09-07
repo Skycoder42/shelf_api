@@ -54,6 +54,8 @@ final class PathBuilder extends ExpressionBuilder {
     final paramRef = refer(pathParam.name);
     if (pathParam.customToString case final OpaqueConstant customToString) {
       return Constants.fromConstant(customToString).call([paramRef]);
+    } else if (pathParam.isEnum) {
+      return paramRef.property('name');
     } else if (pathParam.isDateTime) {
       return paramRef.property('toIso8601String').call(const []);
     } else {

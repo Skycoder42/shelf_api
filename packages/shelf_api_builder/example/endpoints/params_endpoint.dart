@@ -1,11 +1,14 @@
 import 'package:shelf_api/shelf_api.dart';
 
+import '../basic_enum.dart';
+
 @ApiEndpoint('/params')
 class ParamsEndpoint extends ShelfEndpoint {
   ParamsEndpoint(super.request);
 
-  @Get(r'/path/simple/<p1>/sub/<p2|\d+>')
-  List<dynamic> getPathSimple(String p1, int p2) => [p1, p2];
+  @Get(r'/path/simple/<p1>/sub/<p2|\d+>/<p3>')
+  List<dynamic> getPathSimple(String p1, int p2, BasicEnum p3) =>
+      [p1, p2, p3.toString()];
 
   @Get(r'/path/custom/<c1>/sub/<c2|[^\/].*>')
   List<dynamic> getPathCustom(
@@ -22,6 +25,7 @@ class ParamsEndpoint extends ShelfEndpoint {
     required Uri uValue,
     DateTime? dtValue,
     String s2Value = 's2',
+    required BasicEnum eValue,
   }) =>
       {
         'sValue': sValue,
@@ -30,6 +34,7 @@ class ParamsEndpoint extends ShelfEndpoint {
         'uValue': uValue.toString(),
         'dtValue': dtValue?.toIso8601String(),
         's2Value': s2Value,
+        'eValue': eValue.toString(),
       };
 
   @Get('/query/list')
@@ -39,6 +44,7 @@ class ParamsEndpoint extends ShelfEndpoint {
     List<int> iValue = const [1, 2, 3],
     List<DateTime> dtValue = const [],
     List<String> s2Value = const ['s2'],
+    List<BasicEnum> eValue = const [],
   }) =>
       {
         'sValue': sValue,
@@ -46,6 +52,7 @@ class ParamsEndpoint extends ShelfEndpoint {
         'iValue': iValue,
         'dtValue': dtValue.toString(),
         's2Value': s2Value,
+        'eValue': eValue.toString(),
       };
 
   @Get('/query/custom')
@@ -68,12 +75,12 @@ class ParamsEndpoint extends ShelfEndpoint {
 
   @Get('/combined/<p1>')
   Map<String, dynamic> getCombined(
-    double p1, {
+    DateTime p1, {
     required int precision,
     bool roundDown = false,
   }) =>
       {
-        'p1': p1,
+        'p1': p1.microsecondsSinceEpoch,
         'precision': precision,
         'roundDown': roundDown,
       };

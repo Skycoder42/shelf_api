@@ -114,12 +114,21 @@ final class _QueryParamsBuilder {
     if (param.isList) {
       return paramRef
           .property('map')
-          .call([Types.fromType(param.type, isNull: false).property('parse')])
+          .call([_convertNonStringExpression(param)])
           .property('toList')
           .call(const []);
     }
 
-    return Types.fromType(param.type, isNull: false)
-        .newInstanceNamed('parse', [paramRef]);
+    return _convertNonStringExpression(param).call([paramRef]);
+  }
+
+  Expression _convertNonStringExpression(EndpointQueryParameter param) {
+    if (param.isEnum) {
+      return Types.fromType(param.type, isNull: false)
+          .property('values')
+          .property('byName');
+    }
+
+    return Types.fromType(param.type, isNull: false).property('parse');
   }
 }

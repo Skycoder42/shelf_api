@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
 
+import '../../example/basic_enum.dart';
 import 'test_helper.dart';
 
 void main() {
@@ -20,8 +20,10 @@ void main() {
   test('/path/simple endpoint correctly translates parameters', () async {
     const testP1 = 'tree';
     const testP2 = 12;
-    final response = await server.apiClient.paramsGetPathSimple(testP1, testP2);
-    expect(response, [testP1, testP2]);
+    const testP3 = BasicEnum.value2;
+    final response =
+        await server.apiClient.paramsGetPathSimple(testP1, testP2, testP3);
+    expect(response, [testP1, testP2, testP3.toString()]);
   });
 
   test('/path/custom endpoint correctly translates parameters', () async {
@@ -55,9 +57,11 @@ void main() {
   test('/query accepts default values', () async {
     const testSValue = 'tree';
     final testUValue = Uri.https('example.com');
+    const testEValue = BasicEnum.value1;
     final response = await server.apiClient.paramsGetQuery(
       sValue: testSValue,
       uValue: testUValue,
+      eValue: testEValue,
     );
     expect(response, {
       'sValue': testSValue,
@@ -66,6 +70,7 @@ void main() {
       'uValue': testUValue.toString(),
       'dtValue': null,
       's2Value': 's2',
+      'eValue': testEValue.toString(),
     });
   });
 
@@ -76,6 +81,7 @@ void main() {
     final testUValue = Uri.https('example.com');
     final testDtValue = DateTime.now();
     const testS2Value = 'another tree';
+    const testEValue = BasicEnum.value3;
 
     final response = await server.apiClient.paramsGetQuery(
       sValue: testSValue,
@@ -84,6 +90,7 @@ void main() {
       uValue: testUValue,
       dtValue: testDtValue,
       s2Value: testS2Value,
+      eValue: testEValue,
     );
     expect(response, {
       'sValue': testSValue,
@@ -92,6 +99,7 @@ void main() {
       'uValue': testUValue.toString(),
       'dtValue': testDtValue.toIso8601String(),
       's2Value': testS2Value,
+      'eValue': testEValue.toString(),
     });
   });
 
@@ -108,6 +116,7 @@ void main() {
       'iValue': [1, 2, 3],
       'dtValue': '[]',
       's2Value': ['s2'],
+      'eValue': '[]',
     });
   });
 
@@ -117,12 +126,14 @@ void main() {
     const testIValue = [2, 4, 8];
     final testDtValue = [DateTime.now()];
     const testS2Value = <String>[];
+    const testEValue = BasicEnum.values;
     final response = await server.apiClient.paramsGetQueryList(
       sValue: testSValue,
       uValue: testUValue,
       iValue: testIValue,
       dtValue: testDtValue,
       s2Value: testS2Value,
+      eValue: testEValue,
     );
     expect(response, {
       'sValue': testSValue,
@@ -130,6 +141,7 @@ void main() {
       'iValue': testIValue,
       'dtValue': testDtValue.toString(),
       's2Value': ['s2'],
+      'eValue': testEValue.toString(),
     });
   });
 
@@ -182,14 +194,14 @@ void main() {
   });
 
   test('/combined accepts path and query parameters', () async {
-    const testP1 = pi;
+    final testP1 = DateTime.now();
     const testPrecision = 3;
     final response = await server.apiClient.paramsGetCombined(
       testP1,
       precision: testPrecision,
     );
     expect(response, {
-      'p1': testP1,
+      'p1': testP1.microsecondsSinceEpoch,
       'precision': 3,
       'roundDown': false,
     });

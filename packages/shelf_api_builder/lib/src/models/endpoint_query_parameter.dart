@@ -9,6 +9,7 @@ class EndpointQueryParameter {
   final String queryName;
   final OpaqueType type;
   final bool isString;
+  final bool isEnum;
   final bool isDateTime;
   final bool isList;
   final bool isOptional;
@@ -21,6 +22,7 @@ class EndpointQueryParameter {
     required this.queryName,
     required this.type,
     required this.isString,
+    required this.isEnum,
     required this.isDateTime,
     required this.isList,
     required this.isOptional,

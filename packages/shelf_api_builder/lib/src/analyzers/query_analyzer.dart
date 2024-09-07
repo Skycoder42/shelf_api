@@ -67,6 +67,7 @@ class QueryAnalyzer {
       queryName: queryParam?.name ?? param.name,
       type: OpaqueDartType(_buildStep, paramType),
       isString: paramType.isDartCoreString,
+      isEnum: paramType.isEnum,
       isDateTime: TypeCheckers.dateTime.isExactlyType(paramType),
       isList: isList,
       isOptional: param.isOptional,

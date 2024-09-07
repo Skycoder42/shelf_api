@@ -83,6 +83,7 @@ class PathAnalyzer {
         name: param.name,
         type: OpaqueDartType(_buildStep, paramType),
         isString: paramType.isDartCoreString,
+        isEnum: paramType.isEnum,
         isDateTime: TypeCheckers.dateTime.isExactlyType(paramType),
         customParse: await pathParam?.parse(_buildStep),
         customToString: await pathParam?.stringify(_buildStep),

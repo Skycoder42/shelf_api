@@ -8,6 +8,7 @@ class EndpointPathParameter {
   final String name;
   final OpaqueType type;
   final bool isString;
+  final bool isEnum;
   final bool isDateTime;
   final OpaqueConstant? customParse;
   final OpaqueConstant? customToString;
@@ -16,6 +17,7 @@ class EndpointPathParameter {
     required this.name,
     required this.type,
     required this.isString,
+    required this.isEnum,
     required this.isDateTime,
     required this.customParse,
     required this.customToString,
