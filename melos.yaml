@@ -8,11 +8,16 @@ scripts:
     exec: dart pub get
 
   upgrade:
-    exec: dart pub upgrade --major-versions --tighten
+    exec: >-
+      dart pub add 'dev:flutter:{"sdk":"flutter"}' &&
+      dart pub upgrade --major-versions --tighten &&
+      dart pub remove flutter &&
+      dart pub upgrade
 
-  build: >-
-    dart pub global run melos exec -c1 --depends-on=build_runner
-    dart run build_runner build
+  build:
+    run: dart run build_runner build
+    exec:
+      orderDependents: true
 
   build:clean: >-
     dart pub global run melos exec -c1 --depends-on=build_runner
