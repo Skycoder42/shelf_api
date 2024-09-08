@@ -27,13 +27,13 @@ void main() {
   });
 
   test('/path/custom endpoint correctly translates parameters', () async {
-    const testP1 = 'word';
+    const testP1 = 'wo/rd';
     const testP2 = 'valid/sub/path';
     final response = await server.apiClient.paramsGetPathCustom(
       testP1,
       Uri.parse(testP2),
     );
-    expect(response, ['WORDWORDWORD', testP2]);
+    expect(response, ['WO/RDWO/RDWO/RD', testP2]);
   });
 
   test('/path/custom endpoint returns 404 for non matching params', () async {
@@ -44,6 +44,19 @@ void main() {
         testP1,
         Uri.parse(testP2),
       ),
+      throwsA(
+        isA<DioException>().having(
+          (m) => m.response?.statusCode,
+          'statusCode',
+          HttpStatus.notFound,
+        ),
+      ),
+    );
+  });
+
+  test('/path/custom endpoint returns 404 if p1 is not encoded', () async {
+    expect(
+      () => server.dio.get('/api/v1/params/path/custom/invalid/p1/sub/ok'),
       throwsA(
         isA<DioException>().having(
           (m) => m.response?.statusCode,

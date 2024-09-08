@@ -12,6 +12,7 @@ class EndpointPathParameter {
   final bool isDateTime;
   final OpaqueConstant? customParse;
   final OpaqueConstant? customToString;
+  final bool urlEncode;
 
   EndpointPathParameter({
     required this.name,
@@ -21,6 +22,7 @@ class EndpointPathParameter {
     required this.isDateTime,
     required this.customParse,
     required this.customToString,
+    required this.urlEncode,
   });
 
   String get handlerParamName => '\$path\$$name';

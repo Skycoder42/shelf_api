@@ -14,7 +14,11 @@ final class PathBuilder {
 
   Iterable<Expression> build() sync* {
     for (final param in _pathParameters) {
-      final paramRef = refer(param.handlerParamName);
+      Expression paramRef = refer(param.handlerParamName);
+
+      if (param.urlEncode) {
+        paramRef = Types.uri.property('decodeComponent').call([paramRef]);
+      }
 
       if (param.customParse case final OpaqueConstant parse) {
         yield Constants.fromConstant(parse).call([paramRef]);

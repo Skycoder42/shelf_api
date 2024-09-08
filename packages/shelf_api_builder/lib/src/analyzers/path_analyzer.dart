@@ -87,6 +87,7 @@ class PathAnalyzer {
         isDateTime: TypeCheckers.dateTime.isExactlyType(paramType),
         customParse: await pathParam?.parse(_buildStep),
         customToString: await pathParam?.stringify(_buildStep),
+        urlEncode: pathParam?.urlEncode ?? true,
       );
     }
 

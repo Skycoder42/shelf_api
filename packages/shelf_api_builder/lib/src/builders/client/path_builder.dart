@@ -8,6 +8,7 @@ import '../../models/endpoint_path_parameter.dart';
 import '../../models/opaque_constant.dart';
 import '../../util/code/literal_string_builder.dart';
 import '../../util/constants.dart';
+import '../../util/types.dart';
 import '../base/expression_builder.dart';
 
 @internal
@@ -52,14 +53,24 @@ final class PathBuilder extends ExpressionBuilder {
 
   Expression _paramValue(EndpointPathParameter pathParam) {
     final paramRef = refer(pathParam.name);
+
+    Expression paramStringRef;
     if (pathParam.customToString case final OpaqueConstant customToString) {
-      return Constants.fromConstant(customToString).call([paramRef]);
+      paramStringRef = Constants.fromConstant(customToString).call([paramRef]);
     } else if (pathParam.isEnum) {
-      return paramRef.property('name');
+      paramStringRef = paramRef.property('name');
     } else if (pathParam.isDateTime) {
-      return paramRef.property('toIso8601String').call(const []);
+      paramStringRef = paramRef.property('toIso8601String').call(const []);
+    } else if (pathParam.urlEncode && !pathParam.isString) {
+      paramStringRef = paramRef.property('toString').call(const []);
     } else {
-      return paramRef;
+      paramStringRef = paramRef;
+    }
+
+    if (pathParam.urlEncode) {
+      return Types.uri.property('encodeComponent').call([paramStringRef]);
+    } else {
+      return paramStringRef;
     }
   }
 }

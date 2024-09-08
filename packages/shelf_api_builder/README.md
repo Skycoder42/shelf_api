@@ -117,9 +117,9 @@ To create a basic server, simply create a shelf pipeline ad serve it:
 ```dart
 void main() async {
   final app = const Pipeline()
-      .addMiddleware(handleFormatExceptions()) /// Recommended to gracefully handle JSON errors
+      .addMiddleware(handleFormatExceptions()) /// Recommended to gracefully handle JSON parsing errors
       .addMiddleware(logRequests()) /// If you use this, it must come AFTER the handleFormatExceptions
-      .addMiddleware(rivershelf()) /// Required if you want to be able to access a ref in you endpoints
+      .addMiddleware(rivershelf()) /// Required if you want to be able to access a riverpod ref in you endpoints
       .addHandler(ExampleApi().call); /// Required. Registers the actual API as handler
 
   final server = await serve(app, 'localhost', 8080);

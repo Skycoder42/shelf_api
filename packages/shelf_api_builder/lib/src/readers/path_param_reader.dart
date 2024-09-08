@@ -20,6 +20,8 @@ class PathParamReader with StringifiableReader {
       );
     }
   }
+
+  bool get urlEncode => constantReader.read('urlEncode').boolValue;
 }
 
 @internal

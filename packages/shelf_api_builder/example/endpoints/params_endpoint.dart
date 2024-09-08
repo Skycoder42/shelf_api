@@ -13,7 +13,7 @@ class ParamsEndpoint extends ShelfEndpoint {
   @Get(r'/path/custom/<c1>/sub/<c2|[^\/].*>')
   List<dynamic> getPathCustom(
     @PathParam(parse: parseString, stringify: stringifyString) String c1,
-    Uri c2,
+    @PathParam(urlEncode: false) Uri c2,
   ) =>
       [c1, c2.toString()];
 
