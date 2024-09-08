@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2024-09-08
+### Added
+- Added support for automatic handling of enums as path and query parameters
+  - Are converter to value strings via `enum.name` and parsed using
+  `enum.values.byName`
+- Added support for URL encoding of path parameters
+  - Ensures that all path parameters are correctly encoded by the api client and
+  decoded by the server
+  - Enabled by default, can be turned of via `PathParam.urlEncode` annotation
+
+### Changed
+- Updated min `shelf_api` to 1.3.0
+
 ## [1.1.1] - 2024-08-29
 ### Changed
 - Updated dependencies
@@ -22,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release
 
+[1.2.0]: https://github.com/Skycoder42/shelf_api/compare/shelf_api_builder-v1.1.1...shelf_api_builder-v1.2.0
 [1.1.1]: https://github.com/Skycoder42/shelf_api/compare/shelf_api_builder-v1.1.0...shelf_api_builder-v1.1.1
 [1.1.0]: https://github.com/Skycoder42/shelf_api/compare/shelf_api_builder-v1.0.1...shelf_api_builder-v1.1.0
 [1.0.1]: https://github.com/Skycoder42/shelf_api/compare/shelf_api_builder-v1.0.0+1...shelf_api_builder-v1.0.1
