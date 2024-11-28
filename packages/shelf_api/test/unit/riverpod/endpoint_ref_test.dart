@@ -5,18 +5,22 @@ import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks([
-  MockSpec<ShelfRequestRef>(),
+  MockSpec<Ref>(),
   MockSpec<ProviderContainer>(),
   MockSpec<ProviderSubscription>(),
 ])
 import 'endpoint_ref_test.mocks.dart';
 
-// ignore: subtype_of_sealed_class, avoid_implementing_value_types
-class _FakeProvider extends Fake implements ProviderBase, ProviderListenable {}
+// ignore: subtype_of_sealed_class
+class _FakeProvider extends Fake
+    implements
+        // ignore: avoid_implementing_value_types
+        ProviderBase<dynamic>,
+        ProviderListenable<dynamic> {}
 
 void main() {
   group('requestContext', () {
-    final mockRef = MockShelfRequestRef();
+    final mockRef = MockRef();
 
     setUp(() {
       reset(mockRef);
@@ -52,7 +56,7 @@ void main() {
     });
 
     test('refresh calls container.refresh and returns the result', () {
-      when(mockProviderContainer.refresh(any)).thenReturn(42);
+      when(mockProviderContainer.refresh<dynamic>(any)).thenReturn(42);
 
       final result = sut.refresh(testProvider);
 
@@ -72,7 +76,7 @@ void main() {
       setUp(() {
         reset(mockProviderSubscription);
 
-        when(mockProviderContainer.listen(any, any))
+        when(mockProviderContainer.listen<dynamic>(any, any))
             .thenReturn(mockProviderSubscription);
       });
 

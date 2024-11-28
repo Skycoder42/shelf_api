@@ -31,7 +31,7 @@ class TResponseBody<T> {
   });
 
   /// Creates a TResponseBody from a [response] and the already decoded [data].
-  TResponseBody.fromResponse(Response response, this.data)
+  TResponseBody.fromResponse(Response<dynamic> response, this.data)
       : statusCode = response.statusCode ?? 200,
         statusMessage = response.statusMessage,
         isRedirect = response.isRedirect,

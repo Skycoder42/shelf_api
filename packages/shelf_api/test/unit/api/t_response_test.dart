@@ -169,7 +169,7 @@ void main() {
     group('constructor', () {
       _testResponseConstructor(
         'new',
-        construct: (body, {context, headers, encoding}) => TResponse(
+        construct: (body, {context, headers, encoding}) => TResponse<dynamic>(
           HttpStatus.tooManyRequests,
           body: body,
           headers: headers,
@@ -193,7 +193,7 @@ void main() {
       _testResponseConstructor(
         'movedPermanently',
         construct: (body, {context, headers, encoding}) =>
-            TResponse.movedPermanently(
+            TResponse<dynamic>.movedPermanently(
           'test-location',
           body: body,
           headers: headers,
@@ -208,7 +208,8 @@ void main() {
 
       _testResponseConstructor(
         'found',
-        construct: (body, {context, headers, encoding}) => TResponse.found(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.found(
           'test-location',
           body: body,
           headers: headers,
@@ -223,7 +224,8 @@ void main() {
 
       _testResponseConstructor(
         'seeOther',
-        construct: (body, {context, headers, encoding}) => TResponse.seeOther(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.seeOther(
           'test-location',
           body: body,
           headers: headers,
@@ -239,7 +241,7 @@ void main() {
       _testResponseConstructor(
         'notModified',
         construct: (body, {context, headers, encoding}) =>
-            TResponse.notModified(
+            TResponse<dynamic>.notModified(
           headers: headers,
           context: context,
         ),
@@ -249,7 +251,8 @@ void main() {
 
       _testResponseConstructor(
         'badRequest',
-        construct: (body, {context, headers, encoding}) => TResponse.badRequest(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.badRequest(
           body: body,
           headers: headers,
           context: context,
@@ -262,7 +265,7 @@ void main() {
       _testResponseConstructor(
         'unauthorized',
         construct: (body, {context, headers, encoding}) =>
-            TResponse.unauthorized(
+            TResponse<dynamic>.unauthorized(
           body,
           headers: headers,
           context: context,
@@ -274,7 +277,8 @@ void main() {
 
       _testResponseConstructor(
         'forbidden',
-        construct: (body, {context, headers, encoding}) => TResponse.forbidden(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.forbidden(
           body,
           headers: headers,
           context: context,
@@ -286,7 +290,8 @@ void main() {
 
       _testResponseConstructor(
         'notFound',
-        construct: (body, {context, headers, encoding}) => TResponse.notFound(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.notFound(
           body,
           headers: headers,
           context: context,
@@ -299,7 +304,7 @@ void main() {
       _testResponseConstructor(
         'internalServerError',
         construct: (body, {context, headers, encoding}) =>
-            TResponse.internalServerError(
+            TResponse<dynamic>.internalServerError(
           body: body,
           headers: headers,
           context: context,

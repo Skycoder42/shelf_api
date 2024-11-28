@@ -17,7 +17,7 @@ Future<Response> riverpodRequestHandler(Request request) async {
     _ => null,
   };
 
-  await Future.delayed(Duration(milliseconds: delay));
+  await Future<void>.delayed(Duration(milliseconds: delay));
 
   return Response(
     timestamp == null ? HttpStatus.badRequest : HttpStatus.ok,

@@ -35,7 +35,7 @@ void main() {
 
   test('singleton returns constant timestamp value', () async {
     final firstTimestamp = await getRiverpod(_Mode.singleton);
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     final secondTimestamp = await getRiverpod(_Mode.singleton);
 
     expect(secondTimestamp, firstTimestamp);
@@ -44,7 +44,7 @@ void main() {
   group('factory', () {
     test('returns new timestamp for every request', () async {
       final firstTimestamp = await getRiverpod(_Mode.factory);
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
       final secondTimestamp = await getRiverpod(_Mode.factory);
 
       expect(secondTimestamp, isNot(firstTimestamp));

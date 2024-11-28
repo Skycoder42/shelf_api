@@ -23,7 +23,7 @@ void main() {
       addTearDown(testController.close);
 
       final sut = testController.stream.onFinished(expectAsync0(() {}));
-      late StreamSubscription sub;
+      late StreamSubscription<int> sub;
       sub = sut.listen(
         expectAsync1(
           count: 2,
