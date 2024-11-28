@@ -37,7 +37,7 @@ void main() {
   test('/text/custom returns unsupported media type if content type is invalid',
       () async {
     expect(
-      () => server.dio.get(
+      () => server.dio.get<void>(
         '/api/v1/body/text/custom',
         options: Options(
           contentType: Headers.textPlainContentType,
@@ -75,7 +75,7 @@ void main() {
     testController
       ..add([0, 1, 2])
       ..add([3]);
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     testController
       ..add([4, 5, 6, 7, 8, 9, 10])
       ..add([11, 12, 13, 14]);
@@ -90,7 +90,7 @@ void main() {
 
   test('/json returns bad request if request is empty', () async {
     expect(
-      () => server.dio.get(
+      () => server.dio.get<void>(
         '/api/v1/body/json',
         options: Options(
           contentType: Headers.jsonContentType,
@@ -109,7 +109,7 @@ void main() {
   test('/json returns unsupported media type if content type is invalid',
       () async {
     expect(
-      () => server.dio.get(
+      () => server.dio.get<void>(
         '/api/v1/body/json',
         options: Options(
           contentType: Headers.textPlainContentType,
@@ -149,7 +149,7 @@ void main() {
   test('/json/custom returns unsupported media type if content type is invalid',
       () async {
     expect(
-      () => server.dio.get(
+      () => server.dio.get<void>(
         '/api/v1/body/json/custom',
         options: Options(
           contentType: Headers.jsonContentType,

@@ -31,7 +31,7 @@ void main() {
     });
 
     test('GET <empty> returns notFound', () async {
-      final response = await server.dio.get(
+      final response = await server.dio.get<void>(
         '/api/v1',
         options: Options(validateStatus: (status) => true),
       );
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('GET /path/open/ returns notFound', () async {
-      final response = await server.dio.get(
+      final response = await server.dio.get<void>(
         '/api/v1/path/open/',
         options: Options(validateStatus: (status) => true),
       );
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('GET /path/closed returns notFound', () async {
-      final response = await server.dio.get(
+      final response = await server.dio.get<void>(
         '/api/v1/path/closed',
         options: Options(validateStatus: (status) => true),
       );
@@ -95,7 +95,7 @@ void main() {
     });
 
     test('POST <empty> returns notFound', () async {
-      final response = await server.dio.post(
+      final response = await server.dio.post<void>(
         '/api/v1/closed',
         options: Options(validateStatus: (status) => true),
       );
@@ -120,7 +120,7 @@ void main() {
     });
 
     test('POST <empty> returns notFound', () async {
-      final response = await server.dio.post(
+      final response = await server.dio.post<void>(
         '/api/v1',
         options: Options(validateStatus: (status) => true),
       );

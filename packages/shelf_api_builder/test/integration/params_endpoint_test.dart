@@ -56,7 +56,8 @@ void main() {
 
   test('/path/custom endpoint returns 404 if p1 is not encoded', () async {
     expect(
-      () => server.dio.get('/api/v1/params/path/custom/invalid/p1/sub/ok'),
+      () =>
+          server.dio.get<void>('/api/v1/params/path/custom/invalid/p1/sub/ok'),
       throwsA(
         isA<DioException>().having(
           (m) => m.response?.statusCode,

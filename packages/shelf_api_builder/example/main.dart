@@ -24,7 +24,7 @@ void main(List<String> args) async {
     ProcessSignal.sigint,
     if (!Platform.isWindows) ProcessSignal.sigterm,
   ];
-  final subs = <StreamSubscription>[];
+  final subs = <StreamSubscription<ProcessSignal>>[];
   for (final signal in signals) {
     subs.add(
       signal.watch().listen((signal) {
