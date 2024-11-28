@@ -10,8 +10,8 @@ DateTime dateTimeSingleton(Ref ref) => DateTime.now();
 @Riverpod(keepAlive: false)
 DateTime dateTimeFactory(Ref ref) => DateTime.now();
 
-@Riverpod(dependencies: [shelfRequest])
+@Riverpod(keepAlive: true, dependencies: [shelfRequest])
 DateTime requestDateTimeSingleton(Ref ref) => DateTime.now();
 
-@Riverpod(dependencies: [shelfRequest])
+@Riverpod(keepAlive: false, dependencies: [shelfRequest])
 DateTime requestDateTimeFactory(Ref ref) => DateTime.now();
