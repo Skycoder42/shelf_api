@@ -19,7 +19,7 @@ platforms:
   windows:
 
 dependencies:
-  analyzer: '>=6.11.0 <8.0.0'
+  analyzer: ">=6.11.0 <8.0.0"
   build: ^2.4.2
   build_config: ^1.1.2
   code_builder: ^4.10.1

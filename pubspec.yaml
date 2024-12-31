@@ -7,9 +7,3 @@ environment:
 workspace:
   - packages/shelf_api
   - packages/shelf_api_builder
-
-dev_dependencies:
-  # Added as dependency here to ensure whole workspace is compatible with the
-  # same versions that flutter requires.
-  flutter:
-    sdk: flutter
