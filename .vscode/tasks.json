@@ -6,19 +6,39 @@
 			"command": "dart",
 			"cwd": "packages/shelf_api",
 			"args": [
-				"pub",
-				"global",
 				"run",
-				"melos",
-				"run",
-				"build:watch"
+				"build_runner",
+				"watch"
 			],
 			"problemMatcher": [],
-			"label": "melos: run build:watch",
+			"label": "dart: build shelf_api",
+			"detail": "packages/shelf_api"
+		},
+		{
+			"type": "dart",
+			"command": "dart",
+			"cwd": "packages/shelf_api_builder",
+			"args": [
+				"run",
+				"build_runner",
+				"watch"
+			],
+			"problemMatcher": [],
+			"label": "dart: build shelf_api_builder",
+			"detail": "packages/shelf_api_builder"
+		},
+		{
+			"label": "dart: dart run build_runner watch",
+			"detail": "workspace",
+			"dependsOn": [
+				"dart: build shelf_api",
+				"dart: build shelf_api_builder",
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"problemMatcher": []
 		}
 	]
 }

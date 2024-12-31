@@ -4,28 +4,6 @@ packages:
   - packages/**
 
 scripts:
-  get:
-    exec: dart pub get
-
-  upgrade:
-    exec: >-
-      dart pub add 'dev:flutter:{"sdk":"flutter"}' &&
-      dart pub upgrade --major-versions --tighten &&
-      dart pub remove flutter &&
-      dart pub upgrade
-
-  build:
-    run: dart run build_runner build
-    exec:
-      orderDependents: true
-
-  build:clean: >-
-    dart pub global run melos exec -c1 --depends-on=build_runner
-    dart run build_runner build --delete-conflicting-outputs
-
-  build:watch: >-
-    dart pub global run melos exec --depends-on=build_runner
-    dart run build_runner watch
 
   pre-commit:init: >-
     bash -c "echo -e
