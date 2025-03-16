@@ -39,11 +39,7 @@ class BodyParam {
   final Function? toJson;
 
   /// Constructor.
-  const BodyParam({
-    this.contentTypes,
-    this.fromJson,
-    this.toJson,
-  });
+  const BodyParam({this.contentTypes, this.fromJson, this.toJson});
 }
 
 /// Marks the given parameter as the body of the request.

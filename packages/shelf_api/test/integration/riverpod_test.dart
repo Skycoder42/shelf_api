@@ -2,12 +2,7 @@ import 'package:test/test.dart';
 
 import 'test_helper.dart';
 
-enum _Mode {
-  singleton,
-  factory,
-  requestSingleton,
-  requestFactory,
-}
+enum _Mode { singleton, factory, requestSingleton, requestFactory }
 
 void main() {
   late ExampleServer server;
@@ -51,8 +46,11 @@ void main() {
     });
 
     test('returns same timestamp if requests are run in parallel', () async {
-      final [firstTimestamp, secondTimestamp, thirdTimestamp] =
-          await Future.wait([
+      final [
+        firstTimestamp,
+        secondTimestamp,
+        thirdTimestamp,
+      ] = await Future.wait([
         getRiverpod(_Mode.factory, const Duration(milliseconds: 200)),
         Future.delayed(
           const Duration(milliseconds: 100),

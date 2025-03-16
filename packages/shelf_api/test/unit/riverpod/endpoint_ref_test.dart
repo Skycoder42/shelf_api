@@ -27,10 +27,7 @@ void main() {
     });
 
     test('throws state error by default', () {
-      expect(
-        () => shelfRequest(mockRef),
-        throwsStateError,
-      );
+      expect(() => shelfRequest(mockRef), throwsStateError);
     });
   });
 
@@ -76,8 +73,9 @@ void main() {
       setUp(() {
         reset(mockProviderSubscription);
 
-        when(mockProviderContainer.listen<dynamic>(any, any))
-            .thenReturn(mockProviderSubscription);
+        when(
+          mockProviderContainer.listen<dynamic>(any, any),
+        ).thenReturn(mockProviderSubscription);
       });
 
       test('calls container.listen and returns subscription value', () {
@@ -111,10 +109,12 @@ void main() {
       final mockProviderSubscription1 = MockProviderSubscription<int>();
       final mockProviderSubscription2 = MockProviderSubscription<int>();
 
-      when(mockProviderContainer.listen(testProvider, any))
-          .thenReturn(mockProviderSubscription1);
-      when(mockProviderContainer.listen(testProvider2, any))
-          .thenReturn(mockProviderSubscription2);
+      when(
+        mockProviderContainer.listen(testProvider, any),
+      ).thenReturn(mockProviderSubscription1);
+      when(
+        mockProviderContainer.listen(testProvider2, any),
+      ).thenReturn(mockProviderSubscription2);
 
       sut
         ..read(testProvider)

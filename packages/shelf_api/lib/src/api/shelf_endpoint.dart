@@ -22,10 +22,8 @@ abstract class ShelfEndpoint {
   /// Default constructor.
   ///
   /// The [ref] parameter is optional and only made visible for testing purpose.
-  ShelfEndpoint(
-    this.request, {
-    @visibleForTesting EndpointRef? ref,
-  }) : ref = ref ?? request.ref;
+  ShelfEndpoint(this.request, {@visibleForTesting EndpointRef? ref})
+    : ref = ref ?? request.ref;
 
   /// Endpoint initializer callback.
   ///
@@ -35,6 +33,7 @@ abstract class ShelfEndpoint {
   ///
   /// See [dispose] for a cleanup callback.
   @protected
+  // ignore: avoid_futureor_void for backwards compatibility
   FutureOr<void> init() {}
 
   /// Endpoint finalizer callback.
@@ -49,5 +48,6 @@ abstract class ShelfEndpoint {
   ///
   /// See [init] for a setup callback.
   @protected
+  // ignore: avoid_futureor_void for backwards compatibility
   FutureOr<void> dispose() {}
 }

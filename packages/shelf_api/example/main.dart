@@ -13,9 +13,10 @@ import 'riverpod_request_handler.dart';
 
 void main(List<String> args) async {
   final port = int.parse(args.firstOrNull ?? '8080');
-  final router = Router()
-    ..get('/riverpod', riverpodRequestHandler)
-    ..get('/format', formatHandler);
+  final router =
+      Router()
+        ..get('/riverpod', riverpodRequestHandler)
+        ..get('/format', formatHandler);
 
   final app = const Pipeline()
       .addMiddleware(handleFormatExceptions())

@@ -27,16 +27,16 @@ Middleware handleFormatExceptions() => _HandleFormatExceptionsMiddleware().call;
 
 class _HandleFormatExceptionsMiddleware {
   Handler call(Handler next) => (request) async {
-        try {
-          return await next(request);
-        } on FormatException catch (e, s) {
-          return Response.badRequest(
-            body: e.message,
-            context: {
-              handleFormatExceptionsOriginalExceptionKey: e,
-              handleFormatExceptionsOriginalStackTraceKey: s,
-            },
-          );
-        }
-      };
+    try {
+      return await next(request);
+    } on FormatException catch (e, s) {
+      return Response.badRequest(
+        body: e.message,
+        context: {
+          handleFormatExceptionsOriginalExceptionKey: e,
+          handleFormatExceptionsOriginalStackTraceKey: s,
+        },
+      );
+    }
+  };
 }

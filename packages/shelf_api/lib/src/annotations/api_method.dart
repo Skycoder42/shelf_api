@@ -55,87 +55,61 @@ class ApiMethod {
   final Function? toJson;
 
   /// Constructor.
-  const ApiMethod(
-    this.method,
-    this.path, {
-    this.fromJson,
-    this.toJson,
-  });
+  const ApiMethod(this.method, this.path, {this.fromJson, this.toJson});
 }
 
 /// Marks the given method as a get endpoint method.
 @Target({TargetKind.method})
 class Get extends ApiMethod {
   /// Constructor.
-  const Get(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.get, path);
+  const Get(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.get, path);
 }
 
 /// Marks the given method as a delete endpoint method.
 @Target({TargetKind.method})
 class Delete extends ApiMethod {
   /// Constructor.
-  const Delete(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.delete, path);
+  const Delete(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.delete, path);
 }
 
 /// Marks the given method as a head endpoint method.
 @Target({TargetKind.method})
 class Head extends ApiMethod {
   /// Constructor.
-  const Head(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.head, path);
+  const Head(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.head, path);
 }
 
 /// Marks the given method as a options endpoint method.
 @Target({TargetKind.method})
 class Options extends ApiMethod {
   /// Constructor.
-  const Options(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.options, path);
+  const Options(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.options, path);
 }
 
 /// Marks the given method as a patch endpoint method.
 @Target({TargetKind.method})
 class Patch extends ApiMethod {
   /// Constructor.
-  const Patch(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.patch, path);
+  const Patch(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.patch, path);
 }
 
 /// Marks the given method as a post endpoint method.
 @Target({TargetKind.method})
 class Post extends ApiMethod {
   /// Constructor.
-  const Post(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.post, path);
+  const Post(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.post, path);
 }
 
 /// Marks the given method as a put endpoint method.
 @Target({TargetKind.method})
 class Put extends ApiMethod {
   /// Constructor.
-  const Put(
-    String path, {
-    super.fromJson,
-    super.toJson,
-  }) : super(HttpMethod.put, path);
+  const Put(String path, {super.fromJson, super.toJson})
+    : super(HttpMethod.put, path);
 }

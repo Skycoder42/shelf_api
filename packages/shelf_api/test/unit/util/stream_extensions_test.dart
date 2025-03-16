@@ -25,14 +25,11 @@ void main() {
       final sut = testController.stream.onFinished(expectAsync0(() {}));
       late StreamSubscription<int> sub;
       sub = sut.listen(
-        expectAsync1(
-          count: 2,
-          (event) {
-            if (event == 2) {
-              sub.cancel();
-            }
-          },
-        ),
+        expectAsync1(count: 2, (event) {
+          if (event == 2) {
+            sub.cancel();
+          }
+        }),
         onDone: () => fail('onDone should not be called'),
       );
 
@@ -61,9 +58,7 @@ void main() {
         final request = Request(
           HttpMethod.get,
           Uri.http('localhost', '/'),
-          headers: {
-            HttpHeaders.contentLengthHeader: '6',
-          },
+          headers: {HttpHeaders.contentLengthHeader: '6'},
         );
 
         test('merges stream into single byte array', () async {

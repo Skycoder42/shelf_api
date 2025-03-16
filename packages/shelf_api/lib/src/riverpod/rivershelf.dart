@@ -87,33 +87,28 @@ class _RivershelfMiddleware {
     List<Override> overrides = const [],
     List<ProviderObserver>? observers,
   }) : _providerContainer = ProviderContainer(
-          parent: parent,
-          overrides: overrides,
-          observers: observers,
-        );
+         parent: parent,
+         overrides: overrides,
+         observers: observers,
+       );
 
   _RivershelfMiddleware.fromContainer(this._providerContainer);
 
   Handler call(Handler next) => (request) async {
-        final container = ProviderContainer(
-          parent: _providerContainer,
-          overrides: [
-            shelfRequestProvider.overrideWithValue(request),
-          ],
-        );
-        final endpointRef = EndpointRef(container);
+    final container = ProviderContainer(
+      parent: _providerContainer,
+      overrides: [shelfRequestProvider.overrideWithValue(request)],
+    );
+    final endpointRef = EndpointRef(container);
 
-        try {
-          final changedRequest = request.change(
-            context: {
-              ...request.context,
-              rivershelfRefKey: endpointRef,
-            },
-          );
-          return await next(changedRequest);
-        } finally {
-          endpointRef.dispose();
-          container.dispose();
-        }
-      };
+    try {
+      final changedRequest = request.change(
+        context: {...request.context, rivershelfRefKey: endpointRef},
+      );
+      return await next(changedRequest);
+    } finally {
+      endpointRef.dispose();
+      container.dispose();
+    }
+  };
 }

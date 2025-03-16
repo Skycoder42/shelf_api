@@ -37,9 +37,5 @@ class QueryParam {
   final Function? stringify;
 
   /// Constructor.
-  const QueryParam({
-    this.name,
-    this.parse,
-    this.stringify,
-  });
+  const QueryParam({this.name, this.parse, this.stringify});
 }

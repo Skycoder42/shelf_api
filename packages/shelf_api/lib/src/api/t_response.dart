@@ -17,9 +17,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.ok]
   TResponse.ok(
@@ -28,9 +28,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.ok(
-          _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.movedPermanently]
   TResponse.movedPermanently(
@@ -40,9 +40,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.movedPermanently(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.found]
   TResponse.found(
@@ -52,9 +52,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.found(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.seeOther]
   TResponse.seeOther(
@@ -64,15 +64,12 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.seeOther(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.notModified]
-  TResponse.notModified({
-    super.headers,
-    super.context,
-  }) : super.notModified();
+  TResponse.notModified({super.headers, super.context}) : super.notModified();
 
   /// See [Response.badRequest]
   TResponse.badRequest({
@@ -81,9 +78,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.badRequest(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.unauthorized]
   TResponse.unauthorized(
@@ -92,9 +89,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.unauthorized(
-          _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.forbidden]
   TResponse.forbidden(
@@ -103,9 +100,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.forbidden(
-          _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.notFound]
   TResponse.notFound(
@@ -114,9 +111,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.notFound(
-          _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   /// See [Response.internalServerError]
   TResponse.internalServerError({
@@ -125,9 +122,9 @@ class TResponse<T> extends Response {
     super.encoding,
     super.context,
   }) : super.internalServerError(
-          body: _toBody(body, encoding),
-          headers: _addContentTypeHeader(headers, body),
-        );
+         body: _toBody(body, encoding),
+         headers: _addContentTypeHeader(headers, body),
+       );
 
   @override
   Response change({
@@ -135,25 +132,23 @@ class TResponse<T> extends Response {
     Map<String, Object?>? context,
     Object? body,
     Encoding? encoding,
-  }) =>
-      super.change(
-        headers: {
-          ...?headers,
-          if (body != null) ...?_addContentTypeHeader(null, body),
-        },
-        context: context,
-        body: _toBody(body, encoding),
-      );
+  }) => super.change(
+    headers: {
+      ...?headers,
+      if (body != null) ...?_addContentTypeHeader(null, body),
+    },
+    context: context,
+    body: _toBody(body, encoding),
+  );
 
   static Object? _toBody(dynamic body, [Encoding? encoding]) => switch (body) {
-        null => null,
-        final String text => text,
-        final Stream<String> stream =>
-          stream.transform((encoding ?? utf8).encoder),
-        final Uint8List bytes => bytes,
-        final Stream<List<int>> stream => stream,
-        final _ => json.encode(body),
-      };
+    null => null,
+    final String text => text,
+    final Stream<String> stream => stream.transform((encoding ?? utf8).encoder),
+    final Uint8List bytes => bytes,
+    final Stream<List<int>> stream => stream,
+    final _ => json.encode(body),
+  };
 
   static Map<String, Object>? _addContentTypeHeader(
     Map<String, Object>? headers,
@@ -172,10 +167,6 @@ class TResponse<T> extends Response {
       return headers;
     }
 
-    return addHeader(
-      headers,
-      'Content-Type',
-      contentType,
-    );
+    return addHeader(headers, 'Content-Type', contentType);
   }
 }

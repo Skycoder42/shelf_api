@@ -43,8 +43,5 @@ class ApiEndpoint {
   final Middleware Function()? middleware;
 
   /// Constructor.
-  const ApiEndpoint(
-    this.path, {
-    this.middleware,
-  });
+  const ApiEndpoint(this.path, {this.middleware});
 }

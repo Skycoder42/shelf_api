@@ -18,8 +18,10 @@ void main() {
 
   test('returns badRequest', () async {
     const testErrorMessage = 'this is a format error';
-    final response =
-        await server.getRaw(Uri.parse('/format'), testErrorMessage);
+    final response = await server.getRaw(
+      Uri.parse('/format'),
+      testErrorMessage,
+    );
     expect(response.statusCode, HttpStatus.badRequest);
     expect(
       response.transform(utf8.decoder).join(),

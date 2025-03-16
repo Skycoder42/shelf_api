@@ -9,13 +9,13 @@ extension ShelfApiStreamX<T> on Stream<T> {
   /// Registers a callback to be invoked once the stream is done
   Stream<T> onFinished(FutureOr<void> Function() callback) {
     var finished = false;
-    FutureOr<void> finishedCallback() {
+    Future<void> finishedCallback() async {
       if (finished) {
-        return null;
+        return;
       }
       finished = true;
       // ignore: discarded_futures
-      return callback();
+      return await callback();
     }
 
     return cast<T>().transform(

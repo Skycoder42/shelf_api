@@ -20,7 +20,8 @@ part 'endpoint_ref.g.dart';
 /// MyValue myValue(MyValueRef ref) => MyValue(ref);
 /// ```
 @Riverpod(keepAlive: true, dependencies: [])
-Request shelfRequest(Ref ref) => throw StateError(
+Request shelfRequest(Ref ref) =>
+    throw StateError(
       'shelfRequestProvider can only be accessed via session.ref',
     );
 
@@ -49,10 +50,12 @@ class EndpointRef {
   ///
   /// See [Ref.read] and [Ref.watch] for more details.
   T read<T>(ProviderListenable<T> provider) {
-    final subscription = _keepAliveSubs.putIfAbsent(
-      provider,
-      () => container.listen(provider, (_, __) {}),
-    ) as ProviderSubscription<T>;
+    final subscription =
+        _keepAliveSubs.putIfAbsent(
+              provider,
+              () => container.listen(provider, (_, _) {}),
+            )
+            as ProviderSubscription<T>;
     return subscription.read();
   }
 

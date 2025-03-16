@@ -9,9 +9,7 @@ import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:shelf_api/src/riverpod/rivershelf.dart';
 import 'package:test/test.dart';
 
-@GenerateNiceMocks([
-  MockSpec<Request>(),
-])
+@GenerateNiceMocks([MockSpec<Request>()])
 import 'rivershelf_test.mocks.dart';
 
 class FakeResponse extends Fake implements Response {}
@@ -73,13 +71,11 @@ void main() {
 
       expect(newHandler(mockRequest), completes);
 
-      final VerificationResult(captured: [Map<String, Object?> context]) =
-          verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(
+        captured: [Map<String, Object?> context],
+      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
 
-      expect(
-        context,
-        containsPair(rivershelfRefKey, isA<EndpointRef>()),
-      );
+      expect(context, containsPair(rivershelfRefKey, isA<EndpointRef>()));
     });
 
     test('uses scoped provider container with context override', () {
@@ -88,8 +84,9 @@ void main() {
 
       expect(newHandler(mockRequest), completes);
 
-      final VerificationResult(captured: [Map<String, Object?> context]) =
-          verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(
+        captured: [Map<String, Object?> context],
+      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(container, isNot(testProviderContainer));
@@ -109,8 +106,9 @@ void main() {
 
       await expectLater(newHandler(mockRequest), completes);
 
-      final VerificationResult(captured: [Map<String, Object?> context]) =
-          verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(
+        captured: [Map<String, Object?> context],
+      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(
@@ -134,9 +132,7 @@ void main() {
     setUp(() {
       reset(mockRequest);
       testProviderContainer = ProviderContainer(
-        overrides: [
-          shelfRequestProvider.overrideWithValue(MockRequest()),
-        ],
+        overrides: [shelfRequestProvider.overrideWithValue(MockRequest())],
       );
     });
 
@@ -149,9 +145,7 @@ void main() {
       final request = Request(
         HttpMethod.get,
         Uri.http('localhost', '/'),
-        context: {
-          rivershelfRefKey: testRef,
-        },
+        context: {rivershelfRefKey: testRef},
       );
 
       expect(request.ref, same(testRef));
@@ -163,9 +157,7 @@ void main() {
       final request = Request(
         HttpMethod.get,
         Uri.http('localhost', '/'),
-        context: {
-          rivershelfRefKey: testRef,
-        },
+        context: {rivershelfRefKey: testRef},
       );
 
       expect(request.ref, same(testRef));

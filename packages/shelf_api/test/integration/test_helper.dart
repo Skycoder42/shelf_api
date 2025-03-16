@@ -13,13 +13,8 @@ class ExampleServer {
   final HttpClient _client;
 
   ExampleServer._(this._process, int port)
-      : _baseUri = Uri(
-          scheme: 'http',
-          host: 'localhost',
-          port: port,
-          path: '/',
-        ),
-        _client = HttpClient();
+    : _baseUri = Uri(scheme: 'http', host: 'localhost', port: port, path: '/'),
+      _client = HttpClient();
 
   static Future<ExampleServer> start() async {
     final port = 8000 + Random.secure().nextInt(999);
@@ -40,11 +35,12 @@ class ExampleServer {
           .transform(utf8.decoder)
           .transform(const LineSplitter())
           .map((line) {
-        if (!completer.isCompleted && line.startsWith('Serving at')) {
-          completer.complete(null);
-        }
-        return line;
-      }).listen((l) => print('OUT: $l'));
+            if (!completer.isCompleted && line.startsWith('Serving at')) {
+              completer.complete(null);
+            }
+            return line;
+          })
+          .listen((l) => print('OUT: $l'));
 
       await completer.future.timeout(const Duration(seconds: 5));
 

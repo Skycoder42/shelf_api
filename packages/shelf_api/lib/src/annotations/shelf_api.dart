@@ -25,9 +25,5 @@ class ShelfApi {
   final Middleware Function()? middleware;
 
   /// Constructor
-  const ShelfApi(
-    this.endpoints, {
-    this.basePath,
-    this.middleware,
-  });
+  const ShelfApi(this.endpoints, {this.basePath, this.middleware});
 }

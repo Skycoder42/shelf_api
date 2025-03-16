@@ -12,9 +12,5 @@ abstract base class ContentTypes {
   static const json = 'application/json';
 
   /// All default content types.
-  static const values = [
-    text,
-    binary,
-    json,
-  ];
+  static const values = [text, binary, json];
 }
