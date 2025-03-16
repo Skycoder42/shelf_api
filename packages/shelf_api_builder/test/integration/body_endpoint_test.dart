@@ -1,3 +1,5 @@
+// ignore_for_file: discarded_futures
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -34,24 +36,24 @@ void main() {
     expect(response, testBody);
   });
 
-  test('/text/custom returns unsupported media type if content type is invalid',
-      () async {
-    expect(
-      () => server.dio.get<void>(
-        '/api/v1/body/text/custom',
-        options: Options(
-          contentType: Headers.textPlainContentType,
+  test(
+    '/text/custom returns unsupported media type if content type is invalid',
+    () {
+      expect(
+        () => server.dio.get<void>(
+          '/api/v1/body/text/custom',
+          options: Options(contentType: Headers.textPlainContentType),
         ),
-      ),
-      throwsA(
-        isA<DioException>().having(
-          (m) => m.response?.statusCode,
-          'statusCode',
-          HttpStatus.unsupportedMediaType,
+        throwsA(
+          isA<DioException>().having(
+            (m) => m.response?.statusCode,
+            'statusCode',
+            HttpStatus.unsupportedMediaType,
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 
   test('/binary returns body as sent', () async {
     final testBody = Uint8List.fromList([1, 2, 3, 4]);
@@ -64,11 +66,7 @@ void main() {
 
     final response = server.apiClient.bodyStreamBinary(
       testController.stream,
-      $options: Options(
-        headers: {
-          Headers.contentLengthHeader: 15,
-        },
-      ),
+      $options: Options(headers: {Headers.contentLengthHeader: 15}),
     );
     expect(response.collect(), completion(List.generate(15, (i) => i)));
 
@@ -88,13 +86,11 @@ void main() {
     expect(response, testBody);
   });
 
-  test('/json returns bad request if request is empty', () async {
+  test('/json returns bad request if request is empty', () {
     expect(
       () => server.dio.get<void>(
         '/api/v1/body/json',
-        options: Options(
-          contentType: Headers.jsonContentType,
-        ),
+        options: Options(contentType: Headers.jsonContentType),
       ),
       throwsA(
         isA<DioException>().having(
@@ -106,14 +102,11 @@ void main() {
     );
   });
 
-  test('/json returns unsupported media type if content type is invalid',
-      () async {
+  test('/json returns unsupported media type if content type is invalid', () {
     expect(
       () => server.dio.get<void>(
         '/api/v1/body/json',
-        options: Options(
-          contentType: Headers.textPlainContentType,
-        ),
+        options: Options(contentType: Headers.textPlainContentType),
       ),
       throwsA(
         isA<DioException>().having(
@@ -132,10 +125,7 @@ void main() {
   });
 
   test('/json/map returns body as sent', () async {
-    const testBody = {
-      'a': BasicModel(1),
-      'b': BasicModel(2),
-    };
+    const testBody = {'a': BasicModel(1), 'b': BasicModel(2)};
     final response = await server.apiClient.bodyGetJsonMap(testBody);
     expect(response, testBody);
   });
@@ -146,65 +136,76 @@ void main() {
     expect(response, testBody);
   });
 
-  test('/json/custom returns unsupported media type if content type is invalid',
-      () async {
-    expect(
-      () => server.dio.get<void>(
-        '/api/v1/body/json/custom',
-        options: Options(
-          contentType: Headers.jsonContentType,
+  test(
+    '/json/custom returns unsupported media type if content type is invalid',
+    () {
+      expect(
+        () => server.dio.get<void>(
+          '/api/v1/body/json/custom',
+          options: Options(contentType: Headers.jsonContentType),
         ),
-      ),
-      throwsA(
-        isA<DioException>().having(
-          (m) => m.response?.statusCode,
-          'statusCode',
-          HttpStatus.unsupportedMediaType,
+        throwsA(
+          isA<DioException>().having(
+            (m) => m.response?.statusCode,
+            'statusCode',
+            HttpStatus.unsupportedMediaType,
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 
-  testData('/json/null returns body as sent', const [null, 42],
-      (testBody) async {
+  testData('/json/null returns body as sent', const [null, 42], (
+    testBody,
+  ) async {
     final response = await server.apiClient.bodyGetJsonNull(testBody);
     expect(response, testBody);
   });
 
-  testData('/json/null/list returns body as sent', const [
-    null,
-    [BasicModel(1), BasicModel(11)],
-  ], (testBody) async {
-    final response = await server.apiClient.bodyGetJsonNullList(testBody);
-    expect(response, testBody);
-  });
-
-  testData('/json/null/map returns body as sent', const [
-    null,
-    {'x': 10, 'y': 20},
-  ], (testBody) async {
-    final response = await server.apiClient.bodyGetJsonNullMap(testBody);
-    expect(response, testBody);
-  });
+  testData(
+    '/json/null/list returns body as sent',
+    const [
+      null,
+      [BasicModel(1), BasicModel(11)],
+    ],
+    (testBody) async {
+      final response = await server.apiClient.bodyGetJsonNullList(testBody);
+      expect(response, testBody);
+    },
+  );
 
   testData(
-      '/json/null/custom returns body as sent', const [null, BasicModel(999)],
-      (testBody) async {
-    final response = await server.apiClient.bodyGetJsonNullCustom(testBody);
-    expect(response, testBody);
-  });
+    '/json/null/map returns body as sent',
+    const [
+      null,
+      {'x': 10, 'y': 20},
+    ],
+    (testBody) async {
+      final response = await server.apiClient.bodyGetJsonNullMap(testBody);
+      expect(response, testBody);
+    },
+  );
 
-  test('/json/custom/null returns body as sent even without content type',
-      () async {
-    final response = await server.dio.get<String>(
-      '/api/v1/body/json/null/custom',
-      data: '0',
-      options: Options(
-        contentType: 'custom/invalid',
-      ),
-    );
+  testData(
+    '/json/null/custom returns body as sent',
+    const [null, BasicModel(999)],
+    (testBody) async {
+      final response = await server.apiClient.bodyGetJsonNullCustom(testBody);
+      expect(response, testBody);
+    },
+  );
 
-    expect(response.statusCode, HttpStatus.ok);
-    expect(response.data, json.encode(const BasicModel(0)));
-  });
+  test(
+    '/json/custom/null returns body as sent even without content type',
+    () async {
+      final response = await server.dio.get<String>(
+        '/api/v1/body/json/null/custom',
+        data: '0',
+        options: Options(contentType: 'custom/invalid'),
+      );
+
+      expect(response.statusCode, HttpStatus.ok);
+      expect(response.data, json.encode(const BasicModel(0)));
+    },
+  );
 }

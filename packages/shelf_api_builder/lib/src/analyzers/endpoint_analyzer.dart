@@ -16,7 +16,7 @@ class EndpointAnalyzer {
   final MethodsAnalyzer _methodsAnalyzer;
 
   EndpointAnalyzer(this._buildStep)
-      : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
+    : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
 
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,
@@ -37,7 +37,8 @@ class EndpointAnalyzer {
         throw InvalidGenerationSource(
           'Endpoints with a middleware must specify a path '
           'that is different from "/"!',
-          todo: 'Use a custom path, move the middleware to the ShelfApi '
+          todo:
+              'Use a custom path, move the middleware to the ShelfApi '
               'or remove it.',
         );
       }

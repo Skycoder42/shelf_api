@@ -1,3 +1,5 @@
+// ignore_for_file: discarded_futures
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -18,7 +20,7 @@ void main() {
     await server.stop();
   });
 
-  test('/noContent endpoint returns nothing', () async {
+  test('/noContent endpoint returns nothing', () {
     final responseFuture = server.apiClient.responseNoContent();
     expect(responseFuture, completion(isNull));
   });
@@ -123,7 +125,7 @@ void main() {
     expect(response.data, 'Hello, World!');
   });
 
-  test('/async/noContent endpoint returns nothing', () async {
+  test('/async/noContent endpoint returns nothing', () {
     final responseFuture = server.apiClient.responseAsyncNoContent();
     expect(responseFuture, completion(isNull));
   });
@@ -182,8 +184,9 @@ void main() {
   });
 
   test('/async/json/list endpoint returns correct data raw', () async {
-    final response =
-        await server.apiClient.responseAsyncJsonListRaw(asNull: true);
+    final response = await server.apiClient.responseAsyncJsonListRaw(
+      asNull: true,
+    );
     expect(response.statusCode, HttpStatus.ok);
     expect(response.data, isNull);
   });
@@ -210,14 +213,16 @@ void main() {
   });
 
   test('/async/json/custom endpoint returns null data', () async {
-    final response =
-        await server.apiClient.responseAsyncJsonCustom(asNull: true);
+    final response = await server.apiClient.responseAsyncJsonCustom(
+      asNull: true,
+    );
     expect(response, isNull);
   });
 
   test('/async/json/custom endpoint returns correct data raw', () async {
-    final response =
-        await server.apiClient.responseAsyncJsonCustomRaw(asNull: true);
+    final response = await server.apiClient.responseAsyncJsonCustomRaw(
+      asNull: true,
+    );
     expect(response.statusCode, HttpStatus.ok);
     expect(response.data, isNull);
   });
@@ -226,10 +231,7 @@ void main() {
     final response = await server.apiClient.responseAsyncResponse();
     expect(response.statusCode, HttpStatus.ok);
     expect(response.contentLength, 13);
-    expect(
-      response.headers,
-      containsPair('X-As-Null', ['false']),
-    );
+    expect(response.headers, containsPair('X-As-Null', ['false']));
     expect(
       response.stream.cast<List<int>>().transform(utf8.decoder).join(),
       completion('Hello, World!'),
@@ -240,14 +242,8 @@ void main() {
     final response = await server.apiClient.responseAsyncResponse(asNull: true);
     expect(response.statusCode, HttpStatus.noContent);
     expect(response.contentLength, 0);
-    expect(
-      response.headers,
-      containsPair('X-As-Null', ['true']),
-    );
-    expect(
-      response.stream.isEmpty,
-      completion(true),
-    );
+    expect(response.headers, containsPair('X-As-Null', ['true']));
+    expect(response.stream.isEmpty, completion(true));
   });
 
   test('/async/response/typed endpoint returns correct data', () async {
@@ -258,31 +254,27 @@ void main() {
   test('/async/response/typed endpoint returns correct data raw', () async {
     final response = await server.apiClient.responseAsyncTypedResponseRaw();
     expect(response.statusCode, HttpStatus.ok);
-    expect(
-      response.headers.map,
-      containsPair('X-As-Null', ['false']),
-    );
+    expect(response.headers.map, containsPair('X-As-Null', ['false']));
     expect(response.data, const BasicModel(11));
   });
 
   test('/async/response/typed endpoint returns null data', () async {
-    final response =
-        await server.apiClient.responseAsyncTypedResponse(asNull: true);
+    final response = await server.apiClient.responseAsyncTypedResponse(
+      asNull: true,
+    );
     expect(response, isNull);
   });
 
   test('/async/response/typed endpoint returns null data raw', () async {
-    final response =
-        await server.apiClient.responseAsyncTypedResponseRaw(asNull: true);
-    expect(response.statusCode, HttpStatus.noContent);
-    expect(
-      response.headers.map,
-      containsPair('X-As-Null', ['true']),
+    final response = await server.apiClient.responseAsyncTypedResponseRaw(
+      asNull: true,
     );
+    expect(response.statusCode, HttpStatus.noContent);
+    expect(response.headers.map, containsPair('X-As-Null', ['true']));
     expect(response.data, isNull);
   });
 
-  test('/stream/text endpoint returns correct data', () async {
+  test('/stream/text endpoint returns correct data', () {
     final response = server.apiClient.responseStreamText();
     expect(response.join(), completion('Hello, World!'));
   });
@@ -293,7 +285,7 @@ void main() {
     expect(response.data.join(), completion('Hello, World!'));
   });
 
-  test('/stream/binary endpoint returns correct data', () async {
+  test('/stream/binary endpoint returns correct data', () {
     final response = server.apiClient.responseStreamBinary();
     expect(response.collect(), completion([1, 2, 3, 4, 5]));
   });

@@ -4,11 +4,7 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-enum Wrapped {
-  none,
-  list,
-  map;
-}
+enum Wrapped { none, list, map }
 
 @internal
 class SerializableType {

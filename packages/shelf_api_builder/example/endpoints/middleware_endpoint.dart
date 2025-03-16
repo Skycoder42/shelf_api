@@ -3,22 +3,16 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 
-@ApiEndpoint(
-  '/middleware',
-  middleware: MiddlewareEndpoint.endpointMiddleware,
-)
+@ApiEndpoint('/middleware', middleware: MiddlewareEndpoint.endpointMiddleware)
 class MiddlewareEndpoint extends ShelfEndpoint {
   MiddlewareEndpoint(super.request);
 
   @Get('/')
-  Response get() => Response(
-        HttpStatus.noContent,
-        headers: {
-          'X-Middleware': 'Response',
-        },
-      );
+  Response get() =>
+      Response(HttpStatus.noContent, headers: {'X-Middleware': 'Response'});
 
-  static Middleware endpointMiddleware() => (next) => (request) async {
+  static Middleware endpointMiddleware() =>
+      (next) => (request) async {
         final response = await next(request);
         return response.change(
           headers: {

@@ -17,13 +17,12 @@ class ResponseAnalyzer {
   final SerializableAnalyzer _serializableAnalyzer;
 
   ResponseAnalyzer(this._buildStep)
-      : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
+    : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointResponse> analyzeResponse(
     MethodElement method,
     ApiMethodReader apiMethod,
-  ) =>
-      _analyzeResponseImpl(method, apiMethod, method.returnType, true);
+  ) => _analyzeResponseImpl(method, apiMethod, method.returnType, true);
 
   Future<EndpointResponse> _analyzeResponseImpl(
     MethodElement method,
@@ -117,8 +116,12 @@ class ResponseAnalyzer {
     }
 
     final [futureType] = returnType.typeArgumentsOf(TypeCheckers.future)!;
-    return (await _analyzeResponseImpl(method, apiMethod, futureType, false))
-        .copyWith(isAsync: true);
+    return (await _analyzeResponseImpl(
+      method,
+      apiMethod,
+      futureType,
+      false,
+    )).copyWith(isAsync: true);
   }
 
   Future<EndpointResponse> _analyzeTResponse(
@@ -127,8 +130,12 @@ class ResponseAnalyzer {
     DartType returnType,
   ) async {
     final [responseType] = returnType.typeArgumentsOf(TypeCheckers.tResponse)!;
-    return (await _analyzeResponseImpl(method, apiMethod, responseType, false))
-        .copyWith(isResponse: true);
+    return (await _analyzeResponseImpl(
+      method,
+      apiMethod,
+      responseType,
+      false,
+    )).copyWith(isResponse: true);
   }
 
   EndpointResponse _analyzeStream(

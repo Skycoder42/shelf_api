@@ -12,8 +12,9 @@ class ApiEndpointReader with MiddlewareReader {
   final ConstantReader constantReader;
 
   ApiEndpointReader(this.constantReader) {
-    if (!constantReader
-        .instanceOf(const TypeChecker.fromRuntime(ApiEndpoint))) {
+    if (!constantReader.instanceOf(
+      const TypeChecker.fromRuntime(ApiEndpoint),
+    )) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',

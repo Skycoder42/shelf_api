@@ -23,17 +23,17 @@ class PathAnalyzer {
   Future<List<EndpointPathParameter>> analyzePath(
     MethodElement method,
     ApiMethodReader apiMethod,
-  ) =>
-      _analyzePath(method, apiMethod).toList();
+  ) => _analyzePath(method, apiMethod).toList();
 
   Stream<EndpointPathParameter> _analyzePath(
     MethodElement method,
     ApiMethodReader apiMethod,
   ) async* {
-    final pathParamMatches = _pathParamRegexp
-        .allMatches(apiMethod.path)
-        .map((match) => match[1]!)
-        .toList();
+    final pathParamMatches =
+        _pathParamRegexp
+            .allMatches(apiMethod.path)
+            .map((match) => match[1]!)
+            .toList();
 
     for (final param in method.parameters.where((p) => p.isPositional)) {
       if (param.bodyParamAnnotation != null) {

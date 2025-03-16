@@ -15,13 +15,15 @@ final class QueryBuilder {
 
   const QueryBuilder(this._queryParameters, this._requestRef);
 
-  Code get variables => _queryParameters.isNotEmpty
-      ? _QueryVariablesBuilder(_queryParameters, _requestRef)
-      : const Code('');
+  Code get variables =>
+      _queryParameters.isNotEmpty
+          ? _QueryVariablesBuilder(_queryParameters, _requestRef)
+          : const Code('');
 
-  Map<String, Expression> get parameters => _queryParameters.isNotEmpty
-      ? Map.fromEntries(_QueryParamsBuilder(_queryParameters).build())
-      : const {};
+  Map<String, Expression> get parameters =>
+      _queryParameters.isNotEmpty
+          ? Map.fromEntries(_QueryParamsBuilder(_queryParameters).build())
+          : const {};
 }
 
 final class _QueryVariablesBuilder extends CodeBuilder {
@@ -35,15 +37,14 @@ final class _QueryVariablesBuilder extends CodeBuilder {
   @override
   Iterable<Code> build() sync* {
     yield declareFinal(_queryRef.symbol!)
-        .assign(
-          _requestRef.property('url').property('queryParametersAll'),
-        )
+        .assign(_requestRef.property('url').property('queryParametersAll'))
         .statement;
 
     for (final param in _queryParameters) {
       final paramRef = refer(param.handlerParamName);
-      var getValueExpr =
-          _queryRef.index(literalString(param.queryName, raw: true));
+      var getValueExpr = _queryRef.index(
+        literalString(param.queryName, raw: true),
+      );
       if (!param.isList) {
         getValueExpr = getValueExpr.nullSafeProperty('firstOrNull');
       }
@@ -124,9 +125,10 @@ final class _QueryParamsBuilder {
 
   Expression _convertNonStringExpression(EndpointQueryParameter param) {
     if (param.isEnum) {
-      return Types.fromType(param.type, isNull: false)
-          .property('values')
-          .property('byName');
+      return Types.fromType(
+        param.type,
+        isNull: false,
+      ).property('values').property('byName');
     }
 
     return Types.fromType(param.type, isNull: false).property('parse');

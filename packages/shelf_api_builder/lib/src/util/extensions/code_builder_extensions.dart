@@ -3,19 +3,11 @@ import 'package:meta/meta.dart';
 
 @internal
 extension ExpressionX on Expression {
-  Expression get yielded => CodeExpression(
-        Block.of([
-          const Code('yield '),
-          code,
-        ]),
-      );
+  Expression get yielded =>
+      CodeExpression(Block.of([const Code('yield '), code]));
 
-  Expression get yieldedStar => CodeExpression(
-        Block.of([
-          const Code('yield* '),
-          code,
-        ]),
-      );
+  Expression get yieldedStar =>
+      CodeExpression(Block.of([const Code('yield* '), code]));
 
   // ignore: avoid_positional_boolean_parameters
   Expression autoProperty(String name, bool isNullable) =>

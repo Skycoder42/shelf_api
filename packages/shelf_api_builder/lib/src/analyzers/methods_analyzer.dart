@@ -17,10 +17,10 @@ class MethodsAnalyzer {
   final ResponseAnalyzer _responseAnalyzer;
 
   MethodsAnalyzer(BuildStep buildStep)
-      : _bodyAnalyzer = BodyAnalyzer(buildStep),
-        _pathAnalyzer = PathAnalyzer(buildStep),
-        _queryAnalyzer = QueryAnalyzer(buildStep),
-        _responseAnalyzer = ResponseAnalyzer(buildStep);
+    : _bodyAnalyzer = BodyAnalyzer(buildStep),
+      _pathAnalyzer = PathAnalyzer(buildStep),
+      _queryAnalyzer = QueryAnalyzer(buildStep),
+      _responseAnalyzer = ResponseAnalyzer(buildStep);
 
   Future<List<EndpointMethod>> analyzeMethods(ClassElement clazz) =>
       _analyzeMethods(clazz).toList();
@@ -39,14 +39,13 @@ class MethodsAnalyzer {
   Future<EndpointMethod> _analyzeMethod(
     MethodElement method,
     ApiMethodReader apiMethod,
-  ) async =>
-      EndpointMethod(
-        name: method.name,
-        httpMethod: apiMethod.method,
-        path: apiMethod.path,
-        pathParameters: await _pathAnalyzer.analyzePath(method, apiMethod),
-        body: await _bodyAnalyzer.analyzeBody(method),
-        queryParameters: await _queryAnalyzer.analyzeQuery(method),
-        response: await _responseAnalyzer.analyzeResponse(method, apiMethod),
-      );
+  ) async => EndpointMethod(
+    name: method.name,
+    httpMethod: apiMethod.method,
+    path: apiMethod.path,
+    pathParameters: await _pathAnalyzer.analyzePath(method, apiMethod),
+    body: await _bodyAnalyzer.analyzeBody(method),
+    queryParameters: await _queryAnalyzer.analyzeQuery(method),
+    response: await _responseAnalyzer.analyzeResponse(method, apiMethod),
+  );
 }

@@ -19,39 +19,36 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
   final Endpoint _endpoint;
   final EndpointMethod _method;
 
-  static String handlerMethodName(
-    Endpoint endpoint,
-    EndpointMethod method,
-  ) =>
+  static String handlerMethodName(Endpoint endpoint, EndpointMethod method) =>
       '_handler\$${endpoint.name}\$${method.name}';
 
-  const ApiHandlerBuilder(
-    this._endpoint,
-    this._method,
-  );
+  const ApiHandlerBuilder(this._endpoint, this._method);
 
   @override
   Method build() => Method(
-        (b) => b
+    (b) =>
+        b
           ..name = handlerMethodName(_endpoint, _method)
           ..returns = Types.future(Types.shelfResponse)
           ..modifier = MethodModifier.async
           ..requiredParameters.addAll(_buildParameters())
           ..body = Block.of(_buildBody()),
-      );
+  );
 
   Iterable<Parameter> _buildParameters() sync* {
     yield Parameter(
-      (b) => b
-        ..name = _requestRef.symbol!
-        ..type = Types.shelfRequest,
+      (b) =>
+          b
+            ..name = _requestRef.symbol!
+            ..type = Types.shelfRequest,
     );
 
     for (final pathParam in _method.pathParameters) {
       yield Parameter(
-        (b) => b
-          ..name = pathParam.handlerParamName
-          ..type = Types.string,
+        (b) =>
+            b
+              ..name = pathParam.handlerParamName
+              ..type = Types.string,
       );
     }
   }
@@ -81,13 +78,10 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
     yield bodyBuilder.variables;
     yield queryBuilder.variables;
 
-    var invocation = _endpointRef.property(_method.name).call(
-      [
-        ...pathBuilder.build(),
-        if (bodyBuilder.parameter case final Expression param) param,
-      ],
-      queryBuilder.parameters,
-    );
+    var invocation = _endpointRef.property(_method.name).call([
+      ...pathBuilder.build(),
+      if (bodyBuilder.parameter case final Expression param) param,
+    ], queryBuilder.parameters);
     if (_method.isAsync) {
       invocation = invocation.awaited;
     } else if (_method.isStream) {

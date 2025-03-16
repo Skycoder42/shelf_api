@@ -63,7 +63,8 @@ class SerializableAnalyzer {
     if (listType.isNullableType && listType is! DynamicType) {
       throw InvalidGenerationSource(
         'List type must not be nullable!',
-        todo: 'Make list type non nullable or use the "fromJson" parameter '
+        todo:
+            'Make list type non nullable or use the "fromJson" parameter '
             'of the annotation to specify a custom converter.',
         element: element,
       );
@@ -86,7 +87,8 @@ class SerializableAnalyzer {
     if (!keyType.isDartCoreString) {
       throw InvalidGenerationSource(
         'Can only handle maps with a String keys',
-        todo: 'Use the "fromJson" parameter of the annotation to specify a '
+        todo:
+            'Use the "fromJson" parameter of the annotation to specify a '
             'custom converter or use string keys.',
         element: element,
       );
@@ -94,7 +96,8 @@ class SerializableAnalyzer {
     if (valueType.isNullableType && valueType is! DynamicType) {
       throw InvalidGenerationSource(
         'Map value type must not be nullable!',
-        todo: 'Make map value type non nullable or use the "fromJson" '
+        todo:
+            'Make map value type non nullable or use the "fromJson" '
             'parameter of the annotation to specify a custom converter.',
         element: element,
       );
@@ -130,19 +133,22 @@ class SerializableAnalyzer {
     if (typeElement is! ClassElement) {
       throw InvalidGenerationSource(
         'Cannot generate conversion for type without a fromJson constructor!',
-        todo: 'Use the "fromJson" parameter of the annotation to specify a '
+        todo:
+            'Use the "fromJson" parameter of the annotation to specify a '
             'custom converter.',
         element: element,
       );
     }
 
-    final fromJson = typeElement.constructors
-        .where((c) => c.name == 'fromJson')
-        .singleOrNull;
+    final fromJson =
+        typeElement.constructors
+            .where((c) => c.name == 'fromJson')
+            .singleOrNull;
     if (fromJson == null) {
       throw InvalidGenerationSource(
         'Cannot generate conversion for type without a fromJson constructor!',
-        todo: 'Use the "fromJson" parameter of the annotation to specify a '
+        todo:
+            'Use the "fromJson" parameter of the annotation to specify a '
             'custom converter.',
         element: element,
       );
@@ -152,7 +158,8 @@ class SerializableAnalyzer {
     if (firstParam == null || !firstParam.isPositional) {
       throw InvalidGenerationSource(
         'fromJson constructor must have a single positional parameter!',
-        todo: 'Use the "fromJson" parameter of the annotation to specify a '
+        todo:
+            'Use the "fromJson" parameter of the annotation to specify a '
             'custom converter or adjust the fromJson.',
         element: element,
       );

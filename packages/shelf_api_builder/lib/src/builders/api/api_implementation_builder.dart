@@ -20,36 +20,40 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
 
   @override
   Class build() => Class(
-        (b) => b
+    (b) =>
+        b
           ..name = _apiClass.implementationName
           ..fields.add(
             Field(
-              (b) => b
-                ..name = _handlerRef.symbol
-                ..late = true
-                ..modifier = FieldModifier.final$
-                ..type = Types.handler,
+              (b) =>
+                  b
+                    ..name = _handlerRef.symbol
+                    ..late = true
+                    ..modifier = FieldModifier.final$
+                    ..type = Types.handler,
             ),
           )
           ..constructors.add(
-            Constructor(
-              (b) => b..body = Block.of(_buildConstructorBody()),
-            ),
+            Constructor((b) => b..body = Block.of(_buildConstructorBody())),
           )
           ..methods.add(
             Method(
-              (b) => b
-                ..name = 'call'
-                ..returns = Types.futureOr(Types.shelfResponse)
-                ..requiredParameters.add(
-                  Parameter(
-                    (b) => b
-                      ..name = 'request'
-                      ..type = Types.shelfRequest,
-                  ),
-                )
-                ..body = ApiImplementationBuilder._handlerRef
-                    .call([ApiImplementationBuilder._requestRef]).code,
+              (b) =>
+                  b
+                    ..name = 'call'
+                    ..returns = Types.futureOr(Types.shelfResponse)
+                    ..requiredParameters.add(
+                      Parameter(
+                        (b) =>
+                            b
+                              ..name = 'request'
+                              ..type = Types.shelfRequest,
+                      ),
+                    )
+                    ..body =
+                        ApiImplementationBuilder._handlerRef.call([
+                          ApiImplementationBuilder._requestRef,
+                        ]).code,
             ),
           )
           ..methods.addAll([
@@ -57,7 +61,7 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
               for (final method in endpoint.methods)
                 ApiHandlerBuilder(endpoint, method).build(),
           ]),
-      );
+  );
 
   Iterable<Code> _buildConstructorBody() sync* {
     var handler = Types.router.newInstance(const []);
@@ -70,9 +74,9 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
 
     if (_apiClass.basePath case final String path) {
       handler = Types.router.newInstance(const []).cascade('mount').call([
-            literalString(path, raw: true),
-            handler,
-          ]);
+        literalString(path, raw: true),
+        handler,
+      ]);
     }
 
     yield _handlerRef.assign(handler).statement;

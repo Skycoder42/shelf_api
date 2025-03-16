@@ -44,15 +44,11 @@ final class ResponseBuilder extends CodeBuilder {
             .statement;
       case EndpointResponseType.textStream:
         yield Types.shelfResponse
-            .newInstanceNamed(
-              'ok',
-              [
-                _invocation
-                    .property('transform')
-                    .call([Constants.utf8.property('encoder')]),
-              ],
-              _extraParams('text', Constants.utf8),
-            )
+            .newInstanceNamed('ok', [
+              _invocation.property('transform').call([
+                Constants.utf8.property('encoder'),
+              ]),
+            ], _extraParams('text', Constants.utf8))
             .returned
             .statement;
       case EndpointResponseType.binaryStream:
@@ -76,7 +72,9 @@ final class ResponseBuilder extends CodeBuilder {
     if (serializableType.toJson case final OpaqueConstant toJson) {
       if (serializableType.isNullable) {
         yield declareFinal(_responseRef.symbol!).assign(_invocation).statement;
-        responseExpr = _responseRef.notEqualTo(literalNull).conditional(
+        responseExpr = _responseRef
+            .notEqualTo(literalNull)
+            .conditional(
               Constants.fromConstant(toJson).call([_responseRef]),
               literalNull,
             );
@@ -88,13 +86,9 @@ final class ResponseBuilder extends CodeBuilder {
     }
 
     yield Types.shelfResponse
-        .newInstanceNamed(
-          'ok',
-          [
-            Constants.json.property('encode').call([responseExpr]),
-          ],
-          _extraParams('json'),
-        )
+        .newInstanceNamed('ok', [
+          Constants.json.property('encode').call([responseExpr]),
+        ], _extraParams('json'))
         .returned
         .statement;
   }
@@ -102,11 +96,10 @@ final class ResponseBuilder extends CodeBuilder {
   Map<String, Expression> _extraParams(
     String typeName, [
     Reference? encoding,
-  ]) =>
-      {
-        'headers': literalMap({
-          HttpHeaders.contentTypeHeader: Types.contentTypes.property(typeName),
-        }),
-        if (encoding != null) 'encoding': encoding,
-      };
+  ]) => {
+    'headers': literalMap({
+      HttpHeaders.contentTypeHeader: Types.contentTypes.property(typeName),
+    }),
+    if (encoding != null) 'encoding': encoding,
+  };
 }

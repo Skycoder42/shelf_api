@@ -12,7 +12,9 @@ abstract base class Constants {
   static const json = Reference('json', 'dart:convert');
 
   static Reference fromConstant(OpaqueConstant constant) => switch (constant) {
-        final RevivedOpaqueConstant revived =>
-          Reference(revived.name, revived.source.toString()),
-      };
+    final RevivedOpaqueConstant revived => Reference(
+      revived.name,
+      revived.source.toString(),
+    ),
+  };
 }

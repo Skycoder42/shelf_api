@@ -14,11 +14,10 @@ enum EndpointResponseType {
   dynamic;
 
   bool get isStream => switch (this) {
-        EndpointResponseType.textStream ||
-        EndpointResponseType.binaryStream =>
-          true,
-        _ => false,
-      };
+    EndpointResponseType.textStream ||
+    EndpointResponseType.binaryStream => true,
+    _ => false,
+  };
 }
 
 @internal
@@ -47,13 +46,12 @@ class EndpointResponse {
     OpaqueType? returnType,
     bool? isResponse,
     bool? isAsync,
-  }) =>
-      EndpointResponse(
-        responseType: responseType ?? this.responseType,
-        returnType: returnType ?? this.returnType,
-        isResponse: isResponse ?? this.isResponse,
-        isAsync: isAsync ?? this.isAsync,
-      );
+  }) => EndpointResponse(
+    responseType: responseType ?? this.responseType,
+    returnType: returnType ?? this.returnType,
+    isResponse: isResponse ?? this.isResponse,
+    isAsync: isAsync ?? this.isAsync,
+  );
 
   SerializableType get serializableReturnType {
     if (responseType != EndpointResponseType.json) {

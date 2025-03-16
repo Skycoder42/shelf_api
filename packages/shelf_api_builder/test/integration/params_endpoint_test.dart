@@ -1,3 +1,5 @@
+// ignore_for_file: discarded_futures
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -21,8 +23,11 @@ void main() {
     const testP1 = 'tree';
     const testP2 = 12;
     const testP3 = BasicEnum.value2;
-    final response =
-        await server.apiClient.paramsGetPathSimple(testP1, testP2, testP3);
+    final response = await server.apiClient.paramsGetPathSimple(
+      testP1,
+      testP2,
+      testP3,
+    );
     expect(response, [testP1, testP2, testP3.toString()]);
   });
 
@@ -36,14 +41,11 @@ void main() {
     expect(response, ['WO/RDWO/RDWO/RD', testP2]);
   });
 
-  test('/path/custom endpoint returns 404 for non matching params', () async {
+  test('/path/custom endpoint returns 404 for non matching params', () {
     const testP1 = '';
     const testP2 = '/invalid';
     expect(
-      () => server.apiClient.paramsGetPathCustom(
-        testP1,
-        Uri.parse(testP2),
-      ),
+      () => server.apiClient.paramsGetPathCustom(testP1, Uri.parse(testP2)),
       throwsA(
         isA<DioException>().having(
           (m) => m.response?.statusCode,
@@ -54,7 +56,7 @@ void main() {
     );
   });
 
-  test('/path/custom endpoint returns 404 if p1 is not encoded', () async {
+  test('/path/custom endpoint returns 404 if p1 is not encoded', () {
     expect(
       () =>
           server.dio.get<void>('/api/v1/params/path/custom/invalid/p1/sub/ok'),
@@ -159,7 +161,7 @@ void main() {
     });
   });
 
-  test('/query/list returns bad request if required list is empty', () async {
+  test('/query/list returns bad request if required list is empty', () {
     const testSValue = <String>[];
     final testUValue = <Uri>[];
     expect(

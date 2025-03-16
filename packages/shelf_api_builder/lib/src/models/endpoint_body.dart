@@ -12,9 +12,9 @@ enum EndpointBodyType {
   json;
 
   bool get isStream => switch (this) {
-        EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
-        _ => false,
-      };
+    EndpointBodyType.textStream || EndpointBodyType.binaryStream => true,
+    _ => false,
+  };
 }
 
 @internal

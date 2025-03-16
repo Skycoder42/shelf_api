@@ -21,9 +21,10 @@ final class BodyBuilder {
 
   const BodyBuilder(this._methodBody, this._requestRef);
 
-  Code get variables => _methodBody != null
-      ? _BodyVariableBuilder(_methodBody, _requestRef)
-      : const Code('');
+  Code get variables =>
+      _methodBody != null
+          ? _BodyVariableBuilder(_methodBody, _requestRef)
+          : const Code('');
 
   Expression? get parameter =>
       _methodBody != null ? _BodyParamBuilder(_methodBody) : null;
@@ -46,12 +47,13 @@ final class _BodyVariableBuilder extends CodeBuilder {
       case EndpointBodyType.text:
         bodyExpr = _requestRef.property('readAsString').call(const []).awaited;
       case EndpointBodyType.binary:
-        bodyExpr = _requestRef
-            .property('read')
-            .call(const [])
-            .property('collect')
-            .call([_requestRef])
-            .awaited;
+        bodyExpr =
+            _requestRef
+                .property('read')
+                .call(const [])
+                .property('collect')
+                .call([_requestRef])
+                .awaited;
       case EndpointBodyType.textStream:
         bodyExpr = _requestRef
             .property('read')
@@ -63,7 +65,8 @@ final class _BodyVariableBuilder extends CodeBuilder {
       case EndpointBodyType.binaryStream:
         bodyExpr = _requestRef
             .property('read')
-            .call(const []).asA(Types.stream(Types.uint8List));
+            .call(const [])
+            .asA(Types.stream(Types.uint8List));
       case EndpointBodyType.json:
         yield* _jsonCall();
         return;
@@ -78,21 +81,22 @@ final class _BodyVariableBuilder extends CodeBuilder {
     }
 
     yield If(
-      literalConstList(_methodBody.contentTypes)
-          .property('contains')
-          .call([_requestRef.property('mimeType')]).negate(),
+      literalConstList(
+        _methodBody.contentTypes,
+      ).property('contains').call([_requestRef.property('mimeType')]).negate(),
       Types.shelfResponse
-          .newInstance([
-            literalNum(HttpStatus.unsupportedMediaType),
-          ], {
-            'body': LiteralStringBuilder()
-              ..addTemplate(
-                'Expected content type to be any of '
-                '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
-                'but was "%type%"',
-                {'%type%': _requestRef.property('mimeType')},
-              ),
-          })
+          .newInstance(
+            [literalNum(HttpStatus.unsupportedMediaType)],
+            {
+              'body':
+                  LiteralStringBuilder()..addTemplate(
+                    'Expected content type to be any of '
+                    '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
+                    'but was "%type%"',
+                    {'%type%': _requestRef.property('mimeType')},
+                  ),
+            },
+          )
           .returned
           .statement,
     );
@@ -108,13 +112,14 @@ final class _BodyVariableBuilder extends CodeBuilder {
 
     final Expression callExpr;
     if (serializableType.isNullable) {
-      callExpr = _rawBodyRef
-          .property('isNotEmpty')
-          .conditional(
-            Constants.json.property('decode').call(const [_rawBodyRef]),
-            literalNull,
-          )
-          .parenthesized;
+      callExpr =
+          _rawBodyRef
+              .property('isNotEmpty')
+              .conditional(
+                Constants.json.property('decode').call(const [_rawBodyRef]),
+                literalNull,
+              )
+              .parenthesized;
     } else {
       yield If(
         _rawBodyRef.property('isEmpty'),
@@ -147,7 +152,8 @@ final class _BodyParamBuilder extends ExpressionBuilder {
       return BodyBuilder._bodyRef;
     }
 
-    return FromJsonBuilder(_methodBody.serializableParamType)
-        .buildFromJson(BodyBuilder._bodyRef);
+    return FromJsonBuilder(
+      _methodBody.serializableParamType,
+    ).buildFromJson(BodyBuilder._bodyRef);
   }
 }

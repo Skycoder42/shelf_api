@@ -1,5 +1,1 @@
-enum BasicEnum {
-  value1,
-  value2,
-  value3,
-}
+enum BasicEnum { value1, value2, value3 }

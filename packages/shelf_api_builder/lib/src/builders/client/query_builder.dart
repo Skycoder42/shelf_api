@@ -19,10 +19,10 @@ final class QueryBuilder extends ExpressionBuilder {
 
   @override
   Expression build() => literalMap(
-        Map.fromEntries(_buildEntries()),
-        Types.string,
-        Types.dynamic$,
-      );
+    Map.fromEntries(_buildEntries()),
+    Types.string,
+    Types.dynamic$,
+  );
 
   Iterable<MapEntry<Expression, Expression>> _buildEntries() sync* {
     for (final queryParam in _queryParams) {
@@ -43,13 +43,12 @@ final class QueryBuilder extends ExpressionBuilder {
             .property('map')
             .call([
               Method(
-                (b) => b
-                  ..requiredParameters.add(
-                    Parameter(
-                      (b) => b..name = _valueRef.symbol!,
-                    ),
-                  )
-                  ..body = _convertToString(queryParam, _valueRef).code,
+                (b) =>
+                    b
+                      ..requiredParameters.add(
+                        Parameter((b) => b..name = _valueRef.symbol!),
+                      )
+                      ..body = _convertToString(queryParam, _valueRef).code,
               ).closure,
             ])
             .property('toList')
@@ -81,10 +80,7 @@ final class QueryBuilder extends ExpressionBuilder {
     );
   }
 
-  Expression _convertToString(
-    EndpointQueryParameter param,
-    Expression value,
-  ) {
+  Expression _convertToString(EndpointQueryParameter param, Expression value) {
     if (param.isEnum) {
       return value.property('name');
     } else if (param.isDateTime) {

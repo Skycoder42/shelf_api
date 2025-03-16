@@ -22,14 +22,16 @@ final class BodyBuilder extends ExpressionBuilder {
       case EndpointBodyType.binaryStream:
         return bodyRef;
       case EndpointBodyType.textStream:
-        return bodyRef
-            .property('transform')
-            .call([Constants.utf8.property('encoder')]);
+        return bodyRef.property('transform').call([
+          Constants.utf8.property('encoder'),
+        ]);
       case EndpointBodyType.json:
         final serializableType = _body.serializableParamType;
         if (serializableType.toJson case final OpaqueConstant toJson) {
           if (serializableType.isNullable) {
-            return bodyRef.notEqualTo(literalNull).conditional(
+            return bodyRef
+                .notEqualTo(literalNull)
+                .conditional(
                   Constants.fromConstant(toJson).call([bodyRef]),
                   literalNull,
                 );

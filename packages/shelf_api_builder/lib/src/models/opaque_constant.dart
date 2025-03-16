@@ -12,10 +12,7 @@ sealed class OpaqueConstant {
     BuildStep buildStep,
     Revivable revivable,
   ) async {
-    final assetId = AssetId.resolve(
-      revivable.source,
-      from: buildStep.inputId,
-    );
+    final assetId = AssetId.resolve(revivable.source, from: buildStep.inputId);
     final element = await buildStep.resolver.libraryFor(assetId);
     return RevivedOpaqueConstant._(
       revivable.accessor,

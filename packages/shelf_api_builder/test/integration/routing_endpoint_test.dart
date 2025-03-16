@@ -19,10 +19,7 @@ void main() {
   group('<empty>', () {
     test('HEAD / returns info header', () async {
       final response = await server.apiClient.rootRoutingHeadRoot();
-      expect(
-        response.headers,
-        containsPair('X-INFO', ['HEAD /api/v1/']),
-      );
+      expect(response.headers, containsPair('X-INFO', ['HEAD /api/v1/']));
     });
 
     test('GET / returns data', () async {

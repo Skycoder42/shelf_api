@@ -11,10 +11,10 @@ import 'src/endpoint_generator.dart';
 ///------------------|--------|---------------|-------------
 /// `generateApi`    | `bool` | `true`        | Enables or disables it
 Builder shelfApiBuilder(BuilderOptions options) => LibraryBuilder(
-      EndpointGenerator(options),
-      generatedExtension: '.api.dart',
-      options: options,
-    );
+  EndpointGenerator(options),
+  generatedExtension: '.api.dart',
+  options: options,
+);
 
 /// The [ClientGenerator] builder
 ///
@@ -23,7 +23,7 @@ Builder shelfApiBuilder(BuilderOptions options) => LibraryBuilder(
 ///---------------------|--∞------|---------------|-------------
 /// `generateClient`    | `bool` | `true`        | Enables or disables it
 Builder shelfApiClientBuilder(BuilderOptions options) => LibraryBuilder(
-      ClientGenerator(options),
-      generatedExtension: '.client.dart',
-      options: options,
-    );
+  ClientGenerator(options),
+  generatedExtension: '.client.dart',
+  options: options,
+);

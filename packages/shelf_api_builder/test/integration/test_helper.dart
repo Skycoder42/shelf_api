@@ -15,16 +15,17 @@ class ExampleServer {
   final Dio dio;
 
   ExampleServer._(this._process, int port)
-      : dio = Dio(
-          BaseOptions(
-            baseUrl: Uri(
-              scheme: 'http',
-              host: 'localhost',
-              port: port,
-              path: '/',
-            ).toString(),
-          ),
-        );
+    : dio = Dio(
+        BaseOptions(
+          baseUrl:
+              Uri(
+                scheme: 'http',
+                host: 'localhost',
+                port: port,
+                path: '/',
+              ).toString(),
+        ),
+      );
 
   ExampleApiClient get apiClient => ExampleApiClient.dio(dio);
 
@@ -47,11 +48,12 @@ class ExampleServer {
           .transform(utf8.decoder)
           .transform(const LineSplitter())
           .map((line) {
-        if (!completer.isCompleted && line.startsWith('Serving at')) {
-          completer.complete(null);
-        }
-        return line;
-      }).listen((l) => print('OUT: $l'));
+            if (!completer.isCompleted && line.startsWith('Serving at')) {
+              completer.complete(null);
+            }
+            return line;
+          })
+          .listen((l) => print('OUT: $l'));
 
       await completer.future.timeout(const Duration(seconds: 15));
 

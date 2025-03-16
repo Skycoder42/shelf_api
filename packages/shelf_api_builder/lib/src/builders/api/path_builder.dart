@@ -25,13 +25,15 @@ final class PathBuilder {
       } else if (param.isString) {
         yield paramRef;
       } else if (param.isEnum) {
-        yield Types.fromType(param.type, isNull: false)
-            .property('values')
-            .property('byName')
-            .call([paramRef]);
+        yield Types.fromType(
+          param.type,
+          isNull: false,
+        ).property('values').property('byName').call([paramRef]);
       } else {
-        yield Types.fromType(param.type, isNull: false)
-            .newInstanceNamed('parse', [paramRef]);
+        yield Types.fromType(
+          param.type,
+          isNull: false,
+        ).newInstanceNamed('parse', [paramRef]);
       }
     }
   }

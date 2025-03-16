@@ -42,8 +42,7 @@ class BodyEndpoint extends ShelfEndpoint {
       toJson: BasicModel.toJsonX,
     )
     BasicModel body,
-  ) =>
-      body;
+  ) => body;
 
   @Get('/json/null')
   int? getJsonNull(@bodyParam int? body) => body;
@@ -62,6 +61,5 @@ class BodyEndpoint extends ShelfEndpoint {
       toJson: BasicModel.toJsonX,
     )
     BasicModel? body,
-  ) =>
-      body;
+  ) => body;
 }

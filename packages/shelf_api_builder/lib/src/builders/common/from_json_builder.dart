@@ -20,22 +20,23 @@ class FromJsonBuilder {
     } else {
       return switch (_serializableType.wrapped) {
         Wrapped.none => switch (_serializableType.jsonType) {
-            final OpaqueType jsonType => Types.fromType(jsonType),
-            _ => Types.fromType(_serializableType.dartType),
-          },
+          final OpaqueType jsonType => Types.fromType(jsonType),
+          _ => Types.fromType(_serializableType.dartType),
+        },
         Wrapped.list => Types.list().withNullable(_serializableType.isNullable),
-        Wrapped.map => Types.map(keyType: Types.string)
-            .withNullable(_serializableType.isNullable),
+        Wrapped.map => Types.map(
+          keyType: Types.string,
+        ).withNullable(_serializableType.isNullable),
       };
     }
   }
 
-  Expression buildFromJson(Expression jsonBody) =>
-      switch (_serializableType.wrapped) {
-        Wrapped.none => _buildJson(jsonBody),
-        Wrapped.list => _buildList(jsonBody),
-        Wrapped.map => _buildMap(jsonBody),
-      };
+  Expression buildFromJson(Expression jsonBody) => switch (_serializableType
+      .wrapped) {
+    Wrapped.none => _buildJson(jsonBody),
+    Wrapped.list => _buildList(jsonBody),
+    Wrapped.map => _buildMap(jsonBody),
+  };
 
   Expression _buildJson(Expression jsonBody) {
     var checkNull = false;
@@ -45,18 +46,17 @@ class FromJsonBuilder {
       paramExpr = Constants.fromConstant(fromJson).call([jsonBody]);
     } else if (_serializableType.jsonType != null) {
       checkNull = true;
-      paramExpr = Types.fromType(_serializableType.dartType)
-          .withNullable(false)
-          .newInstanceNamed('fromJson', [jsonBody]);
+      paramExpr = Types.fromType(
+        _serializableType.dartType,
+      ).withNullable(false).newInstanceNamed('fromJson', [jsonBody]);
     } else {
       paramExpr = jsonBody;
     }
 
     if (checkNull && _serializableType.isNullable) {
-      paramExpr = jsonBody.notEqualTo(literalNull).conditional(
-            paramExpr,
-            literalNull,
-          );
+      paramExpr = jsonBody
+          .notEqualTo(literalNull)
+          .conditional(paramExpr, literalNull);
     }
 
     return paramExpr;
@@ -68,19 +68,17 @@ class FromJsonBuilder {
           .autoProperty('cast', _serializableType.isNullable)
           .call(const [], const {}, [Types.fromType(jsonType)])
           .property('map')
-          .call(
-            [Types.fromType(_serializableType.dartType).property('fromJson')],
-          )
+          .call([
+            Types.fromType(_serializableType.dartType).property('fromJson'),
+          ])
           .property('toList')
           .call(const []);
     } else {
       return jsonBody
           .autoProperty('cast', _serializableType.isNullable)
-          .call(
-            const [],
-            const {},
-            [Types.fromType(_serializableType.dartType)],
-          )
+          .call(const [], const {}, [
+            Types.fromType(_serializableType.dartType),
+          ])
           .property('toList')
           .call(const []);
     }

@@ -19,7 +19,7 @@ class BodyAnalyzer {
   final SerializableAnalyzer _serializableAnalyzer;
 
   BodyAnalyzer(this._buildStep)
-      : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
+    : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointBody?> analyzeBody(MethodElement method) async {
     final result = _findBodyParam(method);

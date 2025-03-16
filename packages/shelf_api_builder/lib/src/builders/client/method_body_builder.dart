@@ -41,9 +41,7 @@ final class MethodBodyBuilder extends CodeBuilder {
   Iterable<Code> build() sync* {
     final queryBuilder = QueryBuilder(_method.queryParameters);
     final invocation = _dioRef.property('request').call(
-      [
-        PathBuilder(_apiClass, _endpoint, _method),
-      ],
+      [PathBuilder(_apiClass, _endpoint, _method)],
       {
         if (_method.body case final EndpointBody body)
           'data': BodyBuilder(body),
@@ -55,30 +53,26 @@ final class MethodBodyBuilder extends CodeBuilder {
             .call(const [], _options),
         for (final param in _extraParamsRefs) param.symbol!.substring(1): param,
       },
-      [
-        _responseDartType,
-      ],
+      [_responseDartType],
     );
 
     yield ResponseBuilder(_method.response, invocation.awaited, _isRaw);
   }
 
   Map<String, Expression> get _options => {
-        'method': literalString(_method.httpMethod),
-        'responseType': _responseType,
-        if (_method.body?.contentTypes case [final firstContentType, ...])
-          'contentType': literalString(firstContentType)
-        else if (_method.body?.bodyType case final EndpointBodyType bodyType)
-          'contentType': switch (bodyType) {
-            EndpointBodyType.text ||
-            EndpointBodyType.textStream =>
-              literalString(ContentType.text.mimeType),
-            EndpointBodyType.binary ||
-            EndpointBodyType.binaryStream =>
-              literalString(ContentType.binary.mimeType),
-            EndpointBodyType.json => literalString(ContentType.json.mimeType),
-          },
-      };
+    'method': literalString(_method.httpMethod),
+    'responseType': _responseType,
+    if (_method.body?.contentTypes case [final firstContentType, ...])
+      'contentType': literalString(firstContentType)
+    else if (_method.body?.bodyType case final EndpointBodyType bodyType)
+      'contentType': switch (bodyType) {
+        EndpointBodyType.text ||
+        EndpointBodyType.textStream => literalString(ContentType.text.mimeType),
+        EndpointBodyType.binary || EndpointBodyType.binaryStream =>
+          literalString(ContentType.binary.mimeType),
+        EndpointBodyType.json => literalString(ContentType.json.mimeType),
+      },
+  };
 
   TypeReference get _responseDartType {
     switch (_method.response.responseType) {
@@ -93,19 +87,19 @@ final class MethodBodyBuilder extends CodeBuilder {
       case EndpointResponseType.dynamic:
         return Types.responseBody;
       case EndpointResponseType.json:
-        return FromJsonBuilder(_method.response.serializableReturnType)
-            .rawJsonType;
+        return FromJsonBuilder(
+          _method.response.serializableReturnType,
+        ).rawJsonType;
     }
   }
 
   Expression get _responseType => switch (_method.response.responseType) {
-        EndpointResponseType.noContent => literalNull,
-        EndpointResponseType.text => Types.responseType.property('plain'),
-        EndpointResponseType.binary => Types.responseType.property('bytes'),
-        EndpointResponseType.textStream ||
-        EndpointResponseType.binaryStream ||
-        EndpointResponseType.dynamic =>
-          Types.responseType.property('stream'),
-        EndpointResponseType.json => Types.responseType.property('json'),
-      };
+    EndpointResponseType.noContent => literalNull,
+    EndpointResponseType.text => Types.responseType.property('plain'),
+    EndpointResponseType.binary => Types.responseType.property('bytes'),
+    EndpointResponseType.textStream ||
+    EndpointResponseType.binaryStream ||
+    EndpointResponseType.dynamic => Types.responseType.property('stream'),
+    EndpointResponseType.json => Types.responseType.property('json'),
+  };
 }

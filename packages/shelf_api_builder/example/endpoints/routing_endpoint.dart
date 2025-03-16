@@ -5,12 +5,8 @@ class RootRoutingEndpoint extends ShelfEndpoint {
   RootRoutingEndpoint(super.request);
 
   @Head('/')
-  Response headRoot() => Response.ok(
-        null,
-        headers: {
-          'X-INFO': _logRequest(request),
-        },
-      );
+  Response headRoot() =>
+      Response.ok(null, headers: {'X-INFO': _logRequest(request)});
 
   @Get('/')
   String getRoot() => _logRequest(request);

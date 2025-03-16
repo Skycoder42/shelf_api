@@ -11,9 +11,9 @@ sealed class OpaqueType {
   OpaqueType();
 
   SerializableType toSerializable(String reason) => switch (this) {
-        OpaqueSerializableType(serializableType: final type) => type,
-        _ => throw StateError(reason),
-      };
+    OpaqueSerializableType(serializableType: final type) => type,
+    _ => throw StateError(reason),
+  };
 
   static Uri? uriForElement(BuildStep buildStep, Element? element) {
     final sourceUri = element?.librarySource?.uri;
@@ -23,10 +23,7 @@ sealed class OpaqueType {
 
     if (sourceUri.isScheme('asset')) {
       final inputPath = posix.dirname(
-        posix.join(
-          sourceUri.pathSegments.first,
-          buildStep.inputId.path,
-        ),
+        posix.join(sourceUri.pathSegments.first, buildStep.inputId.path),
       );
       final sourcePath = sourceUri.path;
       return Uri.file(
@@ -52,7 +49,7 @@ class OpaqueDartType extends OpaqueType {
   final Uri? uri;
 
   OpaqueDartType(BuildStep buildStep, this.dartType)
-      : uri = OpaqueType.uriForElement(buildStep, dartType.element);
+    : uri = OpaqueType.uriForElement(buildStep, dartType.element);
 }
 
 @internal
@@ -61,7 +58,7 @@ class OpaqueClassType extends OpaqueType {
   final Uri? uri;
 
   OpaqueClassType(BuildStep buildStep, this.element)
-      : uri = OpaqueType.uriForElement(buildStep, element);
+    : uri = OpaqueType.uriForElement(buildStep, element);
 }
 
 @internal

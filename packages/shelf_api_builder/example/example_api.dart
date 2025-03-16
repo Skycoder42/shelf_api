@@ -26,15 +26,13 @@ import 'endpoints/routing_endpoint.dart';
 // ignore: unused_element
 class _ExampleApi {}
 
-Middleware apiMiddleware() => (next) => (request) async {
+Middleware apiMiddleware() =>
+    (next) => (request) async {
       final response = await next(request);
       return response.change(
         headers: {
           'X-Api': 'shelf_api',
-          'X-Middleware': [
-            'Api',
-            ...?response.headersAll['X-Middleware'],
-          ],
+          'X-Middleware': ['Api', ...?response.headersAll['X-Middleware']],
         },
       );
     };

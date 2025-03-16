@@ -26,8 +26,10 @@ class ResponseEndpoint extends ShelfEndpoint {
   List<int> jsonList() => const [1, 2, 3];
 
   @Get('/json/map')
-  Map<String, BasicModel> jsonMap() =>
-      const {'a': BasicModel(1), 'b': BasicModel(2)};
+  Map<String, BasicModel> jsonMap() => const {
+    'a': BasicModel(1),
+    'b': BasicModel(2),
+  };
 
   @Get(
     '/json/custom',
@@ -38,20 +40,16 @@ class ResponseEndpoint extends ShelfEndpoint {
 
   @Get('/response')
   Response response() => Response(
-        HttpStatus.accepted,
-        body: 'Hello, World!',
-        headers: const {
-          'X-Extra-Data': 'Extra Header Data',
-        },
-      );
+    HttpStatus.accepted,
+    body: 'Hello, World!',
+    headers: const {'X-Extra-Data': 'Extra Header Data'},
+  );
 
   @Get('/response/typed')
   TResponse<String> typedResponse() => TResponse.ok(
-        'Hello, World!',
-        headers: const {
-          'X-Extra-Data': 'Extra Header Data',
-        },
-      );
+    'Hello, World!',
+    headers: const {'X-Extra-Data': 'Extra Header Data'},
+  );
 
   @Get('/async/noContent')
   Future<void> asyncNoContent() async {}
@@ -83,24 +81,19 @@ class ResponseEndpoint extends ShelfEndpoint {
 
   @Get('/async/response')
   Future<Response> asyncResponse({bool asNull = false}) async => Response(
-        asNull ? HttpStatus.noContent : HttpStatus.ok,
-        body: asNull ? null : 'Hello, World!',
-        headers: {
-          'X-As-Null': asNull.toString(),
-        },
-      );
+    asNull ? HttpStatus.noContent : HttpStatus.ok,
+    body: asNull ? null : 'Hello, World!',
+    headers: {'X-As-Null': asNull.toString()},
+  );
 
   @Get('/async/response/typed')
   Future<TResponse<BasicModel?>> asyncTypedResponse({
     bool asNull = false,
-  }) async =>
-      TResponse(
-        asNull ? HttpStatus.noContent : HttpStatus.ok,
-        body: asNull ? null : const BasicModel(11),
-        headers: {
-          'X-As-Null': asNull.toString(),
-        },
-      );
+  }) async => TResponse(
+    asNull ? HttpStatus.noContent : HttpStatus.ok,
+    body: asNull ? null : const BasicModel(11),
+    headers: {'X-As-Null': asNull.toString()},
+  );
 
   @Get('/stream/text')
   Stream<String> streamText() => Stream.value('Hello, World!');

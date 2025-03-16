@@ -64,17 +64,18 @@ final class ResponseBuilder extends CodeBuilder {
   Code _buildStreamReturn([
     Expression Function(Expression stream) transform = _transformNoop,
   ]) {
-    final transformedStream =
-        transform(_responseRef.property('data').nullChecked.property('stream'));
+    final transformedStream = transform(
+      _responseRef.property('data').nullChecked.property('stream'),
+    );
     return _isRaw
         ? _returned(transformedStream)
         : transformedStream.yieldedStar.statement;
   }
 
   Iterable<Code> _buildJsonReturn() sync* {
-    yield declareFinal(_responseDataRef.symbol!)
-        .assign(_responseRef.property('data'))
-        .statement;
+    yield declareFinal(
+      _responseDataRef.symbol!,
+    ).assign(_responseRef.property('data')).statement;
 
     final serializableType = _response.serializableReturnType;
     if (!serializableType.isNullable) {
@@ -99,12 +100,13 @@ final class ResponseBuilder extends CodeBuilder {
     yield _returned(fromJsonBuilder.buildFromJson(_responseDataRef));
   }
 
-  Code _returned(Expression expression) => _isRaw
-      ? Types.tResponseBody()
-          .newInstanceNamed('fromResponse', [_responseRef, expression])
-          .returned
-          .statement
-      : expression.returned.statement;
+  Code _returned(Expression expression) =>
+      _isRaw
+          ? Types.tResponseBody()
+              .newInstanceNamed('fromResponse', [_responseRef, expression])
+              .returned
+              .statement
+          : expression.returned.statement;
 
   static Expression _transformNoop(Expression expr) => expr;
 }
