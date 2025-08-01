@@ -15,15 +15,13 @@ final class QueryBuilder {
 
   const QueryBuilder(this._queryParameters, this._requestRef);
 
-  Code get variables =>
-      _queryParameters.isNotEmpty
-          ? _QueryVariablesBuilder(_queryParameters, _requestRef)
-          : const Code('');
+  Code get variables => _queryParameters.isNotEmpty
+      ? _QueryVariablesBuilder(_queryParameters, _requestRef)
+      : const Code('');
 
-  Map<String, Expression> get parameters =>
-      _queryParameters.isNotEmpty
-          ? Map.fromEntries(_QueryParamsBuilder(_queryParameters).build())
-          : const {};
+  Map<String, Expression> get parameters => _queryParameters.isNotEmpty
+      ? Map.fromEntries(_QueryParamsBuilder(_queryParameters).build())
+      : const {};
 }
 
 final class _QueryVariablesBuilder extends CodeBuilder {

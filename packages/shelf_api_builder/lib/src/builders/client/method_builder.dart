@@ -32,44 +32,41 @@ final class MethodBuilder extends SpecBuilder<Method> {
 
   @override
   Method build() => Method(
-    (b) =>
-        b
-          ..name = _methodName
-          ..returns = _returnType(false)
-          ..modifier =
-              _method.response.responseType.isStream
-                  ? MethodModifier.asyncStar
-                  : MethodModifier.async
-          ..requiredParameters.addAll(_buildRequiredParameters())
-          ..optionalParameters.addAll(_buildOptionalParameters())
-          ..body = MethodBodyBuilder(
-            _apiClass,
-            _endpoint,
-            _method,
-            _dioRef,
-            _optionsRef,
-            [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
-            false,
-          ),
+    (b) => b
+      ..name = _methodName
+      ..returns = _returnType(false)
+      ..modifier = _method.response.responseType.isStream
+          ? MethodModifier.asyncStar
+          : MethodModifier.async
+      ..requiredParameters.addAll(_buildRequiredParameters())
+      ..optionalParameters.addAll(_buildOptionalParameters())
+      ..body = MethodBodyBuilder(
+        _apiClass,
+        _endpoint,
+        _method,
+        _dioRef,
+        _optionsRef,
+        [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
+        false,
+      ),
   );
 
   Method buildRaw() => Method(
-    (b) =>
-        b
-          ..name = '${_methodName}Raw'
-          ..returns = _returnType(true)
-          ..modifier = MethodModifier.async
-          ..requiredParameters.addAll(_buildRequiredParameters())
-          ..optionalParameters.addAll(_buildOptionalParameters())
-          ..body = MethodBodyBuilder(
-            _apiClass,
-            _endpoint,
-            _method,
-            _dioRef,
-            _optionsRef,
-            [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
-            true,
-          ),
+    (b) => b
+      ..name = '${_methodName}Raw'
+      ..returns = _returnType(true)
+      ..modifier = MethodModifier.async
+      ..requiredParameters.addAll(_buildRequiredParameters())
+      ..optionalParameters.addAll(_buildOptionalParameters())
+      ..body = MethodBodyBuilder(
+        _apiClass,
+        _endpoint,
+        _method,
+        _dioRef,
+        _optionsRef,
+        [_cancelTokenRef, _onSendProgressRef, _onReceiveProgressRef],
+        true,
+      ),
   );
 
   String get _methodName {
@@ -102,23 +99,21 @@ final class MethodBuilder extends SpecBuilder<Method> {
   Iterable<Parameter> _buildRequiredParameters() sync* {
     for (final pathParam in _method.pathParameters) {
       yield Parameter(
-        (b) =>
-            b
-              ..name = pathParam.name
-              ..type = Types.fromType(pathParam.type),
+        (b) => b
+          ..name = pathParam.name
+          ..type = Types.fromType(pathParam.type),
       );
     }
     if (_method.body case final EndpointBody body) {
       yield Parameter(
-        (b) =>
-            b
-              ..name = 'body'
-              ..type = switch (body.bodyType) {
-                EndpointBodyType.binaryStream => Types.stream(
-                  Types.list(Types.int$),
-                ),
-                _ => Types.fromType(body.paramType),
-              },
+        (b) => b
+          ..name = 'body'
+          ..type = switch (body.bodyType) {
+            EndpointBodyType.binaryStream => Types.stream(
+              Types.list(Types.int$),
+            ),
+            _ => Types.fromType(body.paramType),
+          },
       );
     }
   }
@@ -126,12 +121,12 @@ final class MethodBuilder extends SpecBuilder<Method> {
   Iterable<Parameter> _buildOptionalParameters() sync* {
     for (final queryParam in _method.queryParameters) {
       yield Parameter(
-        (b) =>
-            b
-              ..name = queryParam.paramName
-              ..named = true
-              ..required = !queryParam.isOptional
-              ..type = (queryParam.isList
+        (b) => b
+          ..name = queryParam.paramName
+          ..named = true
+          ..required = !queryParam.isOptional
+          ..type =
+              (queryParam.isList
                       ? Types.list(Types.fromType(queryParam.type))
                       : Types.fromType(queryParam.type))
                   .withNullable(queryParam.isOptional),
@@ -139,32 +134,28 @@ final class MethodBuilder extends SpecBuilder<Method> {
     }
 
     yield Parameter(
-      (b) =>
-          b
-            ..name = _optionsRef.symbol!
-            ..named = true
-            ..type = Types.options.withNullable(true),
+      (b) => b
+        ..name = _optionsRef.symbol!
+        ..named = true
+        ..type = Types.options.withNullable(true),
     );
     yield Parameter(
-      (b) =>
-          b
-            ..name = _cancelTokenRef.symbol!
-            ..named = true
-            ..type = Types.cancelToken.withNullable(true),
+      (b) => b
+        ..name = _cancelTokenRef.symbol!
+        ..named = true
+        ..type = Types.cancelToken.withNullable(true),
     );
     yield Parameter(
-      (b) =>
-          b
-            ..name = _onSendProgressRef.symbol!
-            ..named = true
-            ..type = Types.progressCallback.withNullable(true),
+      (b) => b
+        ..name = _onSendProgressRef.symbol!
+        ..named = true
+        ..type = Types.progressCallback.withNullable(true),
     );
     yield Parameter(
-      (b) =>
-          b
-            ..name = _onReceiveProgressRef.symbol!
-            ..named = true
-            ..type = Types.progressCallback.withNullable(true),
+      (b) => b
+        ..name = _onReceiveProgressRef.symbol!
+        ..named = true
+        ..type = Types.progressCallback.withNullable(true),
     );
   }
 }

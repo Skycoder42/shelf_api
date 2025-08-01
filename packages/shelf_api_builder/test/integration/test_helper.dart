@@ -17,13 +17,12 @@ class ExampleServer {
   ExampleServer._(this._process, int port)
     : dio = Dio(
         BaseOptions(
-          baseUrl:
-              Uri(
-                scheme: 'http',
-                host: 'localhost',
-                port: port,
-                path: '/',
-              ).toString(),
+          baseUrl: Uri(
+            scheme: 'http',
+            host: 'localhost',
+            port: port,
+            path: '/',
+          ).toString(),
         ),
       );
 

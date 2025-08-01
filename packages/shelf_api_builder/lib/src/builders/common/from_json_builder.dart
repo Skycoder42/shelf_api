@@ -31,12 +31,12 @@ class FromJsonBuilder {
     }
   }
 
-  Expression buildFromJson(Expression jsonBody) => switch (_serializableType
-      .wrapped) {
-    Wrapped.none => _buildJson(jsonBody),
-    Wrapped.list => _buildList(jsonBody),
-    Wrapped.map => _buildMap(jsonBody),
-  };
+  Expression buildFromJson(Expression jsonBody) =>
+      switch (_serializableType.wrapped) {
+        Wrapped.none => _buildJson(jsonBody),
+        Wrapped.list => _buildList(jsonBody),
+        Wrapped.map => _buildMap(jsonBody),
+      };
 
   Expression _buildJson(Expression jsonBody) {
     var checkNull = false;

@@ -26,9 +26,9 @@ class BodyParamReader with SerializableReader {
     return contentTypesReader.isNull
         ? null
         : contentTypesReader.listValue
-            .map(ConstantReader.new)
-            .map((r) => r.stringValue)
-            .toList();
+              .map(ConstantReader.new)
+              .map((r) => r.stringValue)
+              .toList();
   }
 }
 

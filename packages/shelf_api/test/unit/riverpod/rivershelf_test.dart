@@ -71,9 +71,8 @@ void main() {
 
       expect(newHandler(mockRequest), completes);
 
-      final VerificationResult(
-        captured: [Map<String, Object?> context],
-      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(captured: [Map<String, Object?> context]) =
+          verify(mockRequest.change(context: captureAnyNamed('context')));
 
       expect(context, containsPair(rivershelfRefKey, isA<EndpointRef>()));
     });
@@ -84,9 +83,8 @@ void main() {
 
       expect(newHandler(mockRequest), completes);
 
-      final VerificationResult(
-        captured: [Map<String, Object?> context],
-      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(captured: [Map<String, Object?> context]) =
+          verify(mockRequest.change(context: captureAnyNamed('context')));
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(container, isNot(testProviderContainer));
@@ -106,9 +104,8 @@ void main() {
 
       await expectLater(newHandler(mockRequest), completes);
 
-      final VerificationResult(
-        captured: [Map<String, Object?> context],
-      ) = verify(mockRequest.change(context: captureAnyNamed('context')));
+      final VerificationResult(captured: [Map<String, Object?> context]) =
+          verify(mockRequest.change(context: captureAnyNamed('context')));
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(

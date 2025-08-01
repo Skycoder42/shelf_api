@@ -34,8 +34,9 @@ final class PathBuilder extends ExpressionBuilder {
       hasTrailingSlash = path.endsWith('/');
     }
 
-    final methodPath =
-        hasTrailingSlash ? _method.path.substring(1) : _method.path;
+    final methodPath = hasTrailingSlash
+        ? _method.path.substring(1)
+        : _method.path;
     if (_method.pathParameters.isEmpty) {
       pathBuilder.addLiteral(methodPath);
     } else {

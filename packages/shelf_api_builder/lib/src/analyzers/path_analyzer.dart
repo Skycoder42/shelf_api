@@ -29,11 +29,10 @@ class PathAnalyzer {
     MethodElement method,
     ApiMethodReader apiMethod,
   ) async* {
-    final pathParamMatches =
-        _pathParamRegexp
-            .allMatches(apiMethod.path)
-            .map((match) => match[1]!)
-            .toList();
+    final pathParamMatches = _pathParamRegexp
+        .allMatches(apiMethod.path)
+        .map((match) => match[1]!)
+        .toList();
 
     for (final param in method.parameters.where((p) => p.isPositional)) {
       if (param.bodyParamAnnotation != null) {

@@ -140,10 +140,9 @@ class SerializableAnalyzer {
       );
     }
 
-    final fromJson =
-        typeElement.constructors
-            .where((c) => c.name == 'fromJson')
-            .singleOrNull;
+    final fromJson = typeElement.constructors
+        .where((c) => c.name == 'fromJson')
+        .singleOrNull;
     if (fromJson == null) {
       throw InvalidGenerationSource(
         'Cannot generate conversion for type without a fromJson constructor!',
