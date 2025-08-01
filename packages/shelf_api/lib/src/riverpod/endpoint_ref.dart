@@ -20,10 +20,9 @@ part 'endpoint_ref.g.dart';
 /// MyValue myValue(MyValueRef ref) => MyValue(ref);
 /// ```
 @Riverpod(keepAlive: true, dependencies: [])
-Request shelfRequest(Ref ref) =>
-    throw StateError(
-      'shelfRequestProvider can only be accessed via session.ref',
-    );
+Request shelfRequest(Ref ref) => throw StateError(
+  'shelfRequestProvider can only be accessed via session.ref',
+);
 
 /// An object that allows shelf request handlers to interact with providers.
 class EndpointRef {

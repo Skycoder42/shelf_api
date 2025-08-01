@@ -26,29 +26,26 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
 
   @override
   Method build() => Method(
-    (b) =>
-        b
-          ..name = handlerMethodName(_endpoint, _method)
-          ..returns = Types.future(Types.shelfResponse)
-          ..modifier = MethodModifier.async
-          ..requiredParameters.addAll(_buildParameters())
-          ..body = Block.of(_buildBody()),
+    (b) => b
+      ..name = handlerMethodName(_endpoint, _method)
+      ..returns = Types.future(Types.shelfResponse)
+      ..modifier = MethodModifier.async
+      ..requiredParameters.addAll(_buildParameters())
+      ..body = Block.of(_buildBody()),
   );
 
   Iterable<Parameter> _buildParameters() sync* {
     yield Parameter(
-      (b) =>
-          b
-            ..name = _requestRef.symbol!
-            ..type = Types.shelfRequest,
+      (b) => b
+        ..name = _requestRef.symbol!
+        ..type = Types.shelfRequest,
     );
 
     for (final pathParam in _method.pathParameters) {
       yield Parameter(
-        (b) =>
-            b
-              ..name = pathParam.handlerParamName
-              ..type = Types.string,
+        (b) => b
+          ..name = pathParam.handlerParamName
+          ..type = Types.string,
       );
     }
   }
@@ -65,8 +62,11 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
       yield* _buildTryBody();
     } else {
       yield Try(Block.of(_buildTryBody()))
-        ..finallyBody =
-            _endpointRef.property('dispose').call(const []).awaited.statement;
+        ..finallyBody = _endpointRef
+            .property('dispose')
+            .call(const [])
+            .awaited
+            .statement;
     }
   }
 

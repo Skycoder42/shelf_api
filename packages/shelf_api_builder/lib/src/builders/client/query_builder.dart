@@ -43,12 +43,11 @@ final class QueryBuilder extends ExpressionBuilder {
             .property('map')
             .call([
               Method(
-                (b) =>
-                    b
-                      ..requiredParameters.add(
-                        Parameter((b) => b..name = _valueRef.symbol!),
-                      )
-                      ..body = _convertToString(queryParam, _valueRef).code,
+                (b) => b
+                  ..requiredParameters.add(
+                    Parameter((b) => b..name = _valueRef.symbol!),
+                  )
+                  ..body = _convertToString(queryParam, _valueRef).code,
               ).closure,
             ])
             .property('toList')

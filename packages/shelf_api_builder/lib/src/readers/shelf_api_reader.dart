@@ -20,13 +20,12 @@ class ShelfApiReader with MiddlewareReader {
     }
   }
 
-  List<DartType> get endpoints =>
-      constantReader
-          .read('endpoints')
-          .listValue
-          .map(ConstantReader.new)
-          .map((r) => r.typeValue)
-          .toList();
+  List<DartType> get endpoints => constantReader
+      .read('endpoints')
+      .listValue
+      .map(ConstantReader.new)
+      .map((r) => r.typeValue)
+      .toList();
 
   String? get basePath {
     final basePathReader = constantReader.read('basePath');

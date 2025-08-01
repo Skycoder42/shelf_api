@@ -29,10 +29,10 @@ void main(List<String> args) async {
     subs.add(
       signal.watch().listen((signal) {
         for (final sub in subs) {
-          sub.cancel();
+          unawaited(sub.cancel());
         }
         print('Received $signal - terminating server');
-        server.close();
+        unawaited(server.close());
       }),
     );
   }

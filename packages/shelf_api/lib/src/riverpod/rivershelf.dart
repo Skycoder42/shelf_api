@@ -27,12 +27,11 @@ Middleware rivershelf({
   ProviderContainer? parent,
   List<Override> overrides = const [],
   List<ProviderObserver>? observers,
-}) =>
-    _RivershelfMiddleware(
-      parent: parent,
-      overrides: overrides,
-      observers: observers,
-    ).call;
+}) => _RivershelfMiddleware(
+  parent: parent,
+  overrides: overrides,
+  observers: observers,
+).call;
 
 /// A middleware to make riverpod available for route handlers.
 ///

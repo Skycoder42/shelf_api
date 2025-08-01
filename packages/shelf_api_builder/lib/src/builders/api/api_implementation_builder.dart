@@ -20,47 +20,42 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
 
   @override
   Class build() => Class(
-    (b) =>
-        b
-          ..name = _apiClass.implementationName
-          ..fields.add(
-            Field(
-              (b) =>
-                  b
-                    ..name = _handlerRef.symbol
-                    ..late = true
-                    ..modifier = FieldModifier.final$
-                    ..type = Types.handler,
-            ),
-          )
-          ..constructors.add(
-            Constructor((b) => b..body = Block.of(_buildConstructorBody())),
-          )
-          ..methods.add(
-            Method(
-              (b) =>
-                  b
-                    ..name = 'call'
-                    ..returns = Types.futureOr(Types.shelfResponse)
-                    ..requiredParameters.add(
-                      Parameter(
-                        (b) =>
-                            b
-                              ..name = 'request'
-                              ..type = Types.shelfRequest,
-                      ),
-                    )
-                    ..body =
-                        ApiImplementationBuilder._handlerRef.call([
-                          ApiImplementationBuilder._requestRef,
-                        ]).code,
-            ),
-          )
-          ..methods.addAll([
-            for (final endpoint in _apiClass.endpoints)
-              for (final method in endpoint.methods)
-                ApiHandlerBuilder(endpoint, method).build(),
-          ]),
+    (b) => b
+      ..name = _apiClass.implementationName
+      ..fields.add(
+        Field(
+          (b) => b
+            ..name = _handlerRef.symbol
+            ..late = true
+            ..modifier = FieldModifier.final$
+            ..type = Types.handler,
+        ),
+      )
+      ..constructors.add(
+        Constructor((b) => b..body = Block.of(_buildConstructorBody())),
+      )
+      ..methods.add(
+        Method(
+          (b) => b
+            ..name = 'call'
+            ..returns = Types.futureOr(Types.shelfResponse)
+            ..requiredParameters.add(
+              Parameter(
+                (b) => b
+                  ..name = 'request'
+                  ..type = Types.shelfRequest,
+              ),
+            )
+            ..body = ApiImplementationBuilder._handlerRef.call([
+              ApiImplementationBuilder._requestRef,
+            ]).code,
+        ),
+      )
+      ..methods.addAll([
+        for (final endpoint in _apiClass.endpoints)
+          for (final method in endpoint.methods)
+            ApiHandlerBuilder(endpoint, method).build(),
+      ]),
   );
 
   Iterable<Code> _buildConstructorBody() sync* {
@@ -94,8 +89,9 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
     final middleware = endpoint.middleware;
     final endpointNeedsRouter = endpoint.path != null || middleware != null;
 
-    var endpointRouter =
-        endpointNeedsRouter ? Types.router.newInstance(const []) : router;
+    var endpointRouter = endpointNeedsRouter
+        ? Types.router.newInstance(const [])
+        : router;
 
     endpointRouter = _routeMethods(endpointRouter, endpoint);
 

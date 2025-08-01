@@ -1,1 +1,5 @@
 include: package:dart_test_tools/package.yaml
+analyzer:
+  errors:
+    # TODO only temporary, until source_gen etc. can be upgraded to 3.0
+    deprecated_member_use: ignore

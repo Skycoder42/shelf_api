@@ -100,13 +100,12 @@ final class ResponseBuilder extends CodeBuilder {
     yield _returned(fromJsonBuilder.buildFromJson(_responseDataRef));
   }
 
-  Code _returned(Expression expression) =>
-      _isRaw
-          ? Types.tResponseBody()
-              .newInstanceNamed('fromResponse', [_responseRef, expression])
-              .returned
-              .statement
-          : expression.returned.statement;
+  Code _returned(Expression expression) => _isRaw
+      ? Types.tResponseBody()
+            .newInstanceNamed('fromResponse', [_responseRef, expression])
+            .returned
+            .statement
+      : expression.returned.statement;
 
   static Expression _transformNoop(Expression expr) => expr;
 }

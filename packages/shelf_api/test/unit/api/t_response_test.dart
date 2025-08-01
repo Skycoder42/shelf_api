@@ -151,48 +151,45 @@ void main() {
     group('constructor', () {
       _testResponseConstructor(
         'new',
-        construct:
-            (body, {context, headers, encoding}) => TResponse<dynamic>(
-              HttpStatus.tooManyRequests,
-              body: body,
-              headers: headers,
-              context: context,
-              encoding: encoding,
-            ),
+        construct: (body, {context, headers, encoding}) => TResponse<dynamic>(
+          HttpStatus.tooManyRequests,
+          body: body,
+          headers: headers,
+          context: context,
+          encoding: encoding,
+        ),
         statusCode: HttpStatus.tooManyRequests,
       );
 
       _testResponseConstructor(
         'ok',
-        construct:
-            (body, {context, headers, encoding}) => TResponse.ok(
-              body,
-              headers: headers,
-              context: context,
-              encoding: encoding,
-            ),
+        construct: (body, {context, headers, encoding}) => TResponse.ok(
+          body,
+          headers: headers,
+          context: context,
+          encoding: encoding,
+        ),
         statusCode: HttpStatus.ok,
       );
 
       _testResponseConstructor(
         'movedPermanently',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.movedPermanently(
-                  'test-location',
-                  body: body,
-                  headers: headers,
-                  context: context,
-                  encoding: encoding,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.movedPermanently(
+              'test-location',
+              body: body,
+              headers: headers,
+              context: context,
+              encoding: encoding,
+            ),
         statusCode: HttpStatus.movedPermanently,
         extraHeaders: {HttpHeaders.locationHeader: 'test-location'},
       );
 
       _testResponseConstructor(
         'found',
-        construct:
-            (body, {context, headers, encoding}) => TResponse<dynamic>.found(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.found(
               'test-location',
               body: body,
               headers: headers,
@@ -205,8 +202,8 @@ void main() {
 
       _testResponseConstructor(
         'seeOther',
-        construct:
-            (body, {context, headers, encoding}) => TResponse<dynamic>.seeOther(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.seeOther(
               'test-location',
               body: body,
               headers: headers,
@@ -219,62 +216,55 @@ void main() {
 
       _testResponseConstructor(
         'notModified',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.notModified(
-                  headers: headers,
-                  context: context,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.notModified(headers: headers, context: context),
         statusCode: HttpStatus.notModified,
         hasBody: false,
       );
 
       _testResponseConstructor(
         'badRequest',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.badRequest(
-                  body: body,
-                  headers: headers,
-                  context: context,
-                  encoding: encoding,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.badRequest(
+              body: body,
+              headers: headers,
+              context: context,
+              encoding: encoding,
+            ),
         statusCode: HttpStatus.badRequest,
         hasDefaultBody: true,
       );
 
       _testResponseConstructor(
         'unauthorized',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.unauthorized(
-                  body,
-                  headers: headers,
-                  context: context,
-                  encoding: encoding,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.unauthorized(
+              body,
+              headers: headers,
+              context: context,
+              encoding: encoding,
+            ),
         statusCode: HttpStatus.unauthorized,
         hasDefaultBody: true,
       );
 
       _testResponseConstructor(
         'forbidden',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.forbidden(
-                  body,
-                  headers: headers,
-                  context: context,
-                  encoding: encoding,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.forbidden(
+              body,
+              headers: headers,
+              context: context,
+              encoding: encoding,
+            ),
         statusCode: HttpStatus.forbidden,
         hasDefaultBody: true,
       );
 
       _testResponseConstructor(
         'notFound',
-        construct:
-            (body, {context, headers, encoding}) => TResponse<dynamic>.notFound(
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.notFound(
               body,
               headers: headers,
               context: context,
@@ -286,14 +276,13 @@ void main() {
 
       _testResponseConstructor(
         'internalServerError',
-        construct:
-            (body, {context, headers, encoding}) =>
-                TResponse<dynamic>.internalServerError(
-                  body: body,
-                  headers: headers,
-                  context: context,
-                  encoding: encoding,
-                ),
+        construct: (body, {context, headers, encoding}) =>
+            TResponse<dynamic>.internalServerError(
+              body: body,
+              headers: headers,
+              context: context,
+              encoding: encoding,
+            ),
         statusCode: HttpStatus.internalServerError,
         hasDefaultBody: true,
       );
@@ -307,13 +296,12 @@ void main() {
 
       _testResponseConstructor(
         'change',
-        construct:
-            (body, {context, headers, encoding}) => testResponse.change(
-              body: body,
-              headers: {...testResponse.headers, ...?headers},
-              context: context,
-              encoding: encoding,
-            ),
+        construct: (body, {context, headers, encoding}) => testResponse.change(
+          body: body,
+          headers: {...testResponse.headers, ...?headers},
+          context: context,
+          encoding: encoding,
+        ),
         statusCode: HttpStatus.ok,
         hasDefaultBody: true,
         withEncoding: false,
