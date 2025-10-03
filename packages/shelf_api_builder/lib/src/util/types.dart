@@ -11,17 +11,41 @@ import '../models/serializable_type.dart';
 abstract base class Types {
   Types._();
 
-  static final dynamic$ = TypeReference((b) => b..symbol = 'dynamic');
+  static final dynamic$ = TypeReference(
+    (b) => b
+      ..symbol = 'dynamic'
+      ..url = 'dart:core',
+  );
 
-  static final void$ = TypeReference((b) => b..symbol = 'void');
+  static final void$ = TypeReference(
+    (b) => b
+      ..symbol = 'void'
+      ..url = 'dart:core',
+  );
 
-  static final bool$ = TypeReference((b) => b..symbol = 'bool');
+  static final bool$ = TypeReference(
+    (b) => b
+      ..symbol = 'bool'
+      ..url = 'dart:core',
+  );
 
-  static final int$ = TypeReference((b) => b..symbol = 'int');
+  static final int$ = TypeReference(
+    (b) => b
+      ..symbol = 'int'
+      ..url = 'dart:core',
+  );
 
-  static final string = TypeReference((b) => b..symbol = 'String');
+  static final string = TypeReference(
+    (b) => b
+      ..symbol = 'String'
+      ..url = 'dart:core',
+  );
 
-  static final uri = TypeReference((b) => b..symbol = 'Uri');
+  static final uri = TypeReference(
+    (b) => b
+      ..symbol = 'Uri'
+      ..url = 'dart:core',
+  );
 
   static final TypeReference uint8List = TypeReference(
     (b) => b
@@ -218,10 +242,7 @@ abstract base class Types {
         b
           ..symbol = dartType.element!.name
           ..isNullable = isNull ?? dartType.isNullableType
-          ..url =
-              uri?.toString() ??
-              dartType.element3?.firstFragment.libraryFragment?.source.uri
-                  .toString();
+          ..url = getUrlWithFallback(uri, dartType.element3);
 
         if (dartType is InterfaceType) {
           b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -234,14 +255,26 @@ abstract base class Types {
     ClassElement2 clazz,
     Uri? uri,
     bool? isNull,
-  ) => TypeReference((b) {
-    b
+  ) => TypeReference(
+    (b) => b
       ..symbol = clazz.name3
       ..isNullable = isNull
-      ..url =
-          uri?.toString() ??
-          clazz.firstFragment.libraryFragment.source.uri.toString();
-  });
+      ..url = getUrlWithFallback(uri, clazz),
+  );
+
+  static String? getUrlWithFallback(Uri? uri, Element2? element) {
+    final url =
+        uri?.toString() ??
+        element?.firstFragment.libraryFragment?.source.uri.toString();
+
+    if (url == null) {
+      return null;
+    } else if (url.startsWith('dart:')) {
+      return url.split('/').first;
+    } else {
+      return url;
+    }
+  }
 
   static TypeReference _fromSerializableType(
     SerializableType serializableType,

@@ -4,6 +4,7 @@ import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 
+import '../util/types.dart';
 import 'serializable_type.dart';
 
 @internal
@@ -16,11 +17,12 @@ sealed class OpaqueType {
   };
 
   static Uri? uriForElement(BuildStep buildStep, Element2? element) {
-    final sourceUri = element?.firstFragment.libraryFragment?.source.uri;
-    if (sourceUri == null) {
+    final sourceUriStr = Types.getUrlWithFallback(null, element);
+    if (sourceUriStr == null) {
       return null;
     }
 
+    final sourceUri = Uri.parse(sourceUriStr);
     if (sourceUri.isScheme('asset')) {
       final inputPath = posix.dirname(
         posix.join(sourceUri.pathSegments.first, buildStep.inputId.path),
