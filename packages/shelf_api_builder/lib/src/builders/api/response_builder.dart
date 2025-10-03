@@ -100,6 +100,6 @@ final class ResponseBuilder extends CodeBuilder {
     'headers': literalMap({
       HttpHeaders.contentTypeHeader: Types.contentTypes.property(typeName),
     }),
-    if (encoding != null) 'encoding': encoding,
+    'encoding': ?encoding,
   };
 }

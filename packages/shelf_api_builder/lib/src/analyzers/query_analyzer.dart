@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
@@ -15,11 +15,11 @@ class QueryAnalyzer {
 
   QueryAnalyzer(this._buildStep);
 
-  Future<List<EndpointQueryParameter>> analyzeQuery(MethodElement method) =>
+  Future<List<EndpointQueryParameter>> analyzeQuery(MethodElement2 method) =>
       _analyzeQuery(method).toList();
 
-  Stream<EndpointQueryParameter> _analyzeQuery(MethodElement method) async* {
-    for (final param in method.parameters) {
+  Stream<EndpointQueryParameter> _analyzeQuery(MethodElement2 method) async* {
+    for (final param in method.formalParameters) {
       if (param.isPositional) {
         continue;
       }
@@ -28,7 +28,9 @@ class QueryAnalyzer {
     }
   }
 
-  Future<EndpointQueryParameter> _analyzeParam(ParameterElement param) async {
+  Future<EndpointQueryParameter> _analyzeParam(
+    FormalParameterElement param,
+  ) async {
     var paramType = param.type;
     if (paramType.isNullableType &&
         (param.isRequired || param.hasDefaultValue)) {
@@ -63,8 +65,8 @@ class QueryAnalyzer {
 
     final queryParam = param.queryParamAnnotation;
     return EndpointQueryParameter(
-      paramName: param.name,
-      queryName: queryParam?.name ?? param.name,
+      paramName: param.name3!,
+      queryName: queryParam?.name ?? param.name3!,
       type: OpaqueDartType(_buildStep, paramType),
       isString: paramType.isDartCoreString,
       isEnum: paramType.isEnum,

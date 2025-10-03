@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/element/type.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
+import '../util/type_checkers.dart';
 import 'middleware_reader.dart';
 
 @internal
@@ -11,7 +11,7 @@ class ShelfApiReader with MiddlewareReader {
   final ConstantReader constantReader;
 
   ShelfApiReader(this.constantReader) {
-    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(ShelfApi))) {
+    if (!constantReader.instanceOf(TypeCheckers.shelfApi)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',

@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
@@ -183,7 +183,7 @@ abstract base class Types {
   static TypeReference tResponseBody([TypeReference? type]) => TypeReference(
     (b) => b
       ..symbol = 'TResponseBody'
-      ..types.addAll([if (type != null) type])
+      ..types.addAll([?type])
       ..url = 'package:shelf_api/shelf_api_client.dart',
   );
 
@@ -220,7 +220,8 @@ abstract base class Types {
           ..isNullable = isNull ?? dartType.isNullableType
           ..url =
               uri?.toString() ??
-              dartType.element?.librarySource?.uri.toString();
+              dartType.element3?.firstFragment.libraryFragment?.source.uri
+                  .toString();
 
         if (dartType is InterfaceType) {
           b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -229,13 +230,18 @@ abstract base class Types {
     }
   }
 
-  static TypeReference _fromClass(ClassElement clazz, Uri? uri, bool? isNull) =>
-      TypeReference((b) {
-        b
-          ..symbol = clazz.name
-          ..isNullable = isNull
-          ..url = uri?.toString() ?? clazz.librarySource.uri.toString();
-      });
+  static TypeReference _fromClass(
+    ClassElement2 clazz,
+    Uri? uri,
+    bool? isNull,
+  ) => TypeReference((b) {
+    b
+      ..symbol = clazz.name3
+      ..isNullable = isNull
+      ..url =
+          uri?.toString() ??
+          clazz.firstFragment.libraryFragment.source.uri.toString();
+  });
 
   static TypeReference _fromSerializableType(
     SerializableType serializableType,

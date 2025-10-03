@@ -1,6 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
@@ -12,9 +11,7 @@ class ApiEndpointReader with MiddlewareReader {
   final ConstantReader constantReader;
 
   ApiEndpointReader(this.constantReader) {
-    if (!constantReader.instanceOf(
-      const TypeChecker.fromRuntime(ApiEndpoint),
-    )) {
+    if (!constantReader.instanceOf(TypeCheckers.apiEndpoint)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',
@@ -27,7 +24,7 @@ class ApiEndpointReader with MiddlewareReader {
 }
 
 @internal
-extension ApiEndpointElementX on ClassElement {
+extension ApiEndpointElementX on ClassElement2 {
   ApiEndpointReader? get apiEndpointAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.apiEndpoint.firstAnnotationOf(this),

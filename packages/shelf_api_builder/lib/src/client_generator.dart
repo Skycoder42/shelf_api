@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
@@ -19,7 +19,7 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
 
   @override
   Future<String?> generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
@@ -27,7 +27,7 @@ class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
       return null;
     }
 
-    if (element is! ClassElement || !element.isPrivate) {
+    if (element is! ClassElement2 || !element.isPrivate) {
       throw InvalidGenerationSourceError(
         'The $ShelfApi annotation can only be used on private classes.',
         element: element,

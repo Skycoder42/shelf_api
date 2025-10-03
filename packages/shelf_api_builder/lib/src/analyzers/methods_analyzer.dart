@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 
@@ -22,11 +22,11 @@ class MethodsAnalyzer {
       _queryAnalyzer = QueryAnalyzer(buildStep),
       _responseAnalyzer = ResponseAnalyzer(buildStep);
 
-  Future<List<EndpointMethod>> analyzeMethods(ClassElement clazz) =>
+  Future<List<EndpointMethod>> analyzeMethods(ClassElement2 clazz) =>
       _analyzeMethods(clazz).toList();
 
-  Stream<EndpointMethod> _analyzeMethods(ClassElement clazz) async* {
-    for (final method in clazz.methods) {
+  Stream<EndpointMethod> _analyzeMethods(ClassElement2 clazz) async* {
+    for (final method in clazz.methods2) {
       final apiMethod = method.apiMethodAnnotation;
       if (apiMethod == null) {
         continue;
@@ -37,10 +37,10 @@ class MethodsAnalyzer {
   }
 
   Future<EndpointMethod> _analyzeMethod(
-    MethodElement method,
+    MethodElement2 method,
     ApiMethodReader apiMethod,
   ) async => EndpointMethod(
-    name: method.name,
+    name: method.name3!,
     httpMethod: apiMethod.method,
     path: apiMethod.path,
     pathParameters: await _pathAnalyzer.analyzePath(method, apiMethod),

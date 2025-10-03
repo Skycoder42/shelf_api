@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
@@ -20,14 +20,14 @@ class SerializableAnalyzer {
       serializable.hasFromJson || serializable.hasToJson;
 
   Future<OpaqueSerializableType> analyzeType(
-    Element element,
+    Element2 element,
     DartType type,
     SerializableReader serializable,
   ) async =>
       OpaqueSerializableType(await _analyzeType(element, type, serializable));
 
   Future<SerializableType> _analyzeType(
-    Element element,
+    Element2 element,
     DartType type,
     SerializableReader serializable,
   ) async {
@@ -55,7 +55,7 @@ class SerializableAnalyzer {
   }
 
   Future<SerializableType> _analyzeJsonList(
-    Element element,
+    Element2 element,
     DartType type,
     SerializableReader serializable,
   ) async {
@@ -79,7 +79,7 @@ class SerializableAnalyzer {
   }
 
   Future<SerializableType> _analyzeJsonMap(
-    Element element,
+    Element2 element,
     DartType type,
     SerializableReader serializable,
   ) async {
@@ -112,7 +112,7 @@ class SerializableAnalyzer {
   }
 
   OpaqueType? _jsonType(
-    Element element,
+    Element2 element,
     DartType type,
     SerializableReader serializable,
   ) {
@@ -129,8 +129,8 @@ class SerializableAnalyzer {
       return null;
     }
 
-    final typeElement = type.element;
-    if (typeElement is! ClassElement) {
+    final typeElement = type.element3;
+    if (typeElement is! ClassElement2) {
       throw InvalidGenerationSource(
         'Cannot generate conversion for type without a fromJson constructor!',
         todo:
@@ -140,8 +140,8 @@ class SerializableAnalyzer {
       );
     }
 
-    final fromJson = typeElement.constructors
-        .where((c) => c.name == 'fromJson')
+    final fromJson = typeElement.constructors2
+        .where((c) => c.name3 == 'fromJson')
         .singleOrNull;
     if (fromJson == null) {
       throw InvalidGenerationSource(
@@ -153,7 +153,7 @@ class SerializableAnalyzer {
       );
     }
 
-    final firstParam = fromJson.parameters.firstOrNull;
+    final firstParam = fromJson.formalParameters.firstOrNull;
     if (firstParam == null || !firstParam.isPositional) {
       throw InvalidGenerationSource(
         'fromJson constructor must have a single positional parameter!',

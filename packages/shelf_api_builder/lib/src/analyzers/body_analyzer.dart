@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
@@ -21,7 +21,7 @@ class BodyAnalyzer {
   BodyAnalyzer(this._buildStep)
     : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
-  Future<EndpointBody?> analyzeBody(MethodElement method) async {
+  Future<EndpointBody?> analyzeBody(MethodElement2 method) async {
     final result = _findBodyParam(method);
     if (result == null) {
       return null;
@@ -69,10 +69,14 @@ class BodyAnalyzer {
     }
   }
 
-  (ParameterElement, BodyParamReader)? _findBodyParam(MethodElement method) {
-    final lastParam = method.parameters.where((p) => p.isPositional).lastOrNull;
+  (FormalParameterElement, BodyParamReader)? _findBodyParam(
+    MethodElement2 method,
+  ) {
+    final lastParam = method.formalParameters
+        .where((p) => p.isPositional)
+        .lastOrNull;
 
-    for (final param in method.parameters) {
+    for (final param in method.formalParameters) {
       if (param == lastParam) {
         continue;
       }
@@ -106,7 +110,7 @@ class BodyAnalyzer {
     return (lastParam, bodyParam);
   }
 
-  void _ensureNotNullable(DartType paramType, MethodElement method) {
+  void _ensureNotNullable(DartType paramType, MethodElement2 method) {
     if (paramType.isNullableType) {
       throw InvalidGenerationSource(
         '$paramType body cannot be nullable!',
@@ -117,7 +121,7 @@ class BodyAnalyzer {
   }
 
   EndpointBody _analyzeStreamBody(
-    ParameterElement param,
+    FormalParameterElement param,
     DartType paramType,
     BodyParamReader bodyParam,
   ) {

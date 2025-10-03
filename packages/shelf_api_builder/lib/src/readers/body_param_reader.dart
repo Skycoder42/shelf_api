@@ -1,6 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
@@ -12,7 +11,7 @@ class BodyParamReader with SerializableReader {
   final ConstantReader constantReader;
 
   BodyParamReader(this.constantReader) {
-    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(BodyParam))) {
+    if (!constantReader.instanceOf(TypeCheckers.bodyParam)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',
@@ -33,7 +32,7 @@ class BodyParamReader with SerializableReader {
 }
 
 @internal
-extension BodyParamElementX on ParameterElement {
+extension BodyParamElementX on FormalParameterElement {
   BodyParamReader? get bodyParamAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.bodyParam.firstAnnotationOf(this),

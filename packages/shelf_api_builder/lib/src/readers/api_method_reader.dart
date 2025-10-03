@@ -1,6 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
@@ -12,7 +11,7 @@ class ApiMethodReader with SerializableReader {
   final ConstantReader constantReader;
 
   ApiMethodReader(this.constantReader) {
-    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(ApiMethod))) {
+    if (!constantReader.instanceOf(TypeCheckers.apiMethod)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',
@@ -27,7 +26,7 @@ class ApiMethodReader with SerializableReader {
 }
 
 @internal
-extension ApiMethodElementX on MethodElement {
+extension ApiMethodElementX on MethodElement2 {
   ApiMethodReader? get apiMethodAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.apiMethod.firstAnnotationOf(this),

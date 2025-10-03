@@ -1,6 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
@@ -12,7 +11,7 @@ class QueryParamReader with StringifiableReader {
   final ConstantReader constantReader;
 
   QueryParamReader(this.constantReader) {
-    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(QueryParam))) {
+    if (!constantReader.instanceOf(TypeCheckers.queryParam)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',
@@ -28,7 +27,7 @@ class QueryParamReader with StringifiableReader {
 }
 
 @internal
-extension QueryParamElementX on ParameterElement {
+extension QueryParamElementX on FormalParameterElement {
   QueryParamReader? get queryParamAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.queryParam.firstAnnotationOf(this),

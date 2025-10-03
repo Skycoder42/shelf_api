@@ -1,6 +1,5 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:meta/meta.dart';
-import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../util/type_checkers.dart';
@@ -12,7 +11,7 @@ class PathParamReader with StringifiableReader {
   final ConstantReader constantReader;
 
   PathParamReader(this.constantReader) {
-    if (!constantReader.instanceOf(const TypeChecker.fromRuntime(PathParam))) {
+    if (!constantReader.instanceOf(TypeCheckers.pathParam)) {
       throw ArgumentError.value(
         constantReader,
         'constantReader',
@@ -25,7 +24,7 @@ class PathParamReader with StringifiableReader {
 }
 
 @internal
-extension PathParamElementX on ParameterElement {
+extension PathParamElementX on FormalParameterElement {
   PathParamReader? get pathParamAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.pathParam.firstAnnotationOf(this),

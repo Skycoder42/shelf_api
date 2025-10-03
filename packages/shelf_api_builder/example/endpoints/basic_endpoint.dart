@@ -22,9 +22,6 @@ class BasicEndpoint extends ShelfEndpoint {
   }) async => TResponse(
     HttpStatus.created,
     body: BasicModel((data.value * factor + delta).round()),
-    headers: {
-      HttpHeaders.locationHeader: '/examples/$id',
-      if (extra != null) 'X-Extra': extra,
-    },
+    headers: {HttpHeaders.locationHeader: '/examples/$id', 'X-Extra': ?extra},
   );
 }

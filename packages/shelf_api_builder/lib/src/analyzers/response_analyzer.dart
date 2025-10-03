@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
@@ -20,12 +20,12 @@ class ResponseAnalyzer {
     : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointResponse> analyzeResponse(
-    MethodElement method,
+    MethodElement2 method,
     ApiMethodReader apiMethod,
   ) => _analyzeResponseImpl(method, apiMethod, method.returnType, true);
 
   Future<EndpointResponse> _analyzeResponseImpl(
-    MethodElement method,
+    MethodElement2 method,
     ApiMethodReader apiMethod,
     DartType returnType,
     bool allowAsync,
@@ -92,7 +92,7 @@ class ResponseAnalyzer {
     }
   }
 
-  void _ensureNotNullable(DartType returnType, MethodElement method) {
+  void _ensureNotNullable(DartType returnType, MethodElement2 method) {
     if (returnType.isNullableType) {
       throw InvalidGenerationSource(
         'Non JSON return types cannot be nullable!',
@@ -103,7 +103,7 @@ class ResponseAnalyzer {
   }
 
   Future<EndpointResponse> _analyzeFuture(
-    MethodElement method,
+    MethodElement2 method,
     ApiMethodReader apiMethod,
     DartType returnType,
     bool allowAsync,
@@ -125,7 +125,7 @@ class ResponseAnalyzer {
   }
 
   Future<EndpointResponse> _analyzeTResponse(
-    MethodElement method,
+    MethodElement2 method,
     ApiMethodReader apiMethod,
     DartType returnType,
   ) async {
@@ -140,7 +140,7 @@ class ResponseAnalyzer {
 
   EndpointResponse _analyzeStream(
     bool allowAsync,
-    MethodElement method,
+    MethodElement2 method,
     DartType returnType,
   ) {
     if (!allowAsync) {
