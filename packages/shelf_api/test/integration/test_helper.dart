@@ -45,8 +45,6 @@ class ExampleServer {
       await completer.future.timeout(const Duration(seconds: 5));
 
       return ExampleServer._(process, port);
-
-      // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       process.kill(ProcessSignal.sigkill);
       rethrow;

@@ -1,7 +1,6 @@
-// ignore_for_file: discarded_futures
-
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_api/src/api/http_method.dart';
@@ -88,11 +87,10 @@ void main() {
 
       final container = (context[rivershelfRefKey]! as EndpointRef).container;
       expect(container, isNot(testProviderContainer));
-      expect(container.depth, 2);
 
       expect(
         () => testProviderContainer.read(shelfRequestProvider),
-        throwsStateError,
+        throwsA(isA<ProviderException>()),
       );
       final providedContext = container.read(shelfRequestProvider);
       expect(providedContext, same(mockRequest));

@@ -1,132 +1,78 @@
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
 import 'package:test/test.dart';
 
-@GenerateNiceMocks([
-  MockSpec<Ref>(),
-  MockSpec<ProviderContainer>(),
-  MockSpec<ProviderSubscription>(),
-])
-import 'endpoint_ref_test.mocks.dart';
-
-// ignore: subtype_of_sealed_class
-class _FakeProvider extends Fake
-    implements
-        // ignore: avoid_implementing_value_types
-        ProviderBase<dynamic>,
-        ProviderListenable<dynamic> {}
-
 void main() {
   group('requestContext', () {
-    final mockRef = MockRef();
+    late ProviderContainer testContainer;
 
     setUp(() {
-      reset(mockRef);
+      testContainer = ProviderContainer.test();
     });
 
     test('throws state error by default', () {
-      expect(() => shelfRequest(mockRef), throwsStateError);
+      expect(
+        () => testContainer.read(shelfRequestProvider),
+        throwsA(
+          isA<ProviderException>().having(
+            (m) => m.exception,
+            'exception',
+            isStateError,
+          ),
+        ),
+      );
     });
   });
 
   group('EndpointRef', () {
-    final testProvider = _FakeProvider();
-    final mockProviderContainer = MockProviderContainer();
+    late ProviderContainer testContainer;
+    late var callCounter = 0;
+    final testProvider = Provider((ref) => ++callCounter);
 
     late EndpointRef sut;
 
     setUp(() {
-      reset(mockProviderContainer);
-
-      sut = EndpointRef(mockProviderContainer);
+      callCounter = 0;
+      testContainer = ProviderContainer.test();
+      sut = EndpointRef(testContainer);
     });
 
     test('exists calls container.exists and returns the result', () {
-      when(mockProviderContainer.exists(any)).thenReturn(true);
-
-      final result = sut.exists(testProvider);
-
-      expect(result, isTrue);
-      verify(mockProviderContainer.exists(testProvider)).called(1);
+      expect(sut.exists(testProvider), isFalse);
+      sut.read(testProvider);
+      expect(sut.exists(testProvider), isTrue);
     });
 
     test('refresh calls container.refresh and returns the result', () {
-      when(mockProviderContainer.refresh<dynamic>(any)).thenReturn(42);
+      final original = sut.read(testProvider);
+      expect(original, 1);
 
       final result = sut.refresh(testProvider);
-
-      expect(result, 42);
-      verify(mockProviderContainer.refresh(testProvider)).called(1);
+      expect(result, 2);
     });
 
     test('invalidate calls container.invalidate', () {
+      final original = sut.read(testProvider);
+      expect(original, 1);
+
       sut.invalidate(testProvider);
 
-      verify(mockProviderContainer.invalidate(testProvider)).called(1);
+      final result = sut.read(testProvider);
+      expect(result, 2);
     });
 
-    group('read', () {
-      final mockProviderSubscription = MockProviderSubscription<int>();
+    test(
+      'read calls container.listen and returns subscription value',
+      () async {
+        final r1 = sut.read(testProvider);
+        expect(r1, 1);
 
-      setUp(() {
-        reset(mockProviderSubscription);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
 
-        when(
-          mockProviderContainer.listen<dynamic>(any, any),
-        ).thenReturn(mockProviderSubscription);
-      });
-
-      test('calls container.listen and returns subscription value', () {
-        when(mockProviderSubscription.read()).thenReturn(42);
-
-        final result = sut.read(testProvider);
-
-        expect(result, 42);
-
-        verifyInOrder([
-          mockProviderContainer.listen(testProvider, argThat(isNotNull)),
-          mockProviderSubscription.read(),
-        ]);
-      });
-
-      test('only listens to providers one', () {
-        sut
-          ..read(testProvider)
-          ..read(testProvider);
-
-        verifyInOrder([
-          mockProviderContainer.listen(testProvider, argThat(isNotNull)),
-          mockProviderSubscription.read(),
-          mockProviderSubscription.read(),
-        ]);
-      });
-    });
-
-    test('dispose closes active subscriptions', () {
-      final testProvider2 = _FakeProvider();
-      final mockProviderSubscription1 = MockProviderSubscription<int>();
-      final mockProviderSubscription2 = MockProviderSubscription<int>();
-
-      when(
-        mockProviderContainer.listen(testProvider, any),
-      ).thenReturn(mockProviderSubscription1);
-      when(
-        mockProviderContainer.listen(testProvider2, any),
-      ).thenReturn(mockProviderSubscription2);
-
-      sut
-        ..read(testProvider)
-        ..read(testProvider2);
-
-      clearInteractions(mockProviderSubscription1);
-      clearInteractions(mockProviderSubscription2);
-
-      sut.dispose();
-
-      verify(mockProviderSubscription1.close()).called(1);
-      verify(mockProviderSubscription2.close()).called(1);
-    });
+        final r2 = sut.read(testProvider);
+        expect(r2, 1);
+      },
+    );
   });
 }

@@ -14,7 +14,6 @@ extension ShelfApiStreamX<T> on Stream<T> {
         return;
       }
       finished = true;
-      // ignore: discarded_futures
       return await callback();
     }
 
