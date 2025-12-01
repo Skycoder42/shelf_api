@@ -28,7 +28,7 @@ class BasicModel {
   @override
   int get hashCode => value.hashCode;
 
-  // ignore: prefer_constructors_over_static_methods
+  // ignore: prefer_constructors_over_static_methods for code generation
   static BasicModel fromJsonX(dynamic value) => BasicModel(value as int);
 
   static int toJsonX(BasicModel model) => model.value;

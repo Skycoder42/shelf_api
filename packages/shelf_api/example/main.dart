@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print in examples
 
 import 'dart:async';
 import 'dart:io';

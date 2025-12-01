@@ -1,4 +1,4 @@
-// ignore_for_file: discarded_futures
+// ignore_for_file: discarded_futures for test files
 
 import 'dart:async';
 import 'dart:io';
