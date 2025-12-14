@@ -1,5 +1,6 @@
-// ignore: implementation_imports
-import 'package:code_builder/src/specs/code.dart';
+import 'package:code_builder/code_builder.dart';
+// ignore: implementation_imports to extend private class
+import 'package:code_builder/src/specs/code.dart' show CodeVisitor;
 import 'package:meta/meta.dart';
 
 @internal

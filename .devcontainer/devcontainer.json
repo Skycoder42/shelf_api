@@ -31,5 +31,5 @@
 		},
 		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
 	},
-	"postCreateCommand": "rm -f pubspec.lock && melos run pre-commit:init"
+	"postCreateCommand": "./tool/setup_git_hooks.dart"
 }

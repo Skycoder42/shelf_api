@@ -35,6 +35,3 @@ doc/api/
 # Intellij files
 .idea/
 *.iml
-
-# Others
-custom_lint.log

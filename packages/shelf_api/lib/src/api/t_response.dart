@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
-// ignore: implementation_imports
+// ignore: implementation_imports for helper utility
 import 'package:shelf/src/util.dart' show addHeader;
 
 import 'content_types.dart';

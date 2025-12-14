@@ -23,7 +23,7 @@ import 'endpoints/routing_endpoint.dart';
   basePath: '/api/v1/',
   middleware: apiMiddleware,
 )
-// ignore: unused_element
+// ignore: unused_element for api definition
 class _ExampleApi {}
 
 Middleware apiMiddleware() =>

@@ -6,11 +6,11 @@ part 'date_time_provider.g.dart';
 @Riverpod(keepAlive: true)
 DateTime dateTimeSingleton(Ref ref) => DateTime.now();
 
-@Riverpod(keepAlive: false)
+@Riverpod()
 DateTime dateTimeFactory(Ref ref) => DateTime.now();
 
 @Riverpod(keepAlive: true, dependencies: [shelfRequest])
 DateTime requestDateTimeSingleton(Ref ref) => DateTime.now();
 
-@Riverpod(keepAlive: false, dependencies: [shelfRequest])
+@Riverpod(dependencies: [shelfRequest])
 DateTime requestDateTimeFactory(Ref ref) => DateTime.now();
