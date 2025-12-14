@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
@@ -17,7 +17,7 @@ class ApiClassAnalyzer {
     : _endpointAnalyzer = EndpointAnalyzer(_buildStep);
 
   Future<ApiClass> analyzeApiClass(
-    ClassElement2 clazz,
+    ClassElement clazz,
     ShelfApiReader shelfApi,
   ) async {
     if (shelfApi.endpoints.isEmpty) {
@@ -29,7 +29,7 @@ class ApiClassAnalyzer {
 
     return ApiClass(
       classType: OpaqueClassType(_buildStep, clazz),
-      className: clazz.name3!,
+      className: clazz.name!,
       endpoints: [
         for (final endpoint in shelfApi.endpoints)
           await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),

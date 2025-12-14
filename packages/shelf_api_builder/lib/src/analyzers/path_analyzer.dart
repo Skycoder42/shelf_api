@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
@@ -21,12 +21,12 @@ class PathAnalyzer {
   PathAnalyzer(this._buildStep);
 
   Future<List<EndpointPathParameter>> analyzePath(
-    MethodElement2 method,
+    MethodElement method,
     ApiMethodReader apiMethod,
   ) => _analyzePath(method, apiMethod).toList();
 
   Stream<EndpointPathParameter> _analyzePath(
-    MethodElement2 method,
+    MethodElement method,
     ApiMethodReader apiMethod,
   ) async* {
     final pathParamMatches = _pathParamRegexp
@@ -58,7 +58,7 @@ class PathAnalyzer {
 
       if (pathParamMatches.isEmpty) {
         throw InvalidGenerationSource(
-          'Unable to find parameter named ${param.name3} in the URL template '
+          'Unable to find parameter named ${param.name} in the URL template '
           'of the endpoint method',
           todo: 'Ensure parameters are correctly named in both URL and method.',
           element: param,
@@ -66,9 +66,9 @@ class PathAnalyzer {
       }
 
       final matchName = pathParamMatches.removeAt(0);
-      if (matchName != param.name3) {
+      if (matchName != param.name) {
         throw InvalidGenerationSource(
-          'Expected ${param.name3} in the URL template but found $matchName. '
+          'Expected ${param.name} in the URL template but found $matchName. '
           'Make sure template parameters and method parameters are in the same '
           'order!',
           todo: 'Reorder or rename your method parameters.',
@@ -79,7 +79,7 @@ class PathAnalyzer {
       final pathParam = param.pathParamAnnotation;
       final paramType = param.type;
       yield EndpointPathParameter(
-        name: param.name3!,
+        name: param.name!,
         type: OpaqueDartType(_buildStep, paramType),
         isString: paramType.isDartCoreString,
         isEnum: paramType.isEnum,

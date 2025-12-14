@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
@@ -20,10 +20,10 @@ class EndpointAnalyzer {
 
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,
-    ClassElement2 apiElement,
+    ClassElement apiElement,
   ) async {
-    final endpointElement = endpointType.element3;
-    if (endpointElement is! ClassElement2 ||
+    final endpointElement = endpointType.element;
+    if (endpointElement is! ClassElement ||
         !TypeCheckers.shelfEndpoint.isSuperOf(endpointElement)) {
       throw InvalidGenerationSource(
         'Endpoints of ShelfApi must extend ShelfEndpoint!',
@@ -46,7 +46,7 @@ class EndpointAnalyzer {
 
     return Endpoint(
       endpointType: OpaqueClassType(_buildStep, endpointElement),
-      name: endpointElement.name3!,
+      name: endpointElement.name!,
       path: apiEndpoint?.path,
       methods: await _methodsAnalyzer.analyzeMethods(endpointElement),
       middleware: await apiEndpoint?.middleware(_buildStep),

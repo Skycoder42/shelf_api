@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:meta/meta.dart';
@@ -16,7 +16,7 @@ sealed class OpaqueType {
     _ => throw StateError(reason),
   };
 
-  static Uri? uriForElement(BuildStep buildStep, Element2? element) {
+  static Uri? uriForElement(BuildStep buildStep, Element? element) {
     final sourceUriStr = Types.getUrlWithFallback(null, element);
     if (sourceUriStr == null) {
       return null;
@@ -51,12 +51,12 @@ class OpaqueDartType extends OpaqueType {
   final Uri? uri;
 
   OpaqueDartType(BuildStep buildStep, this.dartType)
-    : uri = OpaqueType.uriForElement(buildStep, dartType.element3);
+    : uri = OpaqueType.uriForElement(buildStep, dartType.element);
 }
 
 @internal
 class OpaqueClassType extends OpaqueType {
-  final ClassElement2 element;
+  final ClassElement element;
   final Uri? uri;
 
   OpaqueClassType(BuildStep buildStep, this.element)

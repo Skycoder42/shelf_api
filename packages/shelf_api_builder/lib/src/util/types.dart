@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:meta/meta.dart';
@@ -242,7 +242,7 @@ abstract base class Types {
         b
           ..symbol = dartType.element!.name
           ..isNullable = isNull ?? dartType.isNullableType
-          ..url = getUrlWithFallback(uri, dartType.element3);
+          ..url = getUrlWithFallback(uri, dartType.element);
 
         if (dartType is InterfaceType) {
           b.types.addAll(dartType.typeArguments.map(_fromDartType));
@@ -251,18 +251,15 @@ abstract base class Types {
     }
   }
 
-  static TypeReference _fromClass(
-    ClassElement2 clazz,
-    Uri? uri,
-    bool? isNull,
-  ) => TypeReference(
-    (b) => b
-      ..symbol = clazz.name3
-      ..isNullable = isNull
-      ..url = getUrlWithFallback(uri, clazz),
-  );
+  static TypeReference _fromClass(ClassElement clazz, Uri? uri, bool? isNull) =>
+      TypeReference(
+        (b) => b
+          ..symbol = clazz.name
+          ..isNullable = isNull
+          ..url = getUrlWithFallback(uri, clazz),
+      );
 
-  static String? getUrlWithFallback(Uri? uri, Element2? element) {
+  static String? getUrlWithFallback(Uri? uri, Element? element) {
     final url =
         uri?.toString() ??
         element?.firstFragment.libraryFragment?.source.uri.toString();

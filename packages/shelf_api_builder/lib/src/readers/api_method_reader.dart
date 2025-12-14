@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -26,7 +26,7 @@ class ApiMethodReader with SerializableReader {
 }
 
 @internal
-extension ApiMethodElementX on MethodElement2 {
+extension ApiMethodElementX on MethodElement {
   ApiMethodReader? get apiMethodAnnotation {
     final annotation = ConstantReader(
       TypeCheckers.apiMethod.firstAnnotationOf(this),
