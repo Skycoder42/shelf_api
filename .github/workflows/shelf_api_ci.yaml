@@ -17,7 +17,6 @@ jobs:
     with:
       workingDirectory: packages/shelf_api
       buildRunner: true
-      buildRunnerArgs: --workspace
       unitTestPaths: -P unit
       coverageExclude: >-
         "**/*.g.dart"
