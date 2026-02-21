@@ -17,8 +17,8 @@ jobs:
     with:
       workingDirectory: packages/shelf_api
       buildRunner: true
+      buildRunnerArgs: --workspace
       unitTestPaths: -P unit
-      minCoverage: 0 # WORKAROUND for https://github.com/dart-lang/test/issues/2570
       coverageExclude: >-
         "**/*.g.dart"
       integrationTestPaths: -P integration
