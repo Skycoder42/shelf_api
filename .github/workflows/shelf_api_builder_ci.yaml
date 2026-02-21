@@ -18,7 +18,6 @@ jobs:
       workingDirectory: packages/shelf_api_builder
       buildDependencies: shelf_api
       buildRunner: true
-      panaScoreThreshold: 10
       unitTestPaths: ""
       integrationTestPaths: -P integration
 
