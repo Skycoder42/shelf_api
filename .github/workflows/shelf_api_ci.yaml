@@ -27,8 +27,10 @@ jobs:
     uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
     needs:
       - ci
+    permissions:
+      contents: write
+      actions: write
     with:
       workingDirectory: packages/shelf_api
       tagPrefix: shelf_api-v
-    secrets:
-      githubToken: ${{ secrets.GH_PAT }}
+      publishWorkflow: shelf_api_cd.yml

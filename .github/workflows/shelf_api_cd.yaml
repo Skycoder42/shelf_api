@@ -1,9 +1,12 @@
 name: CD - Publish shelf_api to pub.dev
 
 on:
-  push:
-    tags:
-      - "shelf_api-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: The version to be deployed
+        required: true
 
 jobs:
   publish:
@@ -13,5 +16,6 @@ jobs:
       id-token: write
     with:
       tagPrefix: shelf_api-v
+      version: ${{ inputs.version }}
       workingDirectory: packages/shelf_api
       buildRunner: true

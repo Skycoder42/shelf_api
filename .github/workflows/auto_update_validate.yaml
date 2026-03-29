@@ -1,0 +1,26 @@
+name: Validate automatic dependency updates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  shelf_api:
+    name: CI
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/shelf_api
+      buildRunner: true
+      unitTestPaths: -P unit
+      coverageExclude: >-
+        "**/*.g.dart"
+      integrationTestPaths: -P integration
+
+  shelf_api_builder:
+    name: CI
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/shelf_api_builder
+      buildDependencies: shelf_api
+      buildRunner: true
+      unitTestPaths: ""
+      integrationTestPaths: -P integration
