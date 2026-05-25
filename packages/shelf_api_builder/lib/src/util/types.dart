@@ -47,109 +47,109 @@ abstract base class Types {
       ..url = 'dart:core',
   );
 
-  static final TypeReference uint8List = TypeReference(
+  static final uint8List = TypeReference(
     (b) => b
       ..symbol = 'Uint8List'
       ..url = 'dart:typed_data',
   );
 
-  static final TypeReference shelfRequest = TypeReference(
+  static final shelfRequest = TypeReference(
     (b) => b
       ..symbol = 'Request'
       ..url = 'package:shelf/shelf.dart',
   );
 
-  static final TypeReference shelfResponse = TypeReference(
+  static final shelfResponse = TypeReference(
     (b) => b
       ..symbol = 'Response'
       ..url = 'package:shelf/shelf.dart',
   );
 
-  static final TypeReference handler = TypeReference(
+  static final handler = TypeReference(
     (b) => b
       ..symbol = 'Handler'
       ..url = 'package:shelf/shelf.dart',
   );
 
-  static final TypeReference pipeline = TypeReference(
+  static final pipeline = TypeReference(
     (b) => b
       ..symbol = 'Pipeline'
       ..url = 'package:shelf/shelf.dart',
   );
 
-  static final TypeReference router = TypeReference(
+  static final router = TypeReference(
     (b) => b
       ..symbol = 'Router'
       ..url = 'package:shelf_router/shelf_router.dart',
   );
 
-  static final TypeReference dio = TypeReference(
+  static final dio = TypeReference(
     (b) => b
       ..symbol = 'Dio'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference responseType = TypeReference(
+  static final responseType = TypeReference(
     (b) => b
       ..symbol = 'ResponseType'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference responseBody = TypeReference(
+  static final responseBody = TypeReference(
     (b) => b
       ..symbol = 'ResponseBody'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference baseOptions = TypeReference(
+  static final baseOptions = TypeReference(
     (b) => b
       ..symbol = 'BaseOptions'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference options = TypeReference(
+  static final options = TypeReference(
     (b) => b
       ..symbol = 'Options'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference cancelToken = TypeReference(
+  static final cancelToken = TypeReference(
     (b) => b
       ..symbol = 'CancelToken'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference progressCallback = TypeReference(
+  static final progressCallback = TypeReference(
     (b) => b
       ..symbol = 'ProgressCallback'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference dioException = TypeReference(
+  static final dioException = TypeReference(
     (b) => b
       ..symbol = 'DioException'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference dioExceptionType = TypeReference(
+  static final dioExceptionType = TypeReference(
     (b) => b
       ..symbol = 'DioExceptionType'
       ..url = 'package:dio/dio.dart',
   );
 
-  static final TypeReference httpMethod = TypeReference(
+  static final httpMethod = TypeReference(
     (b) => b
       ..symbol = 'HttpMethod'
       ..url = 'package:shelf_api/shelf_api.dart',
   );
 
-  static final TypeReference endpointRef = TypeReference(
+  static final endpointRef = TypeReference(
     (b) => b
       ..symbol = 'EndpointRef'
       ..url = 'package:shelf_api/shelf_api.dart',
   );
 
-  static final TypeReference contentTypes = TypeReference(
+  static final contentTypes = TypeReference(
     (b) => b
       ..symbol = 'ContentTypes'
       ..url = 'package:shelf_api/shelf_api.dart',

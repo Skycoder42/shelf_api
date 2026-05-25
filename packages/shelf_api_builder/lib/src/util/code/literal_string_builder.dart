@@ -59,7 +59,7 @@ class _TemplateStringInfo extends _StringInfo {
   @override
   Iterable<Code> get stringCode sync* {
     final replacements = <(int, int, Expression)>[];
-    for (final MapEntry(key: pattern, value: value) in values.entries) {
+    for (final MapEntry(key: pattern, :value) in values.entries) {
       final matches = pattern.allMatches(template);
       for (final match in matches) {
         replacements.add((match.start, match.end, value));

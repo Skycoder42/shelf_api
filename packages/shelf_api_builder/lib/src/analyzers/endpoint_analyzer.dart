@@ -4,11 +4,11 @@ import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../analyzers/methods_analyzer.dart';
 import '../models/endpoint.dart';
 import '../models/opaque_type.dart';
 import '../readers/api_endpoint_reader.dart';
 import '../util/type_checkers.dart';
+import 'methods_analyzer.dart';
 
 @internal
 class EndpointAnalyzer {

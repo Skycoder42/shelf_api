@@ -8,7 +8,7 @@ import '../base/expression_builder.dart';
 
 @internal
 final class BodyBuilder extends ExpressionBuilder {
-  static const Reference bodyRef = Reference('body');
+  static const bodyRef = Reference('body');
 
   final EndpointBody _body;
 

@@ -5,5 +5,5 @@ import 'package:meta/meta.dart';
 abstract base class Annotations {
   Annotations._();
 
-  static const Reference override = Reference('override');
+  static const override = Reference('override');
 }
