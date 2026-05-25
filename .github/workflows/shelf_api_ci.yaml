@@ -33,4 +33,4 @@ jobs:
     with:
       workingDirectory: packages/shelf_api
       tagPrefix: shelf_api-v
-      publishWorkflow: shelf_api_cd.yml
+      publishWorkflow: shelf_api_cd.yaml

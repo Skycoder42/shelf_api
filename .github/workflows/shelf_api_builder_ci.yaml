@@ -32,4 +32,4 @@ jobs:
     with:
       workingDirectory: packages/shelf_api_builder
       tagPrefix: shelf_api_builder-v
-      publishWorkflow: shelf_api_builder_cd.yml
+      publishWorkflow: shelf_api_builder_cd.yaml
