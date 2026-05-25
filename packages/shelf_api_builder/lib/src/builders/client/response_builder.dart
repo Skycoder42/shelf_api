@@ -1,10 +1,10 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_response.dart';
 import '../../util/code/if.dart';
 import '../../util/constants.dart';
-import '../../util/extensions/code_builder_extensions.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
 import '../common/from_json_builder.dart';
@@ -48,7 +48,7 @@ final class ResponseBuilder extends CodeBuilder {
         yield _buildStreamReturn(
           (stream) => stream
               .property('cast')
-              .call(const [], const {}, [Types.list(Types.int$)])
+              .call(const [], const {}, [CoreTypes.$List(CoreTypes.$int)])
               .property('transform')
               .call([Constants.utf8.property('decoder')]),
         );

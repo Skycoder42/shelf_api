@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint.dart';
@@ -28,7 +29,7 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
   Method build() => Method(
     (b) => b
       ..name = handlerMethodName(_endpoint, _method)
-      ..returns = Types.future(Types.shelfResponse)
+      ..returns = CoreTypes.$Future(Types.shelfResponse)
       ..modifier = MethodModifier.async
       ..requiredParameters.addAll(_buildParameters())
       ..body = Block.of(_buildBody()),
@@ -45,7 +46,7 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
       yield Parameter(
         (b) => b
           ..name = pathParam.handlerParamName
-          ..type = Types.string,
+          ..type = CoreTypes.$String,
       );
     }
   }

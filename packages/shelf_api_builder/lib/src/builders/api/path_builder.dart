@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_path_parameter.dart';
@@ -17,7 +18,7 @@ final class PathBuilder {
       Expression paramRef = refer(param.handlerParamName);
 
       if (param.urlEncode) {
-        paramRef = Types.uri.property('decodeComponent').call([paramRef]);
+        paramRef = CoreTypes.$Uri.property('decodeComponent').call([paramRef]);
       }
 
       if (param.customParse case final OpaqueConstant parse) {

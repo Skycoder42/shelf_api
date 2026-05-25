@@ -1,10 +1,10 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_query_parameter.dart';
 import '../../models/opaque_constant.dart';
 import '../../util/constants.dart';
-import '../../util/types.dart';
 import '../base/expression_builder.dart';
 
 @internal
@@ -20,8 +20,8 @@ final class QueryBuilder extends ExpressionBuilder {
   @override
   Expression build() => literalMap(
     Map.fromEntries(_buildEntries()),
-    Types.string,
-    Types.dynamic$,
+    CoreTypes.$String,
+    CoreTypes.$dynamic,
   );
 
   Iterable<MapEntry<Expression, Expression>> _buildEntries() sync* {

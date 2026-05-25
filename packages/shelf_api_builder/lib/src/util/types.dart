@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
-import 'package:source_helper/source_helper.dart';
 
 import '../models/opaque_type.dart';
 import '../models/serializable_type.dart';
@@ -10,42 +10,6 @@ import '../models/serializable_type.dart';
 @internal
 abstract base class Types {
   Types._();
-
-  static final dynamic$ = TypeReference(
-    (b) => b
-      ..symbol = 'dynamic'
-      ..url = 'dart:core',
-  );
-
-  static final void$ = TypeReference(
-    (b) => b
-      ..symbol = 'void'
-      ..url = 'dart:core',
-  );
-
-  static final bool$ = TypeReference(
-    (b) => b
-      ..symbol = 'bool'
-      ..url = 'dart:core',
-  );
-
-  static final int$ = TypeReference(
-    (b) => b
-      ..symbol = 'int'
-      ..url = 'dart:core',
-  );
-
-  static final string = TypeReference(
-    (b) => b
-      ..symbol = 'String'
-      ..url = 'dart:core',
-  );
-
-  static final uri = TypeReference(
-    (b) => b
-      ..symbol = 'Uri'
-      ..url = 'dart:core',
-  );
 
   static final uint8List = TypeReference(
     (b) => b
@@ -155,134 +119,93 @@ abstract base class Types {
       ..url = 'package:shelf_api/shelf_api.dart',
   );
 
-  static TypeReference list([TypeReference? type]) => TypeReference(
-    (b) => b
-      ..symbol = 'List'
-      ..types.add(type ?? Types.dynamic$),
-  );
-
-  static TypeReference map({
-    TypeReference? keyType,
-    TypeReference? valueType,
-  }) => TypeReference(
-    (b) => b
-      ..symbol = 'Map'
-      ..types.add(keyType ?? Types.dynamic$)
-      ..types.add(valueType ?? Types.dynamic$),
-  );
-
-  static TypeReference future([TypeReference? type]) => TypeReference(
-    (b) => b
-      ..symbol = 'Future'
-      ..types.add(type ?? Types.dynamic$),
-  );
-
-  static TypeReference futureOr([TypeReference? type]) => TypeReference(
+  static TypeReference futureOr([Reference? type]) => TypeReference(
     (b) => b
       ..symbol = 'FutureOr'
-      ..types.add(type ?? Types.dynamic$)
+      ..types.add(type ?? CoreTypes.$dynamic)
       ..url = 'dart:async',
   );
 
-  static TypeReference stream([TypeReference? type]) => TypeReference(
+  static TypeReference stream([Reference? type]) => TypeReference(
     (b) => b
       ..symbol = 'Stream'
-      ..types.add(type ?? Types.dynamic$),
+      ..types.add(type ?? CoreTypes.$dynamic)
+      ..url = 'dart:async',
   );
 
-  static TypeReference dioRequest([TypeReference? type]) => TypeReference(
+  static TypeReference dioRequest([Reference? type]) => TypeReference(
     (b) => b
       ..symbol = 'Request'
-      ..types.add(type ?? Types.dynamic$)
+      ..types.add(type ?? CoreTypes.$dynamic)
       ..url = 'package:dio/dio.dart',
   );
 
-  static TypeReference dioResponse([TypeReference? type]) => TypeReference(
+  static TypeReference dioResponse([Reference? type]) => TypeReference(
     (b) => b
       ..symbol = 'Response'
-      ..types.add(type ?? Types.dynamic$)
+      ..types.add(type ?? CoreTypes.$dynamic)
       ..url = 'package:dio/dio.dart',
   );
 
-  static TypeReference tResponseBody([TypeReference? type]) => TypeReference(
+  static TypeReference tResponseBody([Reference? type]) => TypeReference(
     (b) => b
       ..symbol = 'TResponseBody'
       ..types.addAll([?type])
       ..url = 'package:shelf_api/shelf_api_client.dart',
   );
 
-  static TypeReference fromType(OpaqueType type, {bool? isNull}) =>
-      switch (type) {
-        OpaqueSerializableType(serializableType: final type) =>
-          _fromSerializableType(type, isNull),
-        final OpaqueDartType dartType => _fromDartType(
-          dartType.dartType,
-          dartType.uri,
-          isNull,
-        ),
-        final OpaqueClassType classType => _fromClass(
-          classType.element,
-          classType.uri,
-          isNull,
-        ),
-        OpaqueDynamicType() => dynamic$,
-      };
+  static Reference fromType(OpaqueType type, {bool? isNull}) => switch (type) {
+    OpaqueSerializableType(serializableType: final type) =>
+      _fromSerializableType(type, isNull),
+    final OpaqueDartType dartType => _fromDartType(
+      dartType.dartType,
+      dartType.uri,
+      isNull,
+    ),
+    final OpaqueClassType classType => _fromClass(
+      classType.element,
+      classType.uri,
+      isNull,
+    ),
+    OpaqueDynamicType() => CoreTypes.$dynamic,
+  };
 
-  static TypeReference _fromDartType(
-    DartType dartType, [
-    Uri? uri,
-    bool? isNull,
-  ]) {
-    if (dartType is VoidType || dartType.isDartCoreNull) {
-      return void$;
-    } else if (dartType is DynamicType) {
-      return dynamic$;
-    } else {
-      return TypeReference((b) {
-        b
-          ..symbol = dartType.element!.name
-          ..isNullable = isNull ?? dartType.isNullableType
-          ..url = getUrlWithFallback(uri, dartType.element);
-
-        if (dartType is InterfaceType) {
-          b.types.addAll(dartType.typeArguments.map(_fromDartType));
-        }
-      });
-    }
-  }
-
-  static TypeReference _fromClass(ClassElement clazz, Uri? uri, bool? isNull) =>
-      TypeReference(
+  static Reference _fromDartType(DartType dartType, [Uri? uri, bool? isNull]) {
+    final ref = dartType.toReference(nullable: isNull);
+    if (ref.type case final TypeReference typeRef when uri != null) {
+      return TypeReference(
         (b) => b
-          ..symbol = clazz.name
-          ..isNullable = isNull
-          ..url = getUrlWithFallback(uri, clazz),
+          ..replace(typeRef)
+          ..url = uri.toString(),
       );
-
-  static String? getUrlWithFallback(Uri? uri, Element? element) {
-    final url =
-        uri?.toString() ??
-        element?.firstFragment.libraryFragment?.source.uri.toString();
-
-    if (url == null) {
-      return null;
-    } else if (url.startsWith('dart:')) {
-      return url.split('/').first;
     } else {
-      return url;
+      return ref;
     }
   }
 
-  static TypeReference _fromSerializableType(
+  static TypeReference _fromClass(ClassElement clazz, Uri? uri, bool? isNull) {
+    final ref = clazz.toReference(nullable: isNull ?? false);
+    if (ref.type case final TypeReference typeRef when uri != null) {
+      return TypeReference(
+        (b) => b
+          ..replace(typeRef)
+          ..url = uri.toString(),
+      );
+    } else {
+      return ref;
+    }
+  }
+
+  static Reference _fromSerializableType(
     SerializableType serializableType,
     bool? isNull,
   ) => switch (serializableType.wrapped) {
-    Wrapped.none => Types.fromType(serializableType.dartType, isNull: isNull),
-    Wrapped.list => Types.list(
+    .none => Types.fromType(serializableType.dartType, isNull: isNull),
+    .list => CoreTypes.$List(
       Types.fromType(serializableType.dartType),
     ).withNullable(isNull ?? serializableType.isNullable),
-    Wrapped.map => Types.map(
-      keyType: Types.string,
+    .map => CoreTypes.$Map(
+      keyType: CoreTypes.$String,
       valueType: Types.fromType(serializableType.dartType),
     ).withNullable(isNull ?? serializableType.isNullable),
   };

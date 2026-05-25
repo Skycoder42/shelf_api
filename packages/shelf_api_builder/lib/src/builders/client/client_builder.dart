@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart' hide MethodBuilder;
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/api_class.dart';
@@ -42,7 +43,7 @@ final class ClientBuilder extends SpecBuilder<Class> {
         Parameter(
           (b) => b
             ..name = _baseUrlRef.symbol!
-            ..type = Types.uri,
+            ..type = CoreTypes.$Uri,
         ),
       )
       ..initializers.add(
@@ -105,12 +106,12 @@ final class ClientBuilder extends SpecBuilder<Class> {
   Method _buildClose() => Method(
     (b) => b
       ..name = 'close'
-      ..returns = Types.void$
+      ..returns = CoreTypes.$void
       ..optionalParameters.add(
         Parameter(
           (b) => b
             ..name = 'force'
-            ..type = Types.bool$
+            ..type = CoreTypes.$bool
             ..named = true
             ..defaultTo = literalFalse.code,
         ),

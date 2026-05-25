@@ -4,7 +4,6 @@ import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 
-import '../util/types.dart';
 import 'serializable_type.dart';
 
 @internal
@@ -17,12 +16,11 @@ sealed class OpaqueType {
   };
 
   static Uri? uriForElement(BuildStep buildStep, Element? element) {
-    final sourceUriStr = Types.getUrlWithFallback(null, element);
-    if (sourceUriStr == null) {
+    final sourceUri = element?.library?.uri;
+    if (sourceUri == null) {
       return null;
     }
 
-    final sourceUri = Uri.parse(sourceUriStr);
     if (sourceUri.isScheme('asset')) {
       final inputPath = posix.dirname(
         posix.join(sourceUri.pathSegments.first, buildStep.inputId.path),
@@ -34,6 +32,20 @@ sealed class OpaqueType {
       );
     } else {
       return sourceUri;
+    }
+  }
+
+  static String? getUrlWithFallback(Uri? uri, Element? element) {
+    final url =
+        uri?.toString() ??
+        element?.firstFragment.libraryFragment?.source.uri.toString();
+
+    if (url == null) {
+      return null;
+    } else if (url.startsWith('dart:')) {
+      return url.split('/').first;
+    } else {
+      return url;
     }
   }
 }

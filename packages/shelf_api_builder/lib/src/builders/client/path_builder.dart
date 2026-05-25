@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/api_class.dart';
@@ -6,9 +7,7 @@ import '../../models/endpoint.dart';
 import '../../models/endpoint_method.dart';
 import '../../models/endpoint_path_parameter.dart';
 import '../../models/opaque_constant.dart';
-import '../../util/code/literal_string_builder.dart';
 import '../../util/constants.dart';
-import '../../util/types.dart';
 import '../base/expression_builder.dart';
 
 @internal
@@ -20,17 +19,16 @@ final class PathBuilder extends ExpressionBuilder {
   const PathBuilder(this._apiClass, this._endpoint, this._method);
 
   @override
-  Expression build() {
-    final pathBuilder = LiteralStringBuilder();
+  Expression build() => LiteralString((pathBuilder) {
     var hasTrailingSlash = false;
 
     if (_apiClass.basePath case final String path) {
-      pathBuilder.addLiteral(path);
+      pathBuilder.addString(path);
       hasTrailingSlash = path.endsWith('/');
     }
 
     if (_endpoint.path case final String path) {
-      pathBuilder.addLiteral(hasTrailingSlash ? path.substring(1) : path);
+      pathBuilder.addString(hasTrailingSlash ? path.substring(1) : path);
       hasTrailingSlash = path.endsWith('/');
     }
 
@@ -38,16 +36,14 @@ final class PathBuilder extends ExpressionBuilder {
         ? _method.path.substring(1)
         : _method.path;
     if (_method.pathParameters.isEmpty) {
-      pathBuilder.addLiteral(methodPath);
+      pathBuilder.addString(methodPath);
     } else {
-      pathBuilder.addTemplate(methodPath, {
+      _convertPathTemplate(pathBuilder, methodPath, {
         for (final pathParam in _method.pathParameters)
           _paramPattern(pathParam): _paramValue(pathParam),
       });
     }
-
-    return pathBuilder;
-  }
+  });
 
   RegExp _paramPattern(EndpointPathParameter pathParam) =>
       RegExp('<${RegExp.escape(pathParam.name)}(?:\\|.+?)?>');
@@ -69,9 +65,45 @@ final class PathBuilder extends ExpressionBuilder {
     }
 
     if (pathParam.urlEncode) {
-      return Types.uri.property('encodeComponent').call([paramStringRef]);
+      return CoreTypes.$Uri.property('encodeComponent').call([paramStringRef]);
     } else {
       return paramStringRef;
+    }
+  }
+
+  void _convertPathTemplate(
+    LiteralStringBuilder builder,
+    String template,
+    Map<Pattern, Expression> values,
+  ) {
+    final replacements = <(int, int, Expression)>[];
+    for (final MapEntry(key: pattern, :value) in values.entries) {
+      final matches = pattern.allMatches(template);
+      for (final match in matches) {
+        replacements.add((match.start, match.end, value));
+      }
+    }
+
+    replacements.sort((a, b) {
+      final startCmp = a.$1.compareTo(b.$1);
+      return startCmp != 0 ? startCmp : a.$2.compareTo(b.$2);
+    });
+
+    var previousEnd = 0;
+    for (final (start, end, value) in replacements) {
+      if (start < previousEnd) {
+        throw StateError('Cannot have replacement patterns that overlap!');
+      }
+
+      if (previousEnd != start) {
+        builder.addString(template.substring(previousEnd, start));
+      }
+      builder.addParameter(value);
+      previousEnd = end;
+    }
+
+    if (previousEnd < template.length) {
+      builder.addString(template.substring(previousEnd));
     }
   }
 }

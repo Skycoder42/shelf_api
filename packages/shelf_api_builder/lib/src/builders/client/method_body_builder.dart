@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/api_class.dart';
@@ -74,12 +75,12 @@ final class MethodBodyBuilder extends CodeBuilder {
       },
   };
 
-  TypeReference get _responseDartType {
+  Reference get _responseDartType {
     switch (_method.response.responseType) {
       case EndpointResponseType.noContent:
-        return Types.void$;
+        return CoreTypes.$void;
       case EndpointResponseType.text:
-        return Types.string;
+        return CoreTypes.$String;
       case EndpointResponseType.binary:
         return Types.uint8List;
       case EndpointResponseType.textStream:

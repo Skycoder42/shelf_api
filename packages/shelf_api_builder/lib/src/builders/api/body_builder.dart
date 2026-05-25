@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_body.dart';
 import '../../util/code/if.dart';
-import '../../util/code/literal_string_builder.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -57,7 +57,7 @@ final class _BodyVariableBuilder extends CodeBuilder {
             .property('read')
             .call(const [])
             .property('cast')
-            .call(const [], const {}, [Types.list(Types.int$)])
+            .call(const [], const {}, [CoreTypes.$List(CoreTypes.$int)])
             .property('transform')
             .call([Constants.utf8.property('decoder')]);
       case EndpointBodyType.binaryStream:
@@ -86,13 +86,16 @@ final class _BodyVariableBuilder extends CodeBuilder {
           .newInstance(
             [literalNum(HttpStatus.unsupportedMediaType)],
             {
-              'body': LiteralStringBuilder()
-                ..addTemplate(
-                  'Expected content type to be any of '
-                  '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
-                  'but was "%type%"',
-                  {'%type%': _requestRef.property('mimeType')},
-                ),
+              'body': LiteralString(
+                (b) => b
+                  ..addString(
+                    'Expected content type to be any of '
+                    '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
+                    'but was "',
+                  )
+                  ..addParameter(_requestRef.property('mimeType'))
+                  ..addString('"'),
+              ),
             },
           )
           .returned
@@ -132,7 +135,9 @@ final class _BodyVariableBuilder extends CodeBuilder {
 
     yield declareFinal(BodyBuilder._bodyRef.symbol!)
         .assign(
-          rawJsonType == Types.dynamic$ ? callExpr : callExpr.asA(rawJsonType),
+          rawJsonType == CoreTypes.$dynamic
+              ? callExpr
+              : callExpr.asA(rawJsonType),
         )
         .statement;
   }

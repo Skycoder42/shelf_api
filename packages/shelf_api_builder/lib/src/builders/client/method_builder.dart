@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 import 'package:source_helper/source_helper.dart';
 
@@ -78,7 +79,7 @@ final class MethodBuilder extends SpecBuilder<Method> {
     return name + _method.name.pascal;
   }
 
-  TypeReference _returnType(bool isRaw) {
+  Reference _returnType(bool isRaw) {
     final response = _method.response;
 
     final innerType = switch (response.responseType) {
@@ -88,11 +89,13 @@ final class MethodBuilder extends SpecBuilder<Method> {
     };
 
     if (response.responseType.isStream) {
-      return isRaw ? Types.future(Types.tResponseBody(innerType)) : innerType;
+      return isRaw
+          ? CoreTypes.$Future(Types.tResponseBody(innerType))
+          : innerType;
     } else {
       return isRaw
-          ? Types.future(Types.tResponseBody(innerType))
-          : Types.future(innerType);
+          ? CoreTypes.$Future(Types.tResponseBody(innerType))
+          : CoreTypes.$Future(innerType);
     }
   }
 
@@ -110,7 +113,7 @@ final class MethodBuilder extends SpecBuilder<Method> {
           ..name = 'body'
           ..type = switch (body.bodyType) {
             EndpointBodyType.binaryStream => Types.stream(
-              Types.list(Types.int$),
+              CoreTypes.$List(CoreTypes.$int),
             ),
             _ => Types.fromType(body.paramType),
           },
@@ -127,9 +130,9 @@ final class MethodBuilder extends SpecBuilder<Method> {
           ..required = !queryParam.isOptional
           ..type =
               (queryParam.isList
-                      ? Types.list(Types.fromType(queryParam.type))
+                      ? CoreTypes.$List(Types.fromType(queryParam.type))
                       : Types.fromType(queryParam.type))
-                  .withNullable(queryParam.isOptional),
+                  .asNullable(queryParam.isOptional),
       );
     }
 

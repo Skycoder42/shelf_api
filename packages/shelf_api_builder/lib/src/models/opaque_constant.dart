@@ -15,16 +15,16 @@ sealed class OpaqueConstant {
     final assetId = AssetId.resolve(revivable.source, from: buildStep.inputId);
     final element = await buildStep.resolver.libraryFor(assetId);
     return RevivedOpaqueConstant._(
-      revivable.accessor,
-      OpaqueType.uriForElement(buildStep, element)!,
+      revivable,
+      OpaqueType.uriForElement(buildStep, element),
     );
   }
 }
 
 @internal
 class RevivedOpaqueConstant extends OpaqueConstant {
-  final String name;
-  final Uri source;
+  final Revivable revivable;
+  final Uri? source;
 
-  RevivedOpaqueConstant._(this.name, this.source);
+  RevivedOpaqueConstant._(this.revivable, this.source);
 }

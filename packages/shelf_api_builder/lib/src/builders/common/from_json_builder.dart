@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/opaque_constant.dart';
@@ -14,18 +15,21 @@ class FromJsonBuilder {
 
   FromJsonBuilder(this._serializableType);
 
-  TypeReference get rawJsonType {
+  Reference get rawJsonType {
     if (_serializableType.fromJson != null) {
-      return Types.dynamic$;
+      return CoreTypes.$dynamic;
     } else {
       return switch (_serializableType.wrapped) {
-        Wrapped.none => switch (_serializableType.jsonType) {
+        .none => switch (_serializableType.jsonType) {
           final OpaqueType jsonType => Types.fromType(jsonType),
           _ => Types.fromType(_serializableType.dartType),
         },
-        Wrapped.list => Types.list().withNullable(_serializableType.isNullable),
-        Wrapped.map => Types.map(
-          keyType: Types.string,
+        .list => CoreTypes.$List(
+          CoreTypes.$dynamic,
+        ).withNullable(_serializableType.isNullable),
+        .map => CoreTypes.$Map(
+          keyType: CoreTypes.$String,
+          valueType: CoreTypes.$dynamic,
         ).withNullable(_serializableType.isNullable),
       };
     }
@@ -48,7 +52,7 @@ class FromJsonBuilder {
       checkNull = true;
       paramExpr = Types.fromType(
         _serializableType.dartType,
-      ).withNullable(false).newInstanceNamed('fromJson', [jsonBody]);
+      ).asNullable(false).newInstanceNamed('fromJson', [jsonBody]);
     } else {
       paramExpr = jsonBody;
     }
@@ -88,7 +92,10 @@ class FromJsonBuilder {
     if (_serializableType.jsonType case final OpaqueType jsonType) {
       return jsonBody
           .autoProperty('cast', _serializableType.isNullable)
-          .call(const [], const {}, [Types.string, Types.fromType(jsonType)])
+          .call(const [], const {}, [
+            CoreTypes.$String,
+            Types.fromType(jsonType),
+          ])
           .property('mapValue')
           .call([
             Types.fromType(_serializableType.dartType).property('fromJson'),
@@ -97,7 +104,7 @@ class FromJsonBuilder {
       return jsonBody.autoProperty('cast', _serializableType.isNullable).call(
         const [],
         const {},
-        [Types.string, Types.fromType(_serializableType.dartType)],
+        [CoreTypes.$String, Types.fromType(_serializableType.dartType)],
       );
     }
   }
