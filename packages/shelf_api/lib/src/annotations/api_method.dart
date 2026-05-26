@@ -1,8 +1,11 @@
 // coverage:ignore-file
+/// @docImport 'shelf_api.dart';
+library;
 
 import 'package:meta/meta_meta.dart';
 
 import '../api/http_method.dart';
+import 'shelf_api.dart' show ShelfApi;
 
 /// Marks the given method as a specific endpoint method.
 @Target({TargetKind.method})
@@ -32,6 +35,17 @@ class ApiMethod {
   ///  /api/          | /users/      | /api/users/
   final String path;
 
+  /// Whether to automatically add a 404 Not Found response for API calls that
+  /// return null.
+  ///
+  /// If enabled, the response mapping will convert `null` responses into a
+  /// not found HTTP response. If disabled (the default), a OK response with
+  /// the JSON body `null` will be returned instead.
+  ///
+  /// If unset, the value from the [ShelfApi.autoNotFound] annotation will be
+  /// used as a default.
+  final bool? autoNotFound;
+
   /// Custom deserialization function for the response.
   ///
   /// You can use this in case the response type does not have a fromJson
@@ -55,14 +69,20 @@ class ApiMethod {
   final Function? toJson;
 
   /// Constructor.
-  const ApiMethod(this.method, this.path, {this.fromJson, this.toJson});
+  const ApiMethod(
+    this.method,
+    this.path, {
+    this.autoNotFound,
+    this.fromJson,
+    this.toJson,
+  });
 }
 
 /// Marks the given method as a get endpoint method.
 @Target({TargetKind.method})
 class Get extends ApiMethod {
   /// Constructor.
-  const Get(String path, {super.fromJson, super.toJson})
+  const Get(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.get, path);
 }
 
@@ -70,7 +90,7 @@ class Get extends ApiMethod {
 @Target({TargetKind.method})
 class Delete extends ApiMethod {
   /// Constructor.
-  const Delete(String path, {super.fromJson, super.toJson})
+  const Delete(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.delete, path);
 }
 
@@ -78,7 +98,7 @@ class Delete extends ApiMethod {
 @Target({TargetKind.method})
 class Head extends ApiMethod {
   /// Constructor.
-  const Head(String path, {super.fromJson, super.toJson})
+  const Head(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.head, path);
 }
 
@@ -86,7 +106,7 @@ class Head extends ApiMethod {
 @Target({TargetKind.method})
 class Options extends ApiMethod {
   /// Constructor.
-  const Options(String path, {super.fromJson, super.toJson})
+  const Options(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.options, path);
 }
 
@@ -94,7 +114,7 @@ class Options extends ApiMethod {
 @Target({TargetKind.method})
 class Patch extends ApiMethod {
   /// Constructor.
-  const Patch(String path, {super.fromJson, super.toJson})
+  const Patch(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.patch, path);
 }
 
@@ -102,7 +122,7 @@ class Patch extends ApiMethod {
 @Target({TargetKind.method})
 class Post extends ApiMethod {
   /// Constructor.
-  const Post(String path, {super.fromJson, super.toJson})
+  const Post(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.post, path);
 }
 
@@ -110,6 +130,6 @@ class Post extends ApiMethod {
 @Target({TargetKind.method})
 class Put extends ApiMethod {
   /// Constructor.
-  const Put(String path, {super.fromJson, super.toJson})
+  const Put(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.put, path);
 }

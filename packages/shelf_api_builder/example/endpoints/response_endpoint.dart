@@ -22,6 +22,12 @@ class ResponseEndpoint extends ShelfEndpoint {
   @Get('/json')
   BasicModel json() => const BasicModel(42);
 
+  @Get('/json/nullable')
+  BasicModel? jsonNullable() => null;
+
+  @Get('/json/notFound', autoNotFound: true)
+  BasicModel? jsonNotFound() => null;
+
   @Get('/json/list')
   List<int> jsonList() => const [1, 2, 3];
 
@@ -37,6 +43,21 @@ class ResponseEndpoint extends ShelfEndpoint {
     toJson: BasicModel.toJsonX,
   )
   BasicModel jsonCustom() => const BasicModel(24);
+
+  @Get(
+    '/json/custom/nullable',
+    fromJson: BasicModel.fromJsonX,
+    toJson: BasicModel.toJsonX,
+  )
+  BasicModel? jsonCustomNullable() => null;
+
+  @Get(
+    '/json/custom/notFound',
+    fromJson: BasicModel.fromJsonX,
+    toJson: BasicModel.toJsonX,
+    autoNotFound: true,
+  )
+  BasicModel? jsonCustomNotFound() => null;
 
   @Get('/response')
   Response response() => Response(

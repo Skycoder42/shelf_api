@@ -7,6 +7,7 @@ import 'package:source_gen/source_gen.dart';
 import '../models/endpoint.dart';
 import '../models/opaque_type.dart';
 import '../readers/api_endpoint_reader.dart';
+import '../readers/shelf_api_reader.dart';
 import '../util/type_checkers.dart';
 import 'methods_analyzer.dart';
 
@@ -21,6 +22,7 @@ class EndpointAnalyzer {
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,
     ClassElement apiElement,
+    ShelfApiReader shelfApi,
   ) async {
     final endpointElement = endpointType.element;
     if (endpointElement is! ClassElement ||
@@ -48,7 +50,7 @@ class EndpointAnalyzer {
       endpointType: OpaqueClassType(_buildStep, endpointElement),
       name: endpointElement.name!,
       path: apiEndpoint?.path,
-      methods: await _methodsAnalyzer.analyzeMethods(endpointElement),
+      methods: await _methodsAnalyzer.analyzeMethods(endpointElement, shelfApi),
       middleware: await apiEndpoint?.middleware(_buildStep),
     );
   }

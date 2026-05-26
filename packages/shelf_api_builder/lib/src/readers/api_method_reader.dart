@@ -23,6 +23,8 @@ class ApiMethodReader with SerializableReader {
   String get method => constantReader.read('method').stringValue;
 
   String get path => constantReader.read('path').stringValue;
+
+  bool? get autoNotFound => constantReader.peek('autoNotFound')?.boolValue;
 }
 
 @internal

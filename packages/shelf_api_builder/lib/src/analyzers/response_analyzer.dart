@@ -8,6 +8,7 @@ import 'package:source_helper/source_helper.dart';
 import '../models/endpoint_response.dart';
 import '../models/opaque_type.dart';
 import '../readers/api_method_reader.dart';
+import '../readers/shelf_api_reader.dart';
 import '../util/type_checkers.dart';
 import 'serializable_analyzer.dart';
 
@@ -22,11 +23,19 @@ class ResponseAnalyzer {
   Future<EndpointResponse> analyzeResponse(
     MethodElement method,
     ApiMethodReader apiMethod,
-  ) => _analyzeResponseImpl(method, apiMethod, method.returnType, true);
+    ShelfApiReader shelfApi,
+  ) => _analyzeResponseImpl(
+    method,
+    apiMethod,
+    shelfApi,
+    method.returnType,
+    true,
+  );
 
   Future<EndpointResponse> _analyzeResponseImpl(
     MethodElement method,
     ApiMethodReader apiMethod,
+    ShelfApiReader shelfApi,
     DartType returnType,
     bool allowAsync,
   ) async {
@@ -40,7 +49,13 @@ class ResponseAnalyzer {
 
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
-      return _analyzeFuture(method, apiMethod, returnType, allowAsync);
+      return _analyzeFuture(
+        method,
+        apiMethod,
+        shelfApi,
+        returnType,
+        allowAsync,
+      );
     } else if (_serializableAnalyzer.isCustom(apiMethod)) {
       return EndpointResponse(
         responseType: EndpointResponseType.json,
@@ -49,6 +64,7 @@ class ResponseAnalyzer {
           returnType,
           apiMethod,
         ),
+        autoNotFound: apiMethod.autoNotFound ?? shelfApi.autoNotFound,
       );
     } else if (returnType.isDartAsyncStream) {
       _ensureNotNullable(returnType, method);
@@ -72,7 +88,7 @@ class ResponseAnalyzer {
       );
     } else if (TypeCheckers.tResponse.isExactlyType(returnType)) {
       _ensureNotNullable(returnType, method);
-      return await _analyzeTResponse(method, apiMethod, returnType);
+      return await _analyzeTResponse(method, apiMethod, shelfApi, returnType);
     } else if (TypeCheckers.response.isAssignableFromType(returnType)) {
       _ensureNotNullable(returnType, method);
       return EndpointResponse(
@@ -88,6 +104,7 @@ class ResponseAnalyzer {
           returnType,
           apiMethod,
         ),
+        autoNotFound: apiMethod.autoNotFound ?? shelfApi.autoNotFound,
       );
     }
   }
@@ -105,6 +122,7 @@ class ResponseAnalyzer {
   Future<EndpointResponse> _analyzeFuture(
     MethodElement method,
     ApiMethodReader apiMethod,
+    ShelfApiReader shelfApi,
     DartType returnType,
     bool allowAsync,
   ) async {
@@ -119,6 +137,7 @@ class ResponseAnalyzer {
     return (await _analyzeResponseImpl(
       method,
       apiMethod,
+      shelfApi,
       futureType,
       false,
     )).copyWith(isAsync: true);
@@ -127,12 +146,14 @@ class ResponseAnalyzer {
   Future<EndpointResponse> _analyzeTResponse(
     MethodElement method,
     ApiMethodReader apiMethod,
+    ShelfApiReader shelfApi,
     DartType returnType,
   ) async {
     final [responseType] = returnType.typeArgumentsOf(TypeCheckers.tResponse)!;
     return (await _analyzeResponseImpl(
       method,
       apiMethod,
+      shelfApi,
       responseType,
       false,
     )).copyWith(isResponse: true);

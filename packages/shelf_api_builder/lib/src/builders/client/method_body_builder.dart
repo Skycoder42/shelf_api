@@ -19,6 +19,8 @@ import 'response_builder.dart';
 
 @internal
 final class MethodBodyBuilder extends CodeBuilder {
+  static const _errorRef = Reference(r'$error');
+
   final ApiClass _apiClass;
   final Endpoint _endpoint;
   final EndpointMethod _method;
@@ -41,7 +43,7 @@ final class MethodBodyBuilder extends CodeBuilder {
   @override
   Iterable<Code> build() sync* {
     final queryBuilder = QueryBuilder(_method.queryParameters);
-    final invocation = _dioRef.property('request').call(
+    var invocation = _dioRef.property('request').call(
       [PathBuilder(_apiClass, _endpoint, _method)],
       {
         if (_method.body case final EndpointBody body)
@@ -56,6 +58,58 @@ final class MethodBodyBuilder extends CodeBuilder {
       },
       [_responseDartType],
     );
+
+    if (_method.response.autoNotFoundActivated) {
+      invocation = invocation.property('onError').call(
+        [
+          Method(
+            (b) => b
+              ..requiredParameters.add(
+                Parameter((b) => b..name = _errorRef.symbol!),
+              )
+              ..requiredParameters.add(Parameter((b) => b..name = '_'))
+              ..body = Types.dioResponse(_responseDartType).newInstance(
+                const [],
+                {
+                  'data': literalNull,
+                  for (final property in const [
+                    'requestOptions',
+                    'statusCode',
+                    'statusMessage',
+                    'isRedirect',
+                    'redirects',
+                    'headers',
+                    'extra',
+                  ])
+                    property: _errorRef
+                        .property('response')
+                        .nullChecked
+                        .property(property),
+                },
+              ).code,
+          ).closure,
+        ],
+        {
+          'test': Method(
+            (b) => b
+              ..requiredParameters.add(
+                Parameter((b) => b..name = _errorRef.symbol!),
+              )
+              ..body = _errorRef
+                  .property('type')
+                  .equalTo(Types.dioExceptionType.property('badResponse'))
+                  .and(
+                    _errorRef
+                        .property('response')
+                        .nullSafeProperty('statusCode')
+                        .equalTo(literalNum(404)),
+                  )
+                  .code,
+          ).closure,
+        },
+        [Types.dioException],
+      );
+    }
 
     yield ResponseBuilder(_method.response, invocation.awaited, _isRaw);
   }

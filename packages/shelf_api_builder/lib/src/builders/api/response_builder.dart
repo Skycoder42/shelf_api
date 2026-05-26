@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../models/endpoint_response.dart';
 import '../../models/opaque_constant.dart';
+import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -68,21 +69,41 @@ final class ResponseBuilder extends CodeBuilder {
   Iterable<Code> _buildJson() sync* {
     final serializableType = _response.serializableReturnType;
 
+    Expression responseIn;
+    var needsNullCheck = false;
+    if (serializableType.isNullable) {
+      yield declareFinal(_responseRef.symbol!).assign(_invocation).statement;
+      responseIn = _responseRef;
+
+      if (_response.autoNotFoundActivated) {
+        yield If(
+          _responseRef.equalTo(literalNull),
+          Types.shelfResponse
+              .newInstanceNamed('notFound', const [literalNull])
+              .returned
+              .statement,
+        );
+      } else {
+        needsNullCheck = true;
+      }
+    } else {
+      responseIn = _invocation;
+    }
+
     Expression responseExpr;
     if (serializableType.toJson case final OpaqueConstant toJson) {
-      if (serializableType.isNullable) {
-        yield declareFinal(_responseRef.symbol!).assign(_invocation).statement;
-        responseExpr = _responseRef
+      if (needsNullCheck) {
+        responseExpr = responseIn
             .notEqualTo(literalNull)
             .conditional(
-              Constants.fromConstant(toJson).call([_responseRef]),
+              Constants.fromConstant(toJson).call([responseIn]),
               literalNull,
             );
       } else {
-        responseExpr = Constants.fromConstant(toJson).call([_invocation]);
+        responseExpr = Constants.fromConstant(toJson).call([responseIn]);
       }
     } else {
-      responseExpr = _invocation;
+      responseExpr = responseIn;
     }
 
     yield Types.shelfResponse

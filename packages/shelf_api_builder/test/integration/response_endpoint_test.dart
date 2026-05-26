@@ -61,6 +61,28 @@ void main() {
     expect(response.data, const BasicModel(42));
   });
 
+  test('/json/nullable endpoint returns correct data', () async {
+    final response = await server.apiClient.responseJsonNullable();
+    expect(response, isNull);
+  });
+
+  test('/json/nullable endpoint returns correct data raw', () async {
+    final response = await server.apiClient.responseJsonNullableRaw();
+    expect(response.statusCode, HttpStatus.ok);
+    expect(response.data, isNull);
+  });
+
+  test('/json/notFound endpoint returns correct data', () async {
+    final response = await server.apiClient.responseJsonNotFound();
+    expect(response, isNull);
+  });
+
+  test('/json/notFound endpoint returns correct data raw', () async {
+    final response = await server.apiClient.responseJsonNotFoundRaw();
+    expect(response.statusCode, HttpStatus.notFound);
+    expect(response.data, isNull);
+  });
+
   test('/json/list endpoint returns correct data', () async {
     final response = await server.apiClient.responseJsonList();
     expect(response, const [1, 2, 3]);
@@ -92,6 +114,28 @@ void main() {
     final response = await server.apiClient.responseJsonCustomRaw();
     expect(response.statusCode, HttpStatus.ok);
     expect(response.data, const BasicModel(24));
+  });
+
+  test('/json/custom/nullable endpoint returns correct data', () async {
+    final response = await server.apiClient.responseJsonCustomNullable();
+    expect(response, isNull);
+  });
+
+  test('/json/custom/nullable endpoint returns correct data raw', () async {
+    final response = await server.apiClient.responseJsonCustomNullableRaw();
+    expect(response.statusCode, HttpStatus.ok);
+    expect(response.data, isNull);
+  });
+
+  test('/json/custom/notFound endpoint returns correct data', () async {
+    final response = await server.apiClient.responseJsonCustomNotFound();
+    expect(response, isNull);
+  });
+
+  test('/json/custom/notFound endpoint returns correct data raw', () async {
+    final response = await server.apiClient.responseJsonCustomNotFoundRaw();
+    expect(response.statusCode, HttpStatus.notFound);
+    expect(response.data, isNull);
   });
 
   test('/response endpoint returns correct data', () async {

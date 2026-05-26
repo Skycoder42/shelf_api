@@ -16,6 +16,14 @@ class ShelfApi {
   /// If left empty, no prefix is added.
   final String? basePath;
 
+  /// Whether to automatically add a 404 Not Found response for API calls that
+  /// return null.
+  ///
+  /// If enabled, the response mapping will convert `null` responses into a
+  /// not found HTTP response. If disabled (the default), a OK response with
+  /// the JSON body `null` will be returned instead.
+  final bool autoNotFound;
+
   /// Optional middleware to be applied to the API.
   ///
   /// If specified, this function must return a [Middleware], which is applied
@@ -25,5 +33,10 @@ class ShelfApi {
   final Middleware Function()? middleware;
 
   /// Constructor
-  const ShelfApi(this.endpoints, {this.basePath, this.middleware});
+  const ShelfApi(
+    this.endpoints, {
+    this.basePath,
+    this.middleware,
+    this.autoNotFound = false,
+  });
 }

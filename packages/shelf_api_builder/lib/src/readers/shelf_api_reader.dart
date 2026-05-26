@@ -31,4 +31,6 @@ class ShelfApiReader with MiddlewareReader {
     final basePathReader = constantReader.read('basePath');
     return basePathReader.isNull ? null : basePathReader.stringValue;
   }
+
+  bool get autoNotFound => constantReader.read('autoNotFound').boolValue;
 }

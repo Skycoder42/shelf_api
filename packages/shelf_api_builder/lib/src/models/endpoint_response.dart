@@ -26,12 +26,14 @@ class EndpointResponse {
   final OpaqueType returnType;
   final bool isResponse;
   final bool isAsync;
+  final bool autoNotFound;
 
   EndpointResponse({
     required this.responseType,
     required this.returnType,
     this.isResponse = false,
     this.isAsync = false,
+    this.autoNotFound = false,
   }) {
     if (responseType == EndpointResponseType.json &&
         returnType is! OpaqueSerializableType) {
@@ -64,4 +66,16 @@ class EndpointResponse {
       'OpaqueSerializableType',
     );
   }
+
+  bool get autoNotFoundActivated => switch (this) {
+    EndpointResponse(
+      responseType: .json,
+      autoNotFound: true,
+      returnType: OpaqueSerializableType(
+        serializableType: SerializableType(isNullable: true),
+      ),
+    ) =>
+      true,
+    _ => false,
+  };
 }

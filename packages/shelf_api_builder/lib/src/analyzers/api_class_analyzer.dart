@@ -32,7 +32,7 @@ class ApiClassAnalyzer {
       className: clazz.name!,
       endpoints: [
         for (final endpoint in shelfApi.endpoints)
-          await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz),
+          await _endpointAnalyzer.analyzeEndpoint(endpoint, clazz, shelfApi),
       ],
       basePath: shelfApi.basePath,
       middleware: await shelfApi.middleware(_buildStep),
