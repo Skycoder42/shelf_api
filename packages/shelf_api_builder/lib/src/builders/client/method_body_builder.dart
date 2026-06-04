@@ -114,20 +114,30 @@ final class MethodBodyBuilder extends CodeBuilder {
     yield ResponseBuilder(_method.response, invocation.awaited, _isRaw);
   }
 
-  Map<String, Expression> get _options => {
-    'method': literalString(_method.httpMethod),
-    'responseType': _responseType,
-    if (_method.body?.contentTypes case [final firstContentType, ...])
-      'contentType': literalString(firstContentType)
-    else if (_method.body?.bodyType case final EndpointBodyType bodyType)
-      'contentType': switch (bodyType) {
-        EndpointBodyType.text ||
-        EndpointBodyType.textStream => literalString(ContentType.text.mimeType),
-        EndpointBodyType.binary || EndpointBodyType.binaryStream =>
-          literalString(ContentType.binary.mimeType),
-        EndpointBodyType.json => literalString(ContentType.json.mimeType),
-      },
-  };
+  Map<String, Expression> get _options {
+    final defaultContentType = switch (_method.body) {
+      EndpointBody(contentTypes: [final contentType, ...]) => literalString(
+        contentType,
+      ),
+      EndpointBody(bodyType: .text || .textStream) => literalString(
+        ContentType.text.mimeType,
+      ),
+      EndpointBody(bodyType: .binary || .binaryStream) => literalString(
+        ContentType.binary.mimeType,
+      ),
+      EndpointBody(bodyType: .json) => literalString(ContentType.json.mimeType),
+      _ => null,
+    };
+
+    return {
+      'method': literalString(_method.httpMethod),
+      'responseType': _responseType,
+      if (defaultContentType != null)
+        'contentType': _optionsRef
+            .nullSafeProperty('contentType')
+            .ifNullThen(defaultContentType),
+    };
+  }
 
   Reference get _responseDartType {
     switch (_method.response.responseType) {
