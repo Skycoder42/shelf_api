@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:shelf_api/shelf_api.dart';
@@ -62,4 +63,8 @@ class BodyEndpoint extends ShelfEndpoint {
     )
     BasicModel? body,
   ) => body;
+
+  @Get('/content-type')
+  String getContentType(@bodyParam Uint8List body) =>
+      request.headers[HttpHeaders.contentTypeHeader] ?? '';
 }

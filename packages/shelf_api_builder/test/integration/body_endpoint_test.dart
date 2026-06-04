@@ -206,4 +206,21 @@ void main() {
       expect(response.data, json.encode(const BasicModel(0)));
     },
   );
+
+  test('/content-type returns octet stream by default', () async {
+    final response = await server.apiClient.bodyGetContentType(Uint8List(0));
+    expect(response, ContentType.binary.mimeType);
+  });
+
+  test(
+    '/content-type returns custom content type if set via request options',
+    () async {
+      const testContentType = 'application/x-test';
+      final response = await server.apiClient.bodyGetContentType(
+        Uint8List(0),
+        $options: Options(contentType: testContentType),
+      );
+      expect(response, testContentType);
+    },
+  );
 }
