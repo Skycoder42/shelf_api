@@ -19,7 +19,7 @@ platforms:
   windows:
 
 dependencies:
-  analyzer: ^13.3.0
+  analyzer: ">=13.3.0 <15.0.0"
   build: ^4.0.10
   build_config: ^1.3.2
   code_builder: ^4.12.0
@@ -51,4 +51,3 @@ dart_pre_commit:
       - meta
       - path
       - shelf
-  flutter-compat: false
