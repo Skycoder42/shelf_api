@@ -3,7 +3,6 @@ import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_response.dart';
-import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -79,20 +78,26 @@ final class ResponseBuilder extends CodeBuilder {
 
     final serializableType = _response.serializableReturnType;
     if (!serializableType.isNullable) {
-      yield If(
-        _responseDataRef.equalTo(literalNull),
-        Types.dioException
-            .newInstance(const [], {
-              'requestOptions': _responseRef.property('requestOptions'),
-              'response': _responseRef,
-              'type': Types.dioExceptionType.property('badResponse'),
-              'message': literalString(
-                'Received JSON response with null body, but empty responses '
-                'are not allowed!',
-              ),
-            })
-            .thrown
-            .statement,
+      yield Conditional(
+        (b) => b
+          ..branches.add(
+            Branch(
+              (b) => b
+                ..condition = .expression(_responseDataRef.equalTo(literalNull))
+                ..body = Types.dioException
+                    .newInstance(const [], {
+                      'requestOptions': _responseRef.property('requestOptions'),
+                      'response': _responseRef,
+                      'type': Types.dioExceptionType.property('badResponse'),
+                      'message': literalString(
+                        'Received JSON response with null body, but empty '
+                        'responses are not allowed!',
+                      ),
+                    })
+                    .thrown
+                    .statement,
+            ),
+          ),
       );
     }
 

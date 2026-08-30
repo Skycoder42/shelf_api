@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 
 import '../../models/endpoint_response.dart';
 import '../../models/opaque_constant.dart';
-import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -76,12 +75,18 @@ final class ResponseBuilder extends CodeBuilder {
       responseIn = _responseRef;
 
       if (_response.autoNotFoundActivated) {
-        yield If(
-          _responseRef.equalTo(literalNull),
-          Types.shelfResponse
-              .newInstanceNamed('notFound', const [literalNull])
-              .returned
-              .statement,
+        yield Conditional(
+          (b) => b
+            ..branches.add(
+              Branch(
+                (b) => b
+                  ..condition = .expression(_responseRef.equalTo(literalNull))
+                  ..body = Types.shelfResponse
+                      .newInstanceNamed('notFound', const [literalNull])
+                      .returned
+                      .statement,
+              ),
+            ),
         );
       } else {
         needsNullCheck = true;

@@ -5,7 +5,6 @@ import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint_body.dart';
-import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -78,29 +77,38 @@ final class _BodyVariableBuilder extends CodeBuilder {
       return;
     }
 
-    yield If(
-      literalConstList(_methodBody.contentTypes)
-          .property('contains')
-          .call([_requestRef.property('mimeType')])
-          .negate(),
-      Types.shelfResponse
-          .newInstance(
-            [literalNum(HttpStatus.unsupportedMediaType)],
-            {
-              'body': LiteralString(
-                (b) => b
-                  ..addString(
-                    'Expected content type to be any of '
-                    '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
-                    'but was "',
+    yield Conditional(
+      (b) => b
+        ..branches.add(
+          Branch(
+            (b) => b
+              ..condition = .expression(
+                literalConstList(_methodBody.contentTypes)
+                    .property('contains')
+                    .call([_requestRef.property('mimeType')])
+                    .negate(),
+              )
+              ..body = Types.shelfResponse
+                  .newInstance(
+                    [literalNum(HttpStatus.unsupportedMediaType)],
+                    {
+                      'body': LiteralString(
+                        (b) => b
+                          ..addString(
+                            'Expected content type to be any of '
+                            // ignore: lines_longer_than_80_chars for readability
+                            '${_methodBody.contentTypes.map((e) => '"$e"').join(', ')} '
+                            'but was "',
+                          )
+                          ..addParameter(_requestRef.property('mimeType'))
+                          ..addString('"'),
+                      ),
+                    },
                   )
-                  ..addParameter(_requestRef.property('mimeType'))
-                  ..addString('"'),
-              ),
-            },
-          )
-          .returned
-          .statement,
+                  .returned
+                  .statement,
+          ),
+        ),
     );
   }
 
@@ -122,14 +130,20 @@ final class _BodyVariableBuilder extends CodeBuilder {
           )
           .parenthesized;
     } else {
-      yield If(
-        _rawBodyRef.property('isEmpty'),
-        Types.shelfResponse
-            .newInstanceNamed('badRequest', const [], {
-              'body': literalString('Missing required request body'),
-            })
-            .returned
-            .statement,
+      yield Conditional(
+        (b) => b
+          ..branches.add(
+            Branch(
+              (b) => b
+                ..condition = .expression(_rawBodyRef.property('isEmpty'))
+                ..body = Types.shelfResponse
+                    .newInstanceNamed('badRequest', const [], {
+                      'body': literalString('Missing required request body'),
+                    })
+                    .returned
+                    .statement,
+            ),
+          ),
       );
       callExpr = Constants.json.property('decode').call(const [_rawBodyRef]);
     }

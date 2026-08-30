@@ -1,10 +1,9 @@
-import 'package:code_builder/code_builder.dart' hide Try;
+import 'package:code_builder/code_builder.dart';
 import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/endpoint.dart';
 import '../../models/endpoint_method.dart';
-import '../../util/code/try.dart';
 import '../../util/types.dart';
 import '../base/spec_builder.dart';
 import 'body_builder.dart';
@@ -62,12 +61,15 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
     if (_method.isStream) {
       yield* _buildTryBody();
     } else {
-      yield Try(Block.of(_buildTryBody()))
-        ..finallyBody = _endpointRef
-            .property('dispose')
-            .call(const [])
-            .awaited
-            .statement;
+      yield Try(
+        (b) => b
+          ..body = Block.of(_buildTryBody())
+          ..finallyBlock = _endpointRef
+              .property('dispose')
+              .call(const [])
+              .awaited
+              .statement,
+      );
     }
   }
 

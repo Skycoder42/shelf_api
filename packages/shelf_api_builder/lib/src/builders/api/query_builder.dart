@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 
 import '../../models/endpoint_query_parameter.dart';
 import '../../models/opaque_constant.dart';
-import '../../util/code/if.dart';
 import '../../util/constants.dart';
 import '../../util/types.dart';
 import '../base/code_builder.dart';
@@ -49,17 +48,23 @@ final class _QueryVariablesBuilder extends CodeBuilder {
       yield declareFinal(paramRef.symbol!).assign(getValueExpr).statement;
 
       if (!param.isOptional) {
-        yield If(
-          paramRef.equalTo(literalNull),
-          Types.shelfResponse
-              .newInstanceNamed('badRequest', const [], {
-                'body': literalString(
-                  'Missing required query parameter ${param.queryName}',
-                  raw: true,
-                ),
-              })
-              .returned
-              .statement,
+        yield Conditional(
+          (b) => b
+            ..branches.add(
+              Branch(
+                (b) => b
+                  ..condition = .expression(paramRef.equalTo(literalNull))
+                  ..body = Types.shelfResponse
+                      .newInstanceNamed('badRequest', const [], {
+                        'body': literalString(
+                          'Missing required query parameter ${param.queryName}',
+                          raw: true,
+                        ),
+                      })
+                      .returned
+                      .statement,
+              ),
+            ),
         );
       }
     }
