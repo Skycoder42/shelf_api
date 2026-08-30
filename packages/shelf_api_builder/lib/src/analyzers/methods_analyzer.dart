@@ -17,7 +17,7 @@ class MethodsAnalyzer {
   final QueryAnalyzer _queryAnalyzer;
   final ResponseAnalyzer _responseAnalyzer;
 
-  MethodsAnalyzer(BuildStep buildStep)
+  new(BuildStep buildStep)
     : _bodyAnalyzer = BodyAnalyzer(buildStep),
       _pathAnalyzer = PathAnalyzer(buildStep),
       _queryAnalyzer = QueryAnalyzer(buildStep),

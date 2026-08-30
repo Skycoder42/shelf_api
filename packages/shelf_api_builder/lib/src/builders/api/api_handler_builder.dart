@@ -1,4 +1,4 @@
-import 'package:code_builder/code_builder.dart';
+import 'package:code_builder/code_builder.dart' hide Try;
 import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
@@ -23,7 +23,7 @@ final class ApiHandlerBuilder extends SpecBuilder<Method> {
   static String handlerMethodName(Endpoint endpoint, EndpointMethod method) =>
       '_handler\$${endpoint.name}\$${method.name}';
 
-  const ApiHandlerBuilder(this._endpoint, this._method);
+  const new(this._endpoint, this._method);
 
   @override
   Method build() => Method(

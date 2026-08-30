@@ -24,7 +24,7 @@ import 'endpoints/routing_endpoint.dart';
   middleware: apiMiddleware,
 )
 // ignore: unused_element for api definition
-class _ExampleApi {}
+class _ExampleApi;
 
 Middleware apiMiddleware() =>
     (next) => (request) async {

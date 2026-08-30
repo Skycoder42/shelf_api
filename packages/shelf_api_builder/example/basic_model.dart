@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 class BasicModel {
   final int value;
 
-  const BasicModel(this.value);
+  const new(this.value);
 
-  factory BasicModel.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       BasicModel(json['value'] as int);
 
   dynamic toJson() => {'value': value};

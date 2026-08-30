@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 @internal
 abstract base class ExpressionBuilder extends Expression {
-  const ExpressionBuilder();
+  const new();
 
   Expression build();
 

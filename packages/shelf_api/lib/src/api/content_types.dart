@@ -1,6 +1,6 @@
 /// Constants for the default content types typically used by APIs
 abstract base class ContentTypes {
-  ContentTypes._();
+  new _();
 
   /// Content type for plain text.
   static const text = 'text/plain';

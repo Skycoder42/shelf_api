@@ -13,7 +13,7 @@ final class QueryBuilder extends ExpressionBuilder {
 
   final List<EndpointQueryParameter> _queryParams;
 
-  const QueryBuilder(this._queryParams);
+  const new(this._queryParams);
 
   bool get hasParams => _queryParams.isNotEmpty;
 

@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 @internal
 abstract base class CodeBuilder implements Code {
-  const CodeBuilder();
+  const new();
 
   Iterable<Code> build();
 

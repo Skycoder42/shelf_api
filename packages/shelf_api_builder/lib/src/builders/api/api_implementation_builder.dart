@@ -16,7 +16,7 @@ final class ApiImplementationBuilder extends SpecBuilder<Class> {
 
   final ApiClass _apiClass;
 
-  ApiImplementationBuilder(this._apiClass);
+  new(this._apiClass);
 
   @override
   Class build() => Class(

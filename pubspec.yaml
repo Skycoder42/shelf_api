@@ -2,11 +2,11 @@ name: shelf_api_root
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.0
 
 workspace:
   - packages/shelf_api
   - packages/shelf_api_builder
 
 dev_dependencies:
-  dart_test_tools: ^7.2.3
+  dart_test_tools: ^7.3.2

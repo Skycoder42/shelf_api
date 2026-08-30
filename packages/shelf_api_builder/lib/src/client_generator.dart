@@ -13,7 +13,7 @@ import 'readers/shelf_api_reader.dart';
 class ClientGenerator extends GeneratorForAnnotation<ShelfApi> {
   final BuilderOptions options;
 
-  const ClientGenerator(this.options);
+  const new(this.options);
 
   bool get isEnabled => options.config['generateClient'] as bool? ?? true;
 

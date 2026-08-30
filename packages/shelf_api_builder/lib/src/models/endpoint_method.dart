@@ -15,7 +15,7 @@ class EndpointMethod {
   final List<EndpointPathParameter> pathParameters;
   final List<EndpointQueryParameter> queryParameters;
 
-  EndpointMethod({
+  new({
     required this.name,
     required this.httpMethod,
     required this.path,

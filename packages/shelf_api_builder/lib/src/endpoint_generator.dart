@@ -13,7 +13,7 @@ import 'readers/shelf_api_reader.dart';
 class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
   final BuilderOptions options;
 
-  const EndpointGenerator(this.options);
+  const new(this.options);
 
   bool get isEnabled => options.config['generateApi'] as bool? ?? true;
 

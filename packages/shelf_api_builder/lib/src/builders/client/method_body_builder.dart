@@ -29,7 +29,7 @@ final class MethodBodyBuilder extends CodeBuilder {
   final List<Reference> _extraParamsRefs;
   final bool _isRaw;
 
-  const MethodBodyBuilder(
+  const new(
     this._apiClass,
     this._endpoint,
     this._method,
@@ -68,25 +68,24 @@ final class MethodBodyBuilder extends CodeBuilder {
                 Parameter((b) => b..name = _errorRef.symbol!),
               )
               ..requiredParameters.add(Parameter((b) => b..name = '_'))
-              ..body = Types.dioResponse(_responseDartType).newInstance(
-                const [],
-                {
-                  'data': literalNull,
-                  for (final property in const [
-                    'requestOptions',
-                    'statusCode',
-                    'statusMessage',
-                    'isRedirect',
-                    'redirects',
-                    'headers',
-                    'extra',
-                  ])
-                    property: _errorRef
-                        .property('response')
-                        .nullChecked
-                        .property(property),
-                },
-              ).code,
+              ..body = Types.dioResponse(_responseDartType)
+                  .newInstance(const [], {
+                    'data': literalNull,
+                    for (final property in const [
+                      'requestOptions',
+                      'statusCode',
+                      'statusMessage',
+                      'isRedirect',
+                      'redirects',
+                      'headers',
+                      'extra',
+                    ])
+                      property: _errorRef
+                          .property('response')
+                          .nullChecked
+                          .property(property),
+                  })
+                  .code,
           ).closure,
         ],
         {
@@ -152,9 +151,8 @@ final class MethodBodyBuilder extends CodeBuilder {
       case EndpointResponseType.dynamic:
         return Types.responseBody;
       case EndpointResponseType.json:
-        return FromJsonBuilder(
-          _method.response.serializableReturnType,
-        ).rawJsonType;
+        return FromJsonBuilder(_method.response.serializableReturnType)
+            .rawJsonType;
     }
   }
 

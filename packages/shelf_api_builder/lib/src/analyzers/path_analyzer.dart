@@ -18,7 +18,7 @@ class PathAnalyzer {
 
   final BuildStep _buildStep;
 
-  PathAnalyzer(this._buildStep);
+  new(this._buildStep);
 
   Future<List<EndpointPathParameter>> analyzePath(
     MethodElement method,

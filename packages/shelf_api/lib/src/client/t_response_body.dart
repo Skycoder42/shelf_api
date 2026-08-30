@@ -21,7 +21,7 @@ class TResponseBody<T> {
   final Headers headers;
 
   /// Default constructor.
-  TResponseBody({
+  new({
     required this.data,
     required this.statusCode,
     required this.statusMessage,
@@ -31,7 +31,7 @@ class TResponseBody<T> {
   });
 
   /// Creates a TResponseBody from a [response] and the already decoded [data].
-  TResponseBody.fromResponse(Response<dynamic> response, this.data)
+  new fromResponse(Response<dynamic> response, this.data)
     : statusCode = response.statusCode ?? 200,
       statusMessage = response.statusMessage,
       isRedirect = response.isRedirect,
@@ -40,7 +40,7 @@ class TResponseBody<T> {
 
   /// Creates a TResponseBody from a [responseBody] and the already decoded
   /// [data].
-  TResponseBody.fromResponseBody(ResponseBody responseBody, this.data)
+  new fromResponseBody(ResponseBody responseBody, this.data)
     : statusCode = responseBody.statusCode,
       statusMessage = responseBody.statusMessage,
       isRedirect = responseBody.isRedirect,

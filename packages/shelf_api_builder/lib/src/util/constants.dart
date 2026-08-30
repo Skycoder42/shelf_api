@@ -6,7 +6,7 @@ import '../models/opaque_constant.dart';
 
 @internal
 abstract base class Constants {
-  Constants._();
+  new _();
 
   static const utf8 = Reference('utf8', 'dart:convert');
 

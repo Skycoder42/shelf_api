@@ -22,7 +22,7 @@ abstract class ShelfEndpoint {
   /// Default constructor.
   ///
   /// The [ref] parameter is optional and only made visible for testing purpose.
-  ShelfEndpoint(this.request, {@visibleForTesting EndpointRef? ref})
+  new(this.request, {@visibleForTesting EndpointRef? ref})
     : ref = ref ?? request.ref;
 
   /// Endpoint initializer callback.

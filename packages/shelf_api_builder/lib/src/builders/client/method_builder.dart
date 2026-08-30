@@ -24,12 +24,7 @@ final class MethodBuilder extends SpecBuilder<Method> {
   final EndpointMethod _method;
   final Reference _dioRef;
 
-  const MethodBuilder(
-    this._apiClass,
-    this._endpoint,
-    this._method,
-    this._dioRef,
-  );
+  const new(this._apiClass, this._endpoint, this._method, this._dioRef);
 
   @override
   Method build() => Method(

@@ -13,7 +13,7 @@ import '../../util/types.dart';
 class FromJsonBuilder {
   final SerializableType _serializableType;
 
-  FromJsonBuilder(this._serializableType);
+  new(this._serializableType);
 
   Reference get rawJsonType {
     if (_serializableType.fromJson != null) {
@@ -50,9 +50,9 @@ class FromJsonBuilder {
       paramExpr = Constants.fromConstant(fromJson).call([jsonBody]);
     } else if (_serializableType.jsonType != null) {
       checkNull = true;
-      paramExpr = Types.fromType(
-        _serializableType.dartType,
-      ).asNullable(false).newInstanceNamed('fromJson', [jsonBody]);
+      paramExpr = Types.fromType(_serializableType.dartType)
+          .asNullable(false)
+          .newInstanceNamed('fromJson', [jsonBody]);
     } else {
       paramExpr = jsonBody;
     }

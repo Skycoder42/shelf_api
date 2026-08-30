@@ -82,7 +82,7 @@ extension RequestRivershelfExtension on Request {
 class _RivershelfMiddleware {
   final ProviderContainer _providerContainer;
 
-  _RivershelfMiddleware({
+  new({
     ProviderContainer? parent,
     List<Override> overrides = const [],
     List<ProviderObserver>? observers,
@@ -92,7 +92,7 @@ class _RivershelfMiddleware {
          observers: observers,
        );
 
-  _RivershelfMiddleware.fromContainer(this._providerContainer);
+  new fromContainer(this._providerContainer);
 
   Handler call(Handler next) => (request) async {
     final container = ProviderContainer(

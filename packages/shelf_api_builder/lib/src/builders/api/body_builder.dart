@@ -19,7 +19,7 @@ final class BodyBuilder {
   final EndpointBody? _methodBody;
   final Reference _requestRef;
 
-  const BodyBuilder(this._methodBody, this._requestRef);
+  const new(this._methodBody, this._requestRef);
 
   Code get variables => _methodBody != null
       ? _BodyVariableBuilder(_methodBody, _requestRef)
@@ -35,7 +35,7 @@ final class _BodyVariableBuilder extends CodeBuilder {
   final EndpointBody _methodBody;
   final Reference _requestRef;
 
-  const _BodyVariableBuilder(this._methodBody, this._requestRef);
+  const new(this._methodBody, this._requestRef);
 
   @override
   Iterable<Code> build() sync* {
@@ -79,9 +79,10 @@ final class _BodyVariableBuilder extends CodeBuilder {
     }
 
     yield If(
-      literalConstList(
-        _methodBody.contentTypes,
-      ).property('contains').call([_requestRef.property('mimeType')]).negate(),
+      literalConstList(_methodBody.contentTypes)
+          .property('contains')
+          .call([_requestRef.property('mimeType')])
+          .negate(),
       Types.shelfResponse
           .newInstance(
             [literalNum(HttpStatus.unsupportedMediaType)],
@@ -146,7 +147,7 @@ final class _BodyVariableBuilder extends CodeBuilder {
 final class _BodyParamBuilder extends ExpressionBuilder {
   final EndpointBody _methodBody;
 
-  const _BodyParamBuilder(this._methodBody);
+  const new(this._methodBody);
 
   @override
   Expression build() {
@@ -154,8 +155,7 @@ final class _BodyParamBuilder extends ExpressionBuilder {
       return BodyBuilder._bodyRef;
     }
 
-    return FromJsonBuilder(
-      _methodBody.serializableParamType,
-    ).buildFromJson(BodyBuilder._bodyRef);
+    return FromJsonBuilder(_methodBody.serializableParamType)
+        .buildFromJson(BodyBuilder._bodyRef);
   }
 }

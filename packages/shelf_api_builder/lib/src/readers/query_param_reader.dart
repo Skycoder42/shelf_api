@@ -10,7 +10,7 @@ class QueryParamReader with StringifiableReader {
   @override
   final ConstantReader constantReader;
 
-  QueryParamReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.queryParam)) {
       throw ArgumentError.value(
         constantReader,

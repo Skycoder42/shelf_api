@@ -10,7 +10,7 @@ class PathParamReader with StringifiableReader {
   @override
   final ConstantReader constantReader;
 
-  PathParamReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.pathParam)) {
       throw ArgumentError.value(
         constantReader,

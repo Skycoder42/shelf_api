@@ -6,7 +6,7 @@ import 'opaque_type.dart';
 
 @internal
 sealed class OpaqueConstant {
-  const OpaqueConstant();
+  const new();
 
   static Future<OpaqueConstant> revived(
     BuildStep buildStep,
@@ -26,5 +26,5 @@ class RevivedOpaqueConstant extends OpaqueConstant {
   final Revivable revivable;
   final Uri? source;
 
-  RevivedOpaqueConstant._(this.revivable, this.source);
+  new _(this.revivable, this.source);
 }

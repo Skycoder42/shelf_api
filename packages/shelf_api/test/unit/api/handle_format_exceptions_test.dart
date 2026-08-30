@@ -5,9 +5,9 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_api/src/api/handle_format_exceptions.dart';
 import 'package:test/test.dart';
 
-class FakeRequest extends Fake implements Request {}
+class FakeRequest extends Fake implements Request;
 
-class FakeResponse extends Fake implements Response {}
+class FakeResponse extends Fake implements Response;
 
 void main() {
   group('FormatExceptionHandlerMiddleware', () {

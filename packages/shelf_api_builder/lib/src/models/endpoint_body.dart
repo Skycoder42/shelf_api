@@ -23,7 +23,7 @@ class EndpointBody {
   final EndpointBodyType bodyType;
   final List<String> contentTypes;
 
-  EndpointBody({
+  new({
     required this.paramType,
     required this.bodyType,
     required this.contentTypes,

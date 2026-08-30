@@ -14,7 +14,7 @@ class ExampleServer {
   final Process _process;
   final Dio dio;
 
-  ExampleServer._(this._process, int port)
+  new _(this._process, int port)
     : dio = Dio(
         BaseOptions(
           baseUrl: Uri(

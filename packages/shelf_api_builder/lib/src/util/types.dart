@@ -9,7 +9,7 @@ import '../models/serializable_type.dart';
 
 @internal
 abstract base class Types {
-  Types._();
+  new _();
 
   static final uint8List = TypeReference(
     (b) => b

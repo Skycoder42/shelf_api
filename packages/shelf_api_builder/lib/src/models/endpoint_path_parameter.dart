@@ -14,7 +14,7 @@ class EndpointPathParameter {
   final OpaqueConstant? customToString;
   final bool urlEncode;
 
-  EndpointPathParameter({
+  new({
     required this.name,
     required this.type,
     required this.isString,

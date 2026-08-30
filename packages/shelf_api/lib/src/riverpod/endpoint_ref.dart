@@ -35,7 +35,7 @@ class EndpointRef {
 
   /// @nodoc
   @internal
-  EndpointRef(this.container);
+  new(this.container);
 
   /// Determines whether a provider is initialized or not.
   ///
@@ -50,12 +50,10 @@ class EndpointRef {
   ///
   /// See [Ref.read] and [Ref.watch] for more details.
   T read<T>(ProviderListenable<T> provider) {
-    final subscription =
-        _keepAliveSubs.putIfAbsent(
-              provider,
-              () => container.listen(provider, (_, _) {}),
-            )
-            as ProviderSubscription<T>;
+    final subscription = _keepAliveSubs.putIfAbsent(
+      provider,
+      () => container.listen(provider, (_, _) {}),
+    ) as ProviderSubscription<T>;
     return subscription.read();
   }
 

@@ -13,8 +13,7 @@ class ApiClassAnalyzer {
   final BuildStep _buildStep;
   final EndpointAnalyzer _endpointAnalyzer;
 
-  ApiClassAnalyzer(this._buildStep)
-    : _endpointAnalyzer = EndpointAnalyzer(_buildStep);
+  new(this._buildStep) : _endpointAnalyzer = EndpointAnalyzer(_buildStep);
 
   Future<ApiClass> analyzeApiClass(
     ClassElement clazz,

@@ -7,7 +7,7 @@ import '../basic_model.dart';
 
 @ApiEndpoint('/body')
 class BodyEndpoint extends ShelfEndpoint {
-  BodyEndpoint(super.request);
+  new(super.request);
 
   @Get('/text')
   String getText(@bodyParam String body) => body;

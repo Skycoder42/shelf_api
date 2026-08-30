@@ -69,7 +69,7 @@ class ApiMethod {
   final Function? toJson;
 
   /// Constructor.
-  const ApiMethod(
+  const new(
     this.method,
     this.path, {
     this.autoNotFound,
@@ -82,7 +82,7 @@ class ApiMethod {
 @Target({TargetKind.method})
 class Get extends ApiMethod {
   /// Constructor.
-  const Get(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.get, path);
 }
 
@@ -90,7 +90,7 @@ class Get extends ApiMethod {
 @Target({TargetKind.method})
 class Delete extends ApiMethod {
   /// Constructor.
-  const Delete(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.delete, path);
 }
 
@@ -98,7 +98,7 @@ class Delete extends ApiMethod {
 @Target({TargetKind.method})
 class Head extends ApiMethod {
   /// Constructor.
-  const Head(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.head, path);
 }
 
@@ -106,7 +106,7 @@ class Head extends ApiMethod {
 @Target({TargetKind.method})
 class Options extends ApiMethod {
   /// Constructor.
-  const Options(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.options, path);
 }
 
@@ -114,7 +114,7 @@ class Options extends ApiMethod {
 @Target({TargetKind.method})
 class Patch extends ApiMethod {
   /// Constructor.
-  const Patch(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.patch, path);
 }
 
@@ -122,7 +122,7 @@ class Patch extends ApiMethod {
 @Target({TargetKind.method})
 class Post extends ApiMethod {
   /// Constructor.
-  const Post(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.post, path);
 }
 
@@ -130,6 +130,6 @@ class Post extends ApiMethod {
 @Target({TargetKind.method})
 class Put extends ApiMethod {
   /// Constructor.
-  const Put(String path, {super.autoNotFound, super.fromJson, super.toJson})
+  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
     : super(HttpMethod.put, path);
 }

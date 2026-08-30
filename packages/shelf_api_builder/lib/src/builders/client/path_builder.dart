@@ -1,4 +1,4 @@
-import 'package:code_builder/code_builder.dart';
+import 'package:code_builder/code_builder.dart' hide Pattern;
 import 'package:dart_test_tools/code_gen.dart';
 import 'package:meta/meta.dart';
 
@@ -16,7 +16,7 @@ final class PathBuilder extends ExpressionBuilder {
   final Endpoint _endpoint;
   final EndpointMethod _method;
 
-  const PathBuilder(this._apiClass, this._endpoint, this._method);
+  const new(this._apiClass, this._endpoint, this._method);
 
   @override
   Expression build() => LiteralString((pathBuilder) {

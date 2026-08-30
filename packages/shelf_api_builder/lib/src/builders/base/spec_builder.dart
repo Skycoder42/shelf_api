@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 @internal
 abstract base class SpecBuilder<T extends Spec> implements Spec {
-  const SpecBuilder();
+  const new();
 
   @protected
   T build();

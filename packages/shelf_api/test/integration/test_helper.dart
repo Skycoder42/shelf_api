@@ -12,7 +12,7 @@ class ExampleServer {
   final Uri _baseUri;
   final HttpClient _client;
 
-  ExampleServer._(this._process, int port)
+  new _(this._process, int port)
     : _baseUri = Uri(scheme: 'http', host: 'localhost', port: port, path: '/'),
       _client = HttpClient();
 
@@ -55,7 +55,7 @@ class ExampleServer {
     final request = await _client.getUrl(_baseUri.resolveUri(url));
     final response = await request.close();
     expect(response.statusCode, HttpStatus.ok);
-    return response.transform(utf8.decoder).join();
+    return await response.transform(utf8.decoder).join();
   }
 
   Future<HttpClientResponse> getRaw(Uri url, [String? body]) async {

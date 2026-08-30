@@ -12,7 +12,7 @@ class Endpoint {
   final List<EndpointMethod> methods;
   final OpaqueConstant? middleware;
 
-  Endpoint({
+  new({
     required this.endpointType,
     required this.name,
     required this.path,

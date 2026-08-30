@@ -15,7 +15,7 @@ class SerializableType {
   final OpaqueConstant? fromJson;
   final OpaqueConstant? toJson;
 
-  SerializableType({
+  new({
     required this.dartType,
     required this.wrapped,
     required this.isNullable,

@@ -11,7 +11,7 @@ import 'content_types.dart';
 /// A generic wrapper around [Response] used for code generation.
 class TResponse<T> extends Response {
   /// See [Response.new]
-  TResponse(
+  new(
     super.statusCode, {
     Object? body,
     Map<String, Object>? headers,
@@ -23,18 +23,14 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.ok]
-  TResponse.ok(
-    T body, {
-    Map<String, Object>? headers,
-    super.encoding,
-    super.context,
-  }) : super.ok(
-         _toBody(body, encoding),
-         headers: _addContentTypeHeader(headers, body),
-       );
+  new ok(T body, {Map<String, Object>? headers, super.encoding, super.context})
+    : super.ok(
+        _toBody(body, encoding),
+        headers: _addContentTypeHeader(headers, body),
+      );
 
   /// See [Response.movedPermanently]
-  TResponse.movedPermanently(
+  new movedPermanently(
     super.location, {
     Object? body,
     Map<String, Object>? headers,
@@ -46,7 +42,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.found]
-  TResponse.found(
+  new found(
     super.location, {
     Object? body,
     Map<String, Object>? headers,
@@ -58,7 +54,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.seeOther]
-  TResponse.seeOther(
+  new seeOther(
     super.location, {
     Object? body,
     Map<String, Object>? headers,
@@ -70,10 +66,10 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.notModified]
-  TResponse.notModified({super.headers, super.context}) : super.notModified();
+  new notModified({super.headers, super.context}) : super.notModified();
 
   /// See [Response.badRequest]
-  TResponse.badRequest({
+  new badRequest({
     Object? body,
     Map<String, Object>? headers,
     super.encoding,
@@ -84,7 +80,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.unauthorized]
-  TResponse.unauthorized(
+  new unauthorized(
     Object? body, {
     Map<String, Object>? headers,
     super.encoding,
@@ -95,7 +91,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.forbidden]
-  TResponse.forbidden(
+  new forbidden(
     Object? body, {
     Map<String, Object>? headers,
     super.encoding,
@@ -106,7 +102,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.notFound]
-  TResponse.notFound(
+  new notFound(
     Object? body, {
     Map<String, Object>? headers,
     super.encoding,
@@ -117,7 +113,7 @@ class TResponse<T> extends Response {
        );
 
   /// See [Response.internalServerError]
-  TResponse.internalServerError({
+  new internalServerError({
     Object? body,
     Map<String, Object>? headers,
     super.encoding,

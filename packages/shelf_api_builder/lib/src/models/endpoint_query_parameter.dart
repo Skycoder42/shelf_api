@@ -17,7 +17,7 @@ class EndpointQueryParameter {
   final OpaqueConstant? customParse;
   final OpaqueConstant? customToString;
 
-  EndpointQueryParameter({
+  new({
     required this.paramName,
     required this.queryName,
     required this.type,

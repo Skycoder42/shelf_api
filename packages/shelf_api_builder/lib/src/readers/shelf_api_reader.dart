@@ -10,7 +10,7 @@ class ShelfApiReader with MiddlewareReader {
   @override
   final ConstantReader constantReader;
 
-  ShelfApiReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.shelfApi)) {
       throw ArgumentError.value(
         constantReader,

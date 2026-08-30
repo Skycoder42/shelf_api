@@ -1,6 +1,6 @@
 /// HTTP request method.
 abstract base class HttpMethod {
-  HttpMethod._();
+  new _();
 
   /// CONNECT
   static const connect = 'CONNECT';

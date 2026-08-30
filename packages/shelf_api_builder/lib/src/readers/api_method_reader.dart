@@ -10,7 +10,7 @@ class ApiMethodReader with SerializableReader {
   @override
   final ConstantReader constantReader;
 
-  ApiMethodReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.apiMethod)) {
       throw ArgumentError.value(
         constantReader,

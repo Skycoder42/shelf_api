@@ -10,7 +10,7 @@ class ApiEndpointReader with MiddlewareReader {
   @override
   final ConstantReader constantReader;
 
-  ApiEndpointReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.apiEndpoint)) {
       throw ArgumentError.value(
         constantReader,

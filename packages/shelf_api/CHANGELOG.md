@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.5] - 2026-08-30
+### Changed
+- Updated min sdk version to ^3.13.0
+- Updated min sdk version to ^3.13.0
+- Updated dependencies
+
 ## [1.4.4-dev.2] - 2026-05-26
 ### Added
 - Added annotations for automatic not found handling
@@ -94,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial Release
 
+[1.4.5]: https://github.com/Skycoder42/shelf_api/compare/shelf_api-v1.4.4-dev.2...shelf_api-v1.4.5
 [1.4.4-dev.2]: https://github.com/Skycoder42/shelf_api/compare/shelf_api-v1.4.4-dev.1...shelf_api-v1.4.4-dev.2
 [1.4.4-dev.1]: https://github.com/Skycoder42/shelf_api/compare/shelf_api-v1.4.3...shelf_api-v1.4.4-dev.1
 [1.4.3]: https://github.com/Skycoder42/shelf_api/compare/shelf_api-v1.4.2...shelf_api-v1.4.3

@@ -12,7 +12,7 @@ final class BodyBuilder extends ExpressionBuilder {
 
   final EndpointBody _body;
 
-  const BodyBuilder(this._body);
+  const new(this._body);
 
   @override
   Expression build() {

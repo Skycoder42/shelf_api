@@ -2,7 +2,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 
 class RootRoutingEndpoint extends ShelfEndpoint {
-  RootRoutingEndpoint(super.request);
+  new(super.request);
 
   @Head('/')
   Response headRoot() =>
@@ -20,7 +20,7 @@ class RootRoutingEndpoint extends ShelfEndpoint {
 
 @ApiEndpoint('/open')
 class OpenRoutingEndpoint extends ShelfEndpoint {
-  OpenRoutingEndpoint(super.request);
+  new(super.request);
 
   @Delete('/')
   String deleteRoot() => _logRequest(request);
@@ -34,7 +34,7 @@ class OpenRoutingEndpoint extends ShelfEndpoint {
 
 @ApiEndpoint('/closed/')
 class ClosedRoutingEndpoint extends ShelfEndpoint {
-  ClosedRoutingEndpoint(super.request);
+  new(super.request);
 
   @Post('/')
   String postRoot() => _logRequest(request);
@@ -48,7 +48,7 @@ class ClosedRoutingEndpoint extends ShelfEndpoint {
 
 @ApiEndpoint('/')
 class SlashRoutingEndpoint extends ShelfEndpoint {
-  SlashRoutingEndpoint(super.request);
+  new(super.request);
 
   @Post('/')
   String postRoot() => _logRequest(request);

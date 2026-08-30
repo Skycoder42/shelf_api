@@ -13,7 +13,7 @@ import '../util/type_checkers.dart';
 class QueryAnalyzer {
   final BuildStep _buildStep;
 
-  QueryAnalyzer(this._buildStep);
+  new(this._buildStep);
 
   Future<List<EndpointQueryParameter>> analyzeQuery(MethodElement method) =>
       _analyzeQuery(method).toList();

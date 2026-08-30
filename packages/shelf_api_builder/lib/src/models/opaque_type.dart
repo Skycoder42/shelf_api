@@ -8,7 +8,7 @@ import 'serializable_type.dart';
 
 @internal
 sealed class OpaqueType {
-  OpaqueType();
+  new();
 
   SerializableType toSerializable(String reason) => switch (this) {
     OpaqueSerializableType(serializableType: final type) => type,
@@ -54,7 +54,7 @@ sealed class OpaqueType {
 class OpaqueSerializableType extends OpaqueType {
   final SerializableType serializableType;
 
-  OpaqueSerializableType(this.serializableType);
+  new(this.serializableType);
 }
 
 @internal
@@ -62,7 +62,7 @@ class OpaqueDartType extends OpaqueType {
   final DartType dartType;
   final Uri? uri;
 
-  OpaqueDartType(BuildStep buildStep, this.dartType)
+  new(BuildStep buildStep, this.dartType)
     : uri = OpaqueType.uriForElement(buildStep, dartType.element);
 }
 
@@ -71,11 +71,11 @@ class OpaqueClassType extends OpaqueType {
   final ClassElement element;
   final Uri? uri;
 
-  OpaqueClassType(BuildStep buildStep, this.element)
+  new(BuildStep buildStep, this.element)
     : uri = OpaqueType.uriForElement(buildStep, element);
 }
 
 @internal
 class OpaqueDynamicType extends OpaqueType {
-  OpaqueDynamicType();
+  new();
 }

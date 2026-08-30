@@ -28,7 +28,7 @@ class EndpointResponse {
   final bool isAsync;
   final bool autoNotFound;
 
-  EndpointResponse({
+  new({
     required this.responseType,
     required this.returnType,
     this.isResponse = false,

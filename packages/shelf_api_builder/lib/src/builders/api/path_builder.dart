@@ -11,7 +11,7 @@ import '../../util/types.dart';
 final class PathBuilder {
   final List<EndpointPathParameter> _pathParameters;
 
-  const PathBuilder(this._pathParameters);
+  const new(this._pathParameters);
 
   Iterable<Expression> build() sync* {
     for (final param in _pathParameters) {

@@ -13,7 +13,7 @@ final class QueryBuilder {
   final List<EndpointQueryParameter> _queryParameters;
   final Reference _requestRef;
 
-  const QueryBuilder(this._queryParameters, this._requestRef);
+  const new(this._queryParameters, this._requestRef);
 
   Code get variables => _queryParameters.isNotEmpty
       ? _QueryVariablesBuilder(_queryParameters, _requestRef)
@@ -30,7 +30,7 @@ final class _QueryVariablesBuilder extends CodeBuilder {
   final List<EndpointQueryParameter> _queryParameters;
   final Reference _requestRef;
 
-  const _QueryVariablesBuilder(this._queryParameters, this._requestRef);
+  const new(this._queryParameters, this._requestRef);
 
   @override
   Iterable<Code> build() sync* {
@@ -69,7 +69,7 @@ final class _QueryVariablesBuilder extends CodeBuilder {
 final class _QueryParamsBuilder {
   final List<EndpointQueryParameter> _queryParameters;
 
-  _QueryParamsBuilder(this._queryParameters);
+  new(this._queryParameters);
 
   Iterable<MapEntry<String, Expression>> build() sync* {
     for (final param in _queryParameters) {

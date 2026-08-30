@@ -8,7 +8,7 @@ import '../basic_model.dart';
 
 @ApiEndpoint('/response/')
 class ResponseEndpoint extends ShelfEndpoint {
-  ResponseEndpoint(super.request);
+  new(super.request);
 
   @Get('/noContent')
   void noContent() {}

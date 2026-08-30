@@ -10,7 +10,7 @@ class BodyParamReader with SerializableReader {
   @override
   final ConstantReader constantReader;
 
-  BodyParamReader(this.constantReader) {
+  new(this.constantReader) {
     if (!constantReader.instanceOf(TypeCheckers.bodyParam)) {
       throw ArgumentError.value(
         constantReader,

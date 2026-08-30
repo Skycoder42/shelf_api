@@ -9,7 +9,7 @@ class Try implements Code {
   final _catches = <(TypeReference?, Reference?, Reference?, Code)>{};
   Code? finallyBody;
 
-  Try(this._body);
+  new(this._body);
 
   void addCatch(
     Code body, {

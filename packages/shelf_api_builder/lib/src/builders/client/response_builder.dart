@@ -19,7 +19,7 @@ final class ResponseBuilder extends CodeBuilder {
   final bool _isRaw;
 
   // ignore: avoid_positional_boolean_parameters for private param
-  const ResponseBuilder(this._response, this._invocation, this._isRaw);
+  const new(this._response, this._invocation, this._isRaw);
 
   @override
   Iterable<Code> build() sync* {
@@ -73,9 +73,9 @@ final class ResponseBuilder extends CodeBuilder {
   }
 
   Iterable<Code> _buildJsonReturn() sync* {
-    yield declareFinal(
-      _responseDataRef.symbol!,
-    ).assign(_responseRef.property('data')).statement;
+    yield declareFinal(_responseDataRef.symbol!)
+        .assign(_responseRef.property('data'))
+        .statement;
 
     final serializableType = _response.serializableReturnType;
     if (!serializableType.isNullable) {

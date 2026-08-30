@@ -18,7 +18,7 @@ class BodyAnalyzer {
   final BuildStep _buildStep;
   final SerializableAnalyzer _serializableAnalyzer;
 
-  BodyAnalyzer(this._buildStep)
+  new(this._buildStep)
     : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointBody?> analyzeBody(MethodElement method) async {

@@ -42,5 +42,5 @@ class PathParam {
   final Function? stringify;
 
   /// Constructor.
-  const PathParam({this.urlEncode = true, this.parse, this.stringify});
+  const new({this.urlEncode = true, this.parse, this.stringify});
 }

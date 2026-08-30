@@ -12,7 +12,7 @@ class ApiClass {
   final String? basePath;
   final OpaqueConstant? middleware;
 
-  ApiClass({
+  new({
     required this.classType,
     required this.className,
     required this.endpoints,

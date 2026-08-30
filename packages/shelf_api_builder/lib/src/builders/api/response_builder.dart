@@ -17,7 +17,7 @@ final class ResponseBuilder extends CodeBuilder {
   final EndpointResponse _response;
   final Expression _invocation;
 
-  const ResponseBuilder(this._response, this._invocation);
+  const new(this._response, this._invocation);
 
   @override
   Iterable<Code> build() sync* {

@@ -14,7 +14,7 @@ import '../util/type_checkers.dart';
 class SerializableAnalyzer {
   final BuildStep _buildStep;
 
-  SerializableAnalyzer(this._buildStep);
+  new(this._buildStep);
 
   bool isCustom(SerializableReader serializable) =>
       serializable.hasFromJson || serializable.hasToJson;

@@ -17,7 +17,7 @@ class ResponseAnalyzer {
   final BuildStep _buildStep;
   final SerializableAnalyzer _serializableAnalyzer;
 
-  ResponseAnalyzer(this._buildStep)
+  new(this._buildStep)
     : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointResponse> analyzeResponse(
@@ -49,7 +49,7 @@ class ResponseAnalyzer {
 
     if (returnType.isDartAsyncFuture || returnType.isDartAsyncFutureOr) {
       _ensureNotNullable(returnType, method);
-      return _analyzeFuture(
+      return await _analyzeFuture(
         method,
         apiMethod,
         shelfApi,

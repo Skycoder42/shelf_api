@@ -16,7 +16,7 @@ final class ClientBuilder extends SpecBuilder<Class> {
 
   final ApiClass _apiClass;
 
-  const ClientBuilder(this._apiClass);
+  const new(this._apiClass);
 
   @override
   Class build() => Class(

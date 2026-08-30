@@ -9,7 +9,7 @@ class Switch implements Code {
   final _cases = <(Expression, Code?)>[];
   Code? defaultCase;
 
-  Switch(this._condition);
+  new(this._condition);
 
   void addCase(Expression expression, [Code? body]) =>
       _cases.add((expression, body));

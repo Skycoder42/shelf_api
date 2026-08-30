@@ -8,7 +8,7 @@ class If implements Code {
   final List<(Expression, Code)> _branches;
   Code? orElse;
 
-  If(Expression condition, Code body) : _branches = [(condition, body)];
+  new(Expression condition, Code body) : _branches = [(condition, body)];
 
   void elif(Expression condition, Code body) {
     _branches.add((condition, body));

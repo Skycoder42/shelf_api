@@ -16,8 +16,7 @@ class EndpointAnalyzer {
   final BuildStep _buildStep;
   final MethodsAnalyzer _methodsAnalyzer;
 
-  EndpointAnalyzer(this._buildStep)
-    : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
+  new(this._buildStep) : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
 
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,

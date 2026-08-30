@@ -5,7 +5,7 @@ import 'package:shelf_api/shelf_api.dart';
 
 @ApiEndpoint('/middleware', middleware: MiddlewareEndpoint.endpointMiddleware)
 class MiddlewareEndpoint extends ShelfEndpoint {
-  MiddlewareEndpoint(super.request);
+  new(super.request);
 
   @Get('/')
   Response get() =>
