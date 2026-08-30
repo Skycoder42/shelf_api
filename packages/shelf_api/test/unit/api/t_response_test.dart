@@ -141,6 +141,19 @@ void _testResponseConstructor(
         containsPair(HttpHeaders.contentTypeHeader, ContentType.json.mimeType),
       );
     });
+
+    test('keeps content type if already set', () {
+      const testBody = 'test-body';
+      final sut = construct(
+        Stream.value(testBody),
+        headers: {HttpHeaders.contentTypeHeader: ContentType.html.mimeType},
+      );
+      expect(sut.readAsString(), completion(testBody));
+      expect(
+        sut.headers,
+        containsPair(HttpHeaders.contentTypeHeader, ContentType.html.mimeType),
+      );
+    });
   });
 }
 

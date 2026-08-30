@@ -7,3 +7,6 @@ environment:
 workspace:
   - packages/shelf_api
   - packages/shelf_api_builder
+
+dev_dependencies:
+  dart_test_tools: ^7.2.3

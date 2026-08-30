@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:shelf/shelf.dart';
 // ignore: implementation_imports for helper utility
 import 'package:shelf/src/util.dart' show addHeader;
@@ -154,6 +155,12 @@ class TResponse<T> extends Response {
     Map<String, Object>? headers,
     dynamic body,
   ) {
+    const contentTypeHeader = 'Content-Type';
+    if (headers?.keys.any((h) => equalsIgnoreAsciiCase(h, contentTypeHeader)) ??
+        false) {
+      return headers;
+    }
+
     final contentType = switch (body) {
       null => null,
       String() => ContentTypes.text,
@@ -167,6 +174,6 @@ class TResponse<T> extends Response {
       return headers;
     }
 
-    return addHeader(headers, 'Content-Type', contentType);
+    return addHeader(headers, contentTypeHeader, contentType);
   }
 }

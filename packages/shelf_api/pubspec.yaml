@@ -14,6 +14,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  collection: ^1.19.1
   dio: ^5.9.2
   meta: ^1.18.0
   riverpod: ^3.3.2-dev.2
