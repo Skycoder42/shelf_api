@@ -1,0 +1,70 @@
+name: CI/CD for shelf_api
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+jobs:
+  shelf_api_ci:
+    name: shelf_api
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/shelf_api
+      buildRunner: true
+      unitTestPaths: -P unit
+      coverageExclude: >-
+        "**/*.g.dart"
+      integrationTestPaths: -P integration
+
+  shelf_api_cd:
+    name: shelf_api
+    uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
+    needs:
+      - shelf_api_ci
+    permissions:
+      contents: write
+      actions: write
+    with:
+      workingDirectory: packages/shelf_api
+      tagPrefix: shelf_api-v
+      publishWorkflow: shelf_api_cd.yaml
+
+  shelf_api_builder_ci:
+    name: shelf_api_builder
+    uses: Skycoder42/dart_test_tools/.github/workflows/dart.yml@main
+    with:
+      workingDirectory: packages/shelf_api_builder
+      buildDependencies: shelf_api
+      buildRunner: true
+      unitTestPaths: ""
+      integrationTestPaths: -P integration
+
+  shelf_api_builder_cd:
+    name: shelf_api_builder
+    uses: Skycoder42/dart_test_tools/.github/workflows/release.yml@main
+    needs:
+      - shelf_api_builder_ci
+    permissions:
+      contents: write
+      actions: write
+    with:
+      workingDirectory: packages/shelf_api_builder
+      tagPrefix: shelf_api_builder-v
+      publishWorkflow: shelf_api_builder_cd.yaml
+
+  renovate:
+    name: Renovate
+    needs:
+      - shelf_api_ci
+      - shelf_api_cd
+      - shelf_api_builder_ci
+      - shelf_api_builder_cd
+    if: ${{ !cancelled() }}
+    uses: Skycoder42/dart_test_tools/.github/workflows/renovate-finish.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    with:
+      needs: ${{ toJSON(needs) }}
