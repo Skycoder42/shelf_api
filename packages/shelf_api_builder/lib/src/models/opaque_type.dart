@@ -7,9 +7,8 @@ import 'package:path/path.dart';
 import 'serializable_type.dart';
 
 @internal
-sealed class OpaqueType {
-  new();
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+sealed class OpaqueType() {
   SerializableType toSerializable(String reason) => switch (this) {
     OpaqueSerializableType(serializableType: final type) => type,
     _ => throw StateError(reason),
@@ -51,31 +50,24 @@ sealed class OpaqueType {
 }
 
 @internal
-class OpaqueSerializableType extends OpaqueType {
-  final SerializableType serializableType;
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class OpaqueSerializableType(final SerializableType serializableType)
+    extends OpaqueType;
 
-  new(this.serializableType);
+@internal
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class OpaqueDartType(BuildStep buildStep, final DartType dartType)
+    extends OpaqueType {
+  final Uri? uri = OpaqueType.uriForElement(buildStep, dartType.element);
 }
 
 @internal
-class OpaqueDartType extends OpaqueType {
-  final DartType dartType;
-  final Uri? uri;
-
-  new(BuildStep buildStep, this.dartType)
-    : uri = OpaqueType.uriForElement(buildStep, dartType.element);
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class OpaqueClassType(BuildStep buildStep, final ClassElement element)
+    extends OpaqueType {
+  final Uri? uri = OpaqueType.uriForElement(buildStep, element);
 }
 
 @internal
-class OpaqueClassType extends OpaqueType {
-  final ClassElement element;
-  final Uri? uri;
-
-  new(BuildStep buildStep, this.element)
-    : uri = OpaqueType.uriForElement(buildStep, element);
-}
-
-@internal
-class OpaqueDynamicType extends OpaqueType {
-  new();
-}
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class OpaqueDynamicType() extends OpaqueType;

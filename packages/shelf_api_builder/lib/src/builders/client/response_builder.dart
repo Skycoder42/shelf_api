@@ -9,16 +9,15 @@ import '../base/code_builder.dart';
 import '../common/from_json_builder.dart';
 
 @internal
-final class ResponseBuilder extends CodeBuilder {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const ResponseBuilder(
+  final EndpointResponse _response,
+  final Expression _invocation,
+  // ignore: avoid_positional_boolean_parameters for internal class
+  final bool _isRaw,
+) extends CodeBuilder {
   static const _responseRef = Reference(r'$response');
   static const _responseDataRef = Reference(r'$responseData');
-
-  final EndpointResponse _response;
-  final Expression _invocation;
-  final bool _isRaw;
-
-  // ignore: avoid_positional_boolean_parameters for private param
-  const new(this._response, this._invocation, this._isRaw);
 
   @override
   Iterable<Code> build() sync* {

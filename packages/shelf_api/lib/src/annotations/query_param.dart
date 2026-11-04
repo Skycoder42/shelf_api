@@ -4,13 +4,13 @@ import 'package:meta/meta_meta.dart';
 
 /// Can be used to add metadata to a query parameter of an endpoint method.
 @Target({TargetKind.parameter})
-class QueryParam {
+class const QueryParam({
   /// The name of the query parameter.
   ///
   /// By default, the name of the dart parameter is used. You can use this in
   /// case the parameter needs to be spelled differently or is not allowed as a
   /// dart parameter name.
-  final String? name;
+  final String? name,
 
   /// A custom parse function.
   ///
@@ -22,7 +22,7 @@ class QueryParam {
   /// ```dart
   /// T Function(String)
   /// ```
-  final Function? parse;
+  final Function? parse,
 
   /// A custom toString function.
   ///
@@ -34,8 +34,8 @@ class QueryParam {
   /// ```dart
   /// String Function(T)
   /// ```
-  final Function? stringify;
-
+  final Function? stringify,
+}) {
   /// Constructor.
-  const new({this.name, this.parse, this.stringify});
+  this;
 }

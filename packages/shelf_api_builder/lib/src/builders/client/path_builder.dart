@@ -11,13 +11,12 @@ import '../../util/constants.dart';
 import '../base/expression_builder.dart';
 
 @internal
-final class PathBuilder extends ExpressionBuilder {
-  final ApiClass _apiClass;
-  final Endpoint _endpoint;
-  final EndpointMethod _method;
-
-  const new(this._apiClass, this._endpoint, this._method);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const PathBuilder(
+  final ApiClass _apiClass,
+  final Endpoint _endpoint,
+  final EndpointMethod _method,
+) extends ExpressionBuilder {
   @override
   Expression build() => LiteralString((pathBuilder) {
     var hasTrailingSlash = false;

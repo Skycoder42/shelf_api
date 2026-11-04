@@ -8,11 +8,10 @@ import '../../util/constants.dart';
 import '../../util/types.dart';
 
 @internal
-final class PathBuilder {
-  final List<EndpointPathParameter> _pathParameters;
-
-  const new(this._pathParameters);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const PathBuilder(
+  final List<EndpointPathParameter> _pathParameters,
+) {
   Iterable<Expression> build() sync* {
     for (final param in _pathParameters) {
       Expression paramRef = refer(param.handlerParamName);

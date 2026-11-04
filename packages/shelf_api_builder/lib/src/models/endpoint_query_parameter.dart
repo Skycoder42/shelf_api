@@ -4,32 +4,20 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-class EndpointQueryParameter {
-  final String paramName;
-  final String queryName;
-  final OpaqueType type;
-  final bool isString;
-  final bool isEnum;
-  final bool isDateTime;
-  final bool isList;
-  final bool isOptional;
-  final String? defaultValue;
-  final OpaqueConstant? customParse;
-  final OpaqueConstant? customToString;
-
-  new({
-    required this.paramName,
-    required this.queryName,
-    required this.type,
-    required this.isString,
-    required this.isEnum,
-    required this.isDateTime,
-    required this.isList,
-    required this.isOptional,
-    required this.defaultValue,
-    required this.customParse,
-    required this.customToString,
-  }) {
+class EndpointQueryParameter({
+  required final String paramName,
+  required final String queryName,
+  required final OpaqueType type,
+  required final bool isString,
+  required final bool isEnum,
+  required final bool isDateTime,
+  required final bool isList,
+  required final bool isOptional,
+  required final String? defaultValue,
+  required final OpaqueConstant? customParse,
+  required final OpaqueConstant? customToString,
+}) {
+  this {
     if (isList && isOptional && defaultValue == null) {
       throw StateError('Optional list params cannot be nullable!');
     }

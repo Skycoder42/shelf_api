@@ -5,9 +5,8 @@ import 'package:source_gen/source_gen.dart';
 import 'opaque_type.dart';
 
 @internal
-sealed class OpaqueConstant {
-  const new();
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+sealed class const OpaqueConstant() {
   static Future<OpaqueConstant> revived(
     BuildStep buildStep,
     Revivable revivable,
@@ -22,9 +21,5 @@ sealed class OpaqueConstant {
 }
 
 @internal
-class RevivedOpaqueConstant extends OpaqueConstant {
-  final Revivable revivable;
-  final Uri? source;
-
-  new _(this.revivable, this.source);
-}
+class RevivedOpaqueConstant._(final Revivable revivable, final Uri? source)
+    extends OpaqueConstant;

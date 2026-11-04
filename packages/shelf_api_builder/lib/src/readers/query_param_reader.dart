@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'stringifiable_reader.dart';
 
 @internal
-class QueryParamReader with StringifiableReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class QueryParamReader(@override final ConstantReader constantReader)
+    with StringifiableReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.queryParam)) {
       throw ArgumentError.value(
         constantReader,

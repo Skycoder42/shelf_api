@@ -5,20 +5,14 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-class Endpoint {
-  final OpaqueType endpointType;
-  final String name;
-  final String? path;
-  final List<EndpointMethod> methods;
-  final OpaqueConstant? middleware;
-
-  new({
-    required this.endpointType,
-    required this.name,
-    required this.path,
-    required this.methods,
-    required this.middleware,
-  }) {
+class Endpoint({
+  required final OpaqueType endpointType,
+  required final String name,
+  required final String? path,
+  required final List<EndpointMethod> methods,
+  required final OpaqueConstant? middleware,
+}) {
+  this {
     if (middleware != null && (path == null || path == '/')) {
       throw StateError('middleware cannot be set if path is "/" or null');
     }

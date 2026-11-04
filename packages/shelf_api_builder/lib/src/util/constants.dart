@@ -5,9 +5,7 @@ import 'package:meta/meta.dart';
 import '../models/opaque_constant.dart';
 
 @internal
-abstract base class Constants {
-  new _();
-
+abstract base class Constants._() {
   static const utf8 = Reference('utf8', 'dart:convert');
 
   static const json = Reference('json', 'dart:convert');

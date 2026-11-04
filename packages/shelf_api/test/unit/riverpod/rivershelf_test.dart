@@ -11,14 +11,11 @@ import 'package:test/test.dart';
 @GenerateNiceMocks([MockSpec<Request>()])
 import 'rivershelf_test.mocks.dart';
 
-class FakeResponse extends Fake implements Response;
+class FakeResponse() extends Fake implements Response;
 
-class FakeEndpointRef extends Fake implements EndpointRef {
-  @override
-  final ProviderContainer container;
-
-  new(this.container);
-}
+class FakeEndpointRef(@override final ProviderContainer container)
+    extends Fake
+    implements EndpointRef;
 
 void main() {
   group('RivershelfMiddleware', () {

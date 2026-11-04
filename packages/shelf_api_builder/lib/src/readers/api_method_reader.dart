@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'serializable_reader.dart';
 
 @internal
-class ApiMethodReader with SerializableReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class ApiMethodReader(@override final ConstantReader constantReader)
+    with SerializableReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.apiMethod)) {
       throw ArgumentError.value(
         constantReader,

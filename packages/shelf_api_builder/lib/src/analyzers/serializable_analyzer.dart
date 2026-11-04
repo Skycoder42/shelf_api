@@ -11,11 +11,8 @@ import '../readers/serializable_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
-class SerializableAnalyzer {
-  final BuildStep _buildStep;
-
-  new(this._buildStep);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class SerializableAnalyzer(final BuildStep _buildStep) {
   bool isCustom(SerializableReader serializable) =>
       serializable.hasFromJson || serializable.hasToJson;
 

@@ -12,13 +12,12 @@ import '../base/expression_builder.dart';
 import '../common/from_json_builder.dart';
 
 @internal
-final class BodyBuilder {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const BodyBuilder(
+  final EndpointBody? _methodBody,
+  final Reference _requestRef,
+) {
   static const _bodyRef = Reference(r'$body');
-
-  final EndpointBody? _methodBody;
-  final Reference _requestRef;
-
-  const new(this._methodBody, this._requestRef);
 
   Code get variables => _methodBody != null
       ? _BodyVariableBuilder(_methodBody, _requestRef)
@@ -28,13 +27,11 @@ final class BodyBuilder {
       _methodBody != null ? _BodyParamBuilder(_methodBody) : null;
 }
 
-final class _BodyVariableBuilder extends CodeBuilder {
+final class const _BodyVariableBuilder(
+  final EndpointBody _methodBody,
+  final Reference _requestRef,
+) extends CodeBuilder {
   static const _rawBodyRef = Reference(r'$rawBody');
-
-  final EndpointBody _methodBody;
-  final Reference _requestRef;
-
-  const new(this._methodBody, this._requestRef);
 
   @override
   Iterable<Code> build() sync* {
@@ -158,11 +155,8 @@ final class _BodyVariableBuilder extends CodeBuilder {
   }
 }
 
-final class _BodyParamBuilder extends ExpressionBuilder {
-  final EndpointBody _methodBody;
-
-  const new(this._methodBody);
-
+final class const _BodyParamBuilder(final EndpointBody _methodBody)
+    extends ExpressionBuilder {
   @override
   Expression build() {
     if (_methodBody.bodyType != EndpointBodyType.json) {

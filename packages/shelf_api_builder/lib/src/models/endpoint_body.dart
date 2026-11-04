@@ -4,7 +4,7 @@ import 'opaque_type.dart';
 import 'serializable_type.dart';
 
 @internal
-enum EndpointBodyType {
+enum EndpointBodyType() {
   text,
   binary,
   textStream,
@@ -18,16 +18,12 @@ enum EndpointBodyType {
 }
 
 @internal
-class EndpointBody {
-  final OpaqueType paramType;
-  final EndpointBodyType bodyType;
-  final List<String> contentTypes;
-
-  new({
-    required this.paramType,
-    required this.bodyType,
-    required this.contentTypes,
-  }) {
+class EndpointBody({
+  required final OpaqueType paramType,
+  required final EndpointBodyType bodyType,
+  required final List<String> contentTypes,
+}) {
+  this {
     if (bodyType == EndpointBodyType.json &&
         paramType is! OpaqueSerializableType) {
       throw ArgumentError(

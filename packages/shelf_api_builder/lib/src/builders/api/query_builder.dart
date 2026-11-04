@@ -8,12 +8,11 @@ import '../../util/types.dart';
 import '../base/code_builder.dart';
 
 @internal
-final class QueryBuilder {
-  final List<EndpointQueryParameter> _queryParameters;
-  final Reference _requestRef;
-
-  const new(this._queryParameters, this._requestRef);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const QueryBuilder(
+  final List<EndpointQueryParameter> _queryParameters,
+  final Reference _requestRef,
+) {
   Code get variables => _queryParameters.isNotEmpty
       ? _QueryVariablesBuilder(_queryParameters, _requestRef)
       : const Code('');
@@ -23,13 +22,11 @@ final class QueryBuilder {
       : const {};
 }
 
-final class _QueryVariablesBuilder extends CodeBuilder {
+final class const _QueryVariablesBuilder(
+  final List<EndpointQueryParameter> _queryParameters,
+  final Reference _requestRef,
+) extends CodeBuilder {
   static const _queryRef = Reference(r'$query');
-
-  final List<EndpointQueryParameter> _queryParameters;
-  final Reference _requestRef;
-
-  const new(this._queryParameters, this._requestRef);
 
   @override
   Iterable<Code> build() sync* {
@@ -71,11 +68,9 @@ final class _QueryVariablesBuilder extends CodeBuilder {
   }
 }
 
-final class _QueryParamsBuilder {
-  final List<EndpointQueryParameter> _queryParameters;
-
-  new(this._queryParameters);
-
+final class _QueryParamsBuilder(
+  final List<EndpointQueryParameter> _queryParameters,
+) {
   Iterable<MapEntry<String, Expression>> build() sync* {
     for (final param in _queryParameters) {
       final paramRef = refer(param.handlerParamName);

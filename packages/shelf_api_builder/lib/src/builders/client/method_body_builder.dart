@@ -18,27 +18,18 @@ import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
-final class MethodBodyBuilder extends CodeBuilder {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const MethodBodyBuilder(
+  final ApiClass _apiClass,
+  final Endpoint _endpoint,
+  final EndpointMethod _method,
+  final Reference _dioRef,
+  final Reference _optionsRef,
+  final List<Reference> _extraParamsRefs,
+  // ignore: avoid_positional_boolean_parameters for private param
+  final bool _isRaw,
+) extends CodeBuilder {
   static const _errorRef = Reference(r'$error');
-
-  final ApiClass _apiClass;
-  final Endpoint _endpoint;
-  final EndpointMethod _method;
-  final Reference _dioRef;
-  final Reference _optionsRef;
-  final List<Reference> _extraParamsRefs;
-  final bool _isRaw;
-
-  const new(
-    this._apiClass,
-    this._endpoint,
-    this._method,
-    this._dioRef,
-    this._optionsRef,
-    this._extraParamsRefs,
-    // ignore: avoid_positional_boolean_parameters for private param
-    this._isRaw,
-  );
 
   @override
   Iterable<Code> build() sync* {

@@ -4,9 +4,8 @@ import 'package:code_builder/src/specs/code.dart' show CodeVisitor;
 import 'package:meta/meta.dart';
 
 @internal
-abstract base class CodeBuilder implements Code {
-  const new();
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+abstract base class const CodeBuilder() implements Code {
   Iterable<Code> build();
 
   @override

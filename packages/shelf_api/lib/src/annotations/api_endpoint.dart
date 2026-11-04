@@ -7,7 +7,7 @@ import 'shelf_api.dart';
 
 /// Marks the given method as a specific endpoint method.
 @Target({TargetKind.classType})
-class ApiEndpoint {
+class const ApiEndpoint(
   /// The base path for all API methods of this endpoint.
   ///
   /// All methods of this endpoint are mounted below [path], except if the
@@ -30,7 +30,7 @@ class ApiEndpoint {
   ///  /api/          | /            | /api/
   ///  /api/          | /users       | /api/users
   ///  /api/          | /users/      | /api/users/
-  final String path;
+  final String path, {
 
   /// Optional middleware to be applied to this endpoint.
   ///
@@ -40,8 +40,8 @@ class ApiEndpoint {
   ///
   /// **Note:** When specifying a middleware, the [path] must not be just `'/'`,
   /// as setting a middleware for a root-mounted endpoint is not supported.
-  final Middleware Function()? middleware;
-
+  final Middleware Function()? middleware,
+}) {
   /// Constructor.
-  const new(this.path, {this.middleware});
+  this;
 }

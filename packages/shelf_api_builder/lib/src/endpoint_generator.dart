@@ -10,11 +10,9 @@ import 'builders/api/api_implementation_builder.dart';
 import 'readers/shelf_api_reader.dart';
 
 @internal
-class EndpointGenerator extends GeneratorForAnnotation<ShelfApi> {
-  final BuilderOptions options;
-
-  const new(this.options);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class const EndpointGenerator(final BuilderOptions options)
+    extends GeneratorForAnnotation<ShelfApi> {
   bool get isEnabled => options.config['generateApi'] as bool? ?? true;
 
   @override

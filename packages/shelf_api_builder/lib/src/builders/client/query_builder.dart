@@ -8,12 +8,10 @@ import '../../util/constants.dart';
 import '../base/expression_builder.dart';
 
 @internal
-final class QueryBuilder extends ExpressionBuilder {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const QueryBuilder(final List<EndpointQueryParameter> _queryParams)
+    extends ExpressionBuilder {
   static const _valueRef = Reference(r'$value');
-
-  final List<EndpointQueryParameter> _queryParams;
-
-  const new(this._queryParams);
 
   bool get hasParams => _queryParams.isNotEmpty;
 

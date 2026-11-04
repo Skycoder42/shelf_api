@@ -10,21 +10,17 @@ import 'package:test/test.dart';
 
 import '../../example/example_api.client.dart';
 
-class ExampleServer {
-  final Process _process;
-  final Dio dio;
-
-  new _(this._process, int port)
-    : dio = Dio(
-        BaseOptions(
-          baseUrl: Uri(
-            scheme: 'http',
-            host: 'localhost',
-            port: port,
-            path: '/',
-          ).toString(),
-        ),
-      );
+class ExampleServer._(final Process _process, int port) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: Uri(
+        scheme: 'http',
+        host: 'localhost',
+        port: port,
+        path: '/',
+      ).toString(),
+    ),
+  );
 
   ExampleApiClient get apiClient => ExampleApiClient.dio(dio);
 

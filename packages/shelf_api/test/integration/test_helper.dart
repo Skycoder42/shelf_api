@@ -7,14 +7,16 @@ import 'dart:math';
 
 import 'package:test/test.dart';
 
-class ExampleServer {
-  final Process _process;
-  final Uri _baseUri;
+class ExampleServer._(final Process _process, int port) {
+  final _baseUri = Uri(
+    scheme: 'http',
+    host: 'localhost',
+    port: port,
+    path: '/',
+  );
   final HttpClient _client;
 
-  new _(this._process, int port)
-    : _baseUri = Uri(scheme: 'http', host: 'localhost', port: port, path: '/'),
-      _client = HttpClient();
+  this : _client = HttpClient();
 
   static Future<ExampleServer> start() async {
     final port = 8000 + Random.secure().nextInt(999);

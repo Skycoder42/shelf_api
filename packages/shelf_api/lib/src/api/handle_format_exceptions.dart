@@ -25,7 +25,7 @@ const handleFormatExceptionsOriginalStackTraceKey =
 /// [handleFormatExceptionsOriginalStackTraceKey]
 Middleware handleFormatExceptions() => _HandleFormatExceptionsMiddleware().call;
 
-class _HandleFormatExceptionsMiddleware {
+class _HandleFormatExceptionsMiddleware() {
   Handler call(Handler next) => (request) async {
     try {
       return await next(request);

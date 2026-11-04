@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'serializable_reader.dart';
 
 @internal
-class BodyParamReader with SerializableReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class BodyParamReader(@override final ConstantReader constantReader)
+    with SerializableReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.bodyParam)) {
       throw ArgumentError.value(
         constantReader,

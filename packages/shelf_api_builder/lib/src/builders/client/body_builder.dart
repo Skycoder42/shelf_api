@@ -7,12 +7,10 @@ import '../../util/constants.dart';
 import '../base/expression_builder.dart';
 
 @internal
-final class BodyBuilder extends ExpressionBuilder {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const BodyBuilder(final EndpointBody _body)
+    extends ExpressionBuilder {
   static const bodyRef = Reference('body');
-
-  final EndpointBody _body;
-
-  const new(this._body);
 
   @override
   Expression build() {

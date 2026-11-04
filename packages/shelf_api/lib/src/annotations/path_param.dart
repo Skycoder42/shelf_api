@@ -4,7 +4,7 @@ import 'package:meta/meta_meta.dart';
 
 /// Can be used to add metadata to a path parameter of an endpoint method.
 @Target({TargetKind.parameter})
-class PathParam {
+class const PathParam({
   /// Specifies whether the path parameter should be URL encoded.
   ///
   /// If enabled, all params are encoded, to ensure special characters (like
@@ -15,7 +15,7 @@ class PathParam {
   /// When disabled, no encoding or decoding happens, which allows you to for
   /// example use '/' in a path param to actually change the path. However, this
   /// can lead to problems with path matching and should be avoided
-  final bool urlEncode;
+  final bool urlEncode = true,
 
   /// A custom parse function.
   ///
@@ -27,7 +27,7 @@ class PathParam {
   /// ```dart
   /// T Function(String)
   /// ```
-  final Function? parse;
+  final Function? parse,
 
   /// A custom toString function.
   ///
@@ -39,8 +39,8 @@ class PathParam {
   /// ```dart
   /// String Function(T)
   /// ```
-  final Function? stringify;
-
+  final Function? stringify,
+}) {
   /// Constructor.
-  const new({this.urlEncode = true, this.parse, this.stringify});
+  this;
 }

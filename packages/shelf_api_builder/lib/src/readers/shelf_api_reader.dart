@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'middleware_reader.dart';
 
 @internal
-class ShelfApiReader with MiddlewareReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class ShelfApiReader(@override final ConstantReader constantReader)
+    with MiddlewareReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.shelfApi)) {
       throw ArgumentError.value(
         constantReader,

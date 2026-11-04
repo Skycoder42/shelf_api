@@ -4,7 +4,7 @@ import 'opaque_type.dart';
 import 'serializable_type.dart';
 
 @internal
-enum EndpointResponseType {
+enum EndpointResponseType() {
   noContent,
   text,
   binary,
@@ -21,20 +21,14 @@ enum EndpointResponseType {
 }
 
 @internal
-class EndpointResponse {
-  final EndpointResponseType responseType;
-  final OpaqueType returnType;
-  final bool isResponse;
-  final bool isAsync;
-  final bool autoNotFound;
-
-  new({
-    required this.responseType,
-    required this.returnType,
-    this.isResponse = false,
-    this.isAsync = false,
-    this.autoNotFound = false,
-  }) {
+class EndpointResponse({
+  required final EndpointResponseType responseType,
+  required final OpaqueType returnType,
+  final bool isResponse = false,
+  final bool isAsync = false,
+  final bool autoNotFound = false,
+}) {
+  this {
     if (responseType == EndpointResponseType.json &&
         returnType is! OpaqueSerializableType) {
       throw ArgumentError(

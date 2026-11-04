@@ -10,11 +10,8 @@ import '../../util/extensions/code_builder_extensions.dart';
 import '../../util/types.dart';
 
 @internal
-class FromJsonBuilder {
-  final SerializableType _serializableType;
-
-  new(this._serializableType);
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class FromJsonBuilder(final SerializableType _serializableType) {
   Reference get rawJsonType {
     if (_serializableType.fromJson != null) {
       return CoreTypes.$dynamic;

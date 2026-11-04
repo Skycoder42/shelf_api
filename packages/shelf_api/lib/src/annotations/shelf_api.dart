@@ -7,22 +7,14 @@ import 'api_endpoint.dart';
 
 /// Annotation to mark a class as shelf API router
 @Target({TargetKind.classType})
-class ShelfApi {
+class const ShelfApi(
   /// The list of endpoint classes the API is composed of
-  final List<Type> endpoints;
+  final List<Type> endpoints, {
 
   /// The base API path to prepend to each API route.
   ///
   /// If left empty, no prefix is added.
-  final String? basePath;
-
-  /// Whether to automatically add a 404 Not Found response for API calls that
-  /// return null.
-  ///
-  /// If enabled, the response mapping will convert `null` responses into a
-  /// not found HTTP response. If disabled (the default), a OK response with
-  /// the JSON body `null` will be returned instead.
-  final bool autoNotFound;
+  final String? basePath,
 
   /// Optional middleware to be applied to the API.
   ///
@@ -30,13 +22,16 @@ class ShelfApi {
   /// to all requests to this API.
   ///
   /// To set a middleware for a specific endpoint, use [ApiEndpoint.middleware].
-  final Middleware Function()? middleware;
+  final Middleware Function()? middleware,
 
+  /// Whether to automatically add a 404 Not Found response for API calls that
+  /// return null.
+  ///
+  /// If enabled, the response mapping will convert `null` responses into a
+  /// not found HTTP response. If disabled (the default), a OK response with
+  /// the JSON body `null` will be returned instead.
+  final bool autoNotFound = false,
+}) {
   /// Constructor
-  const new(
-    this.endpoints, {
-    this.basePath,
-    this.middleware,
-    this.autoNotFound = false,
-  });
+  this;
 }

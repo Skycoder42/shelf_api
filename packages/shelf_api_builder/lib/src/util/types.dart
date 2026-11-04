@@ -8,9 +8,7 @@ import '../models/opaque_type.dart';
 import '../models/serializable_type.dart';
 
 @internal
-abstract base class Types {
-  new _();
-
+abstract base class Types._() {
   static final uint8List = TypeReference(
     (b) => b
       ..symbol = 'Uint8List'

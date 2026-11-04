@@ -1,11 +1,7 @@
 import 'package:meta/meta.dart';
 
 @immutable
-class BasicModel {
-  final int value;
-
-  const new(this.value);
-
+class const BasicModel(final int value) {
   factory fromJson(Map<String, dynamic> json) =>
       BasicModel(json['value'] as int);
 

@@ -12,11 +12,9 @@ import '../util/type_checkers.dart';
 import 'methods_analyzer.dart';
 
 @internal
-class EndpointAnalyzer {
-  final BuildStep _buildStep;
-  final MethodsAnalyzer _methodsAnalyzer;
-
-  new(this._buildStep) : _methodsAnalyzer = MethodsAnalyzer(_buildStep);
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class EndpointAnalyzer(final BuildStep _buildStep) {
+  final _methodsAnalyzer = MethodsAnalyzer(_buildStep);
 
   Future<Endpoint> analyzeEndpoint(
     DartType endpointType,

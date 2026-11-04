@@ -4,7 +4,7 @@ import 'package:meta/meta_meta.dart';
 
 /// Marks the given parameter as the body of the request.
 @Target({TargetKind.parameter})
-class BodyParam {
+class const BodyParam({
   /// A list of allowed content types for this endpoint.
   ///
   /// By default (when [contentTypes] is `null`), this is detected
@@ -14,7 +14,7 @@ class BodyParam {
   ///
   /// **Note:** You can disable content type validation for JSON requests by
   /// setting this property to an empty list `[]`.
-  final List<String>? contentTypes;
+  final List<String>? contentTypes,
 
   /// Custom deserialization function for the body.
   ///
@@ -25,7 +25,7 @@ class BodyParam {
   /// ```dart
   /// T Function(dynamic)
   /// ```
-  final Function? fromJson;
+  final Function? fromJson,
 
   /// Custom serialization function for the body.
   ///
@@ -36,10 +36,10 @@ class BodyParam {
   /// ```dart
   /// dynamic Function(T)
   /// ```
-  final Function? toJson;
-
+  final Function? toJson,
+}) {
   /// Constructor.
-  const new({this.contentTypes, this.fromJson, this.toJson});
+  this;
 }
 
 /// Marks the given parameter as the body of the request.

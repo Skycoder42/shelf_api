@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'middleware_reader.dart';
 
 @internal
-class ApiEndpointReader with MiddlewareReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class ApiEndpointReader(@override final ConstantReader constantReader)
+    with MiddlewareReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.apiEndpoint)) {
       throw ArgumentError.value(
         constantReader,

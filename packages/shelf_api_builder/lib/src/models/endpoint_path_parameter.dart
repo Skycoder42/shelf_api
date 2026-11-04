@@ -4,26 +4,16 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-class EndpointPathParameter {
-  final String name;
-  final OpaqueType type;
-  final bool isString;
-  final bool isEnum;
-  final bool isDateTime;
-  final OpaqueConstant? customParse;
-  final OpaqueConstant? customToString;
-  final bool urlEncode;
-
-  new({
-    required this.name,
-    required this.type,
-    required this.isString,
-    required this.isEnum,
-    required this.isDateTime,
-    required this.customParse,
-    required this.customToString,
-    required this.urlEncode,
-  });
-
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class EndpointPathParameter({
+  required final String name,
+  required final OpaqueType type,
+  required final bool isString,
+  required final bool isEnum,
+  required final bool isDateTime,
+  required final OpaqueConstant? customParse,
+  required final OpaqueConstant? customToString,
+  required final bool urlEncode,
+}) {
   String get handlerParamName => '\$path\$$name';
 }

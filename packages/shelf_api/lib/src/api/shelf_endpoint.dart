@@ -12,18 +12,18 @@ import '../riverpod/rivershelf.dart';
 /// The base class for all shelf API endpoints.
 ///
 /// See [ShelfApi] for how to register these endpoints.
-abstract class ShelfEndpoint {
+abstract class ShelfEndpoint(
   /// The original request being processed by this endpoint.
-  final Request request;
-
+  final Request request, {
+  @visibleForTesting EndpointRef? ref,
+}) {
   /// The [EndpointRef] attached to the [request]
-  final EndpointRef ref;
+  final EndpointRef ref = ref ?? request.ref;
 
   /// Default constructor.
   ///
   /// The [ref] parameter is optional and only made visible for testing purpose.
-  new(this.request, {@visibleForTesting EndpointRef? ref})
-    : ref = ref ?? request.ref;
+  this;
 
   /// Endpoint initializer callback.
   ///

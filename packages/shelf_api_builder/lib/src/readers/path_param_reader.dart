@@ -6,11 +6,9 @@ import '../util/type_checkers.dart';
 import 'stringifiable_reader.dart';
 
 @internal
-class PathParamReader with StringifiableReader {
-  @override
-  final ConstantReader constantReader;
-
-  new(this.constantReader) {
+class PathParamReader(@override final ConstantReader constantReader)
+    with StringifiableReader {
+  this {
     if (!constantReader.instanceOf(TypeCheckers.pathParam)) {
       throw ArgumentError.value(
         constantReader,

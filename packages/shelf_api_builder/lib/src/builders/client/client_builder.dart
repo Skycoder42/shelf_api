@@ -9,14 +9,12 @@ import '../base/spec_builder.dart';
 import 'method_builder.dart';
 
 @internal
-final class ClientBuilder extends SpecBuilder<Class> {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const ClientBuilder(final ApiClass _apiClass)
+    extends SpecBuilder<Class> {
   static const _dioRef = Reference('_dio');
   static const _baseUrlRef = Reference('baseUrl');
   static const _baseOptionsRef = Reference('baseOptions');
-
-  final ApiClass _apiClass;
-
-  const new(this._apiClass);
 
   @override
   Class build() => Class(

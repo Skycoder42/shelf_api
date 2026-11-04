@@ -5,9 +5,7 @@ import 'package:shelf_api/shelf_api.dart';
 import '../basic_model.dart';
 
 @ApiEndpoint('/basic')
-class BasicEndpoint extends ShelfEndpoint {
-  new(super.request);
-
+class BasicEndpoint(super.request) extends ShelfEndpoint {
   @Get('/')
   String get() => 'Hello, World!';
 

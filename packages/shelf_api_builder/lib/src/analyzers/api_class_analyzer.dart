@@ -9,11 +9,9 @@ import '../readers/shelf_api_reader.dart';
 import 'endpoint_analyzer.dart';
 
 @internal
-class ApiClassAnalyzer {
-  final BuildStep _buildStep;
-  final EndpointAnalyzer _endpointAnalyzer;
-
-  new(this._buildStep) : _endpointAnalyzer = EndpointAnalyzer(_buildStep);
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class ApiClassAnalyzer(final BuildStep _buildStep) {
+  final _endpointAnalyzer = EndpointAnalyzer(_buildStep);
 
   Future<ApiClass> analyzeApiClass(
     ClassElement clazz,

@@ -11,17 +11,12 @@ import 'query_analyzer.dart';
 import 'response_analyzer.dart';
 
 @internal
-class MethodsAnalyzer {
-  final BodyAnalyzer _bodyAnalyzer;
-  final PathAnalyzer _pathAnalyzer;
-  final QueryAnalyzer _queryAnalyzer;
-  final ResponseAnalyzer _responseAnalyzer;
-
-  new(BuildStep buildStep)
-    : _bodyAnalyzer = BodyAnalyzer(buildStep),
-      _pathAnalyzer = PathAnalyzer(buildStep),
-      _queryAnalyzer = QueryAnalyzer(buildStep),
-      _responseAnalyzer = ResponseAnalyzer(buildStep);
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class MethodsAnalyzer(BuildStep buildStep) {
+  final _bodyAnalyzer = BodyAnalyzer(buildStep);
+  final _pathAnalyzer = PathAnalyzer(buildStep);
+  final _queryAnalyzer = QueryAnalyzer(buildStep);
+  final _responseAnalyzer = ResponseAnalyzer(buildStep);
 
   Future<List<EndpointMethod>> analyzeMethods(
     ClassElement clazz,

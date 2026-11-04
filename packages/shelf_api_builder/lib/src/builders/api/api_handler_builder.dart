@@ -12,17 +12,16 @@ import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
-final class ApiHandlerBuilder extends SpecBuilder<Method> {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const ApiHandlerBuilder(
+  final Endpoint _endpoint,
+  final EndpointMethod _method,
+) extends SpecBuilder<Method> {
   static const _endpointRef = Reference(r'$endpoint');
   static const _requestRef = Reference(r'$request');
 
-  final Endpoint _endpoint;
-  final EndpointMethod _method;
-
   static String handlerMethodName(Endpoint endpoint, EndpointMethod method) =>
       '_handler\$${endpoint.name}\$${method.name}';
-
-  const new(this._endpoint, this._method);
 
   @override
   Method build() => Method(

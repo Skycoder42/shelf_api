@@ -2,7 +2,12 @@ import 'package:test/test.dart';
 
 import 'test_helper.dart';
 
-enum _Mode { singleton, factory, requestSingleton, requestFactory }
+enum _Mode() {
+  singleton,
+  factory,
+  requestSingleton,
+  requestFactory,
+}
 
 void main() {
   late ExampleServer server;

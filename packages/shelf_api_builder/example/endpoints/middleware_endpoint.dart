@@ -4,9 +4,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_api/shelf_api.dart';
 
 @ApiEndpoint('/middleware', middleware: MiddlewareEndpoint.endpointMiddleware)
-class MiddlewareEndpoint extends ShelfEndpoint {
-  new(super.request);
-
+class MiddlewareEndpoint(super.request) extends ShelfEndpoint {
   @Get('/')
   Response get() =>
       Response(HttpStatus.noContent, headers: {'X-Middleware': 'Response'});

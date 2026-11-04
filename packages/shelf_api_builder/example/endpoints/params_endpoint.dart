@@ -3,9 +3,7 @@ import 'package:shelf_api/shelf_api.dart';
 import '../basic_enum.dart';
 
 @ApiEndpoint('/params')
-class ParamsEndpoint extends ShelfEndpoint {
-  new(super.request);
-
+class ParamsEndpoint(super.request) extends ShelfEndpoint {
   @Get(r'/path/simple/<p1>/sub/<p2|\d+>/<p3>')
   List<dynamic> getPathSimple(String p1, int p2, BasicEnum p3) => [
     p1,

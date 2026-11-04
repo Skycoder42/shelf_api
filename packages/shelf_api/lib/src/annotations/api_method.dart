@@ -9,9 +9,9 @@ import 'shelf_api.dart' show ShelfApi;
 
 /// Marks the given method as a specific endpoint method.
 @Target({TargetKind.method})
-class ApiMethod {
+class const ApiMethod(
   /// The HTTP method this method will be called for.
-  final String method;
+  final String method,
 
   /// The path to this API method.
   ///
@@ -33,7 +33,7 @@ class ApiMethod {
   ///  /api/          | /            | /api/
   ///  /api/          | /users       | /api/users
   ///  /api/          | /users/      | /api/users/
-  final String path;
+  final String path, {
 
   /// Whether to automatically add a 404 Not Found response for API calls that
   /// return null.
@@ -44,7 +44,7 @@ class ApiMethod {
   ///
   /// If unset, the value from the [ShelfApi.autoNotFound] annotation will be
   /// used as a default.
-  final bool? autoNotFound;
+  final bool? autoNotFound,
 
   /// Custom deserialization function for the response.
   ///
@@ -55,7 +55,7 @@ class ApiMethod {
   /// ```dart
   /// T Function(dynamic)
   /// ```
-  final Function? fromJson;
+  final Function? fromJson,
 
   /// Custom serialization function for the response.
   ///
@@ -66,70 +66,84 @@ class ApiMethod {
   /// ```dart
   /// dynamic Function(T)
   /// ```
-  final Function? toJson;
-
+  final Function? toJson,
+}) {
   /// Constructor.
-  const new(
-    this.method,
-    this.path, {
-    this.autoNotFound,
-    this.fromJson,
-    this.toJson,
-  });
+  this;
 }
 
 /// Marks the given method as a get endpoint method.
 @Target({TargetKind.method})
-class Get extends ApiMethod {
+class const Get(String path, {super.autoNotFound, super.fromJson, super.toJson})
+    extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.get, path);
+  this : super(HttpMethod.get, path);
 }
 
 /// Marks the given method as a delete endpoint method.
 @Target({TargetKind.method})
-class Delete extends ApiMethod {
+class const Delete(
+  String path, {
+  super.autoNotFound,
+  super.fromJson,
+  super.toJson,
+}) extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.delete, path);
+  this : super(HttpMethod.delete, path);
 }
 
 /// Marks the given method as a head endpoint method.
 @Target({TargetKind.method})
-class Head extends ApiMethod {
+class const Head(
+  String path, {
+  super.autoNotFound,
+  super.fromJson,
+  super.toJson,
+}) extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.head, path);
+  this : super(HttpMethod.head, path);
 }
 
 /// Marks the given method as a options endpoint method.
 @Target({TargetKind.method})
-class Options extends ApiMethod {
+class const Options(
+  String path, {
+  super.autoNotFound,
+  super.fromJson,
+  super.toJson,
+}) extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.options, path);
+  this : super(HttpMethod.options, path);
 }
 
 /// Marks the given method as a patch endpoint method.
 @Target({TargetKind.method})
-class Patch extends ApiMethod {
+class const Patch(
+  String path, {
+  super.autoNotFound,
+  super.fromJson,
+  super.toJson,
+}) extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.patch, path);
+  this : super(HttpMethod.patch, path);
 }
 
 /// Marks the given method as a post endpoint method.
 @Target({TargetKind.method})
-class Post extends ApiMethod {
+class const Post(
+  String path, {
+  super.autoNotFound,
+  super.fromJson,
+  super.toJson,
+}) extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.post, path);
+  this : super(HttpMethod.post, path);
 }
 
 /// Marks the given method as a put endpoint method.
 @Target({TargetKind.method})
-class Put extends ApiMethod {
+class const Put(String path, {super.autoNotFound, super.fromJson, super.toJson})
+    extends ApiMethod {
   /// Constructor.
-  const new(String path, {super.autoNotFound, super.fromJson, super.toJson})
-    : super(HttpMethod.put, path);
+  this : super(HttpMethod.put, path);
 }

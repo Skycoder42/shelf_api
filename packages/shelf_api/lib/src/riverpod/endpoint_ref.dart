@@ -26,16 +26,15 @@ Request shelfRequest(Ref ref) => throw StateError(
 );
 
 /// An object that allows shelf request handlers to interact with providers.
-class EndpointRef {
+class EndpointRef(
   /// @nodoc
-  @internal
-  final ProviderContainer container;
-
+  @internal final ProviderContainer container,
+) {
   final _keepAliveSubs = <ProviderListenable<dynamic>, ProviderSubscription>{};
 
   /// @nodoc
   @internal
-  new(this.container);
+  this;
 
   /// Determines whether a provider is initialized or not.
   ///

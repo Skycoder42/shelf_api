@@ -12,13 +12,10 @@ import '../readers/path_param_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
-class PathAnalyzer {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class PathAnalyzer(final BuildStep _buildStep) {
   // Based on https://github.com/dart-lang/shelf/blob/master/pkgs/shelf_router/lib/src/router_entry.dart#L31
   final _pathParamRegexp = RegExp(r'<([^>|]+)(?:\|[^>]*)?>');
-
-  final BuildStep _buildStep;
-
-  new(this._buildStep);
 
   Future<List<EndpointPathParameter>> analyzePath(
     MethodElement method,

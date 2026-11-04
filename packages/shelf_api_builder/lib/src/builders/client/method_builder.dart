@@ -13,18 +13,17 @@ import '../base/spec_builder.dart';
 import 'method_body_builder.dart';
 
 @internal
-final class MethodBuilder extends SpecBuilder<Method> {
+// ignore: public_member_api_docs analyzer bug with primary constructors
+final class const MethodBuilder(
+  final ApiClass _apiClass,
+  final Endpoint _endpoint,
+  final EndpointMethod _method,
+  final Reference _dioRef,
+) extends SpecBuilder<Method> {
   static const _optionsRef = Reference(r'$options');
   static const _cancelTokenRef = Reference(r'$cancelToken');
   static const _onSendProgressRef = Reference(r'$onSendProgress');
   static const _onReceiveProgressRef = Reference(r'$onReceiveProgress');
-
-  final ApiClass _apiClass;
-  final Endpoint _endpoint;
-  final EndpointMethod _method;
-  final Reference _dioRef;
-
-  const new(this._apiClass, this._endpoint, this._method, this._dioRef);
 
   @override
   Method build() => Method(

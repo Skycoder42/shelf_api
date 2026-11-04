@@ -13,12 +13,9 @@ import '../util/type_checkers.dart';
 import 'serializable_analyzer.dart';
 
 @internal
-class ResponseAnalyzer {
-  final BuildStep _buildStep;
-  final SerializableAnalyzer _serializableAnalyzer;
-
-  new(this._buildStep)
-    : _serializableAnalyzer = SerializableAnalyzer(_buildStep);
+// ignore: public_member_api_docs analyzer bug with primary constructors
+class ResponseAnalyzer(final BuildStep _buildStep) {
+  final _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 
   Future<EndpointResponse> analyzeResponse(
     MethodElement method,
