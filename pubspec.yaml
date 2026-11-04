@@ -9,4 +9,4 @@ workspace:
   - packages/shelf_api_builder
 
 dev_dependencies:
-  dart_test_tools: ^7.3.2
+  dart_test_tools: ^8.1.0
