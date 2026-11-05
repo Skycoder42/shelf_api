@@ -10,3 +10,6 @@ workspace:
 
 dev_dependencies:
   dart_test_tools: ^8.1.0
+
+renovate:
+  pre_build_command: cd packages/shelf_api && dart run build_runner build
