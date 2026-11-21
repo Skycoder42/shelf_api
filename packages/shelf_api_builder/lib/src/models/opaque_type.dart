@@ -7,7 +7,6 @@ import 'package:path/path.dart';
 import 'serializable_type.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 sealed class OpaqueType() {
   SerializableType toSerializable(String reason) => switch (this) {
     OpaqueSerializableType(serializableType: final type) => type,
@@ -50,24 +49,20 @@ sealed class OpaqueType() {
 }
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class OpaqueSerializableType(final SerializableType serializableType)
     extends OpaqueType;
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class OpaqueDartType(BuildStep buildStep, final DartType dartType)
     extends OpaqueType {
   final Uri? uri = OpaqueType.uriForElement(buildStep, dartType.element);
 }
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class OpaqueClassType(BuildStep buildStep, final ClassElement element)
     extends OpaqueType {
   final Uri? uri = OpaqueType.uriForElement(buildStep, element);
 }
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class OpaqueDynamicType() extends OpaqueType;

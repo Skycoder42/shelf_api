@@ -10,7 +10,6 @@ import '../readers/query_param_reader.dart';
 import '../util/type_checkers.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class QueryAnalyzer(final BuildStep _buildStep) {
   Future<List<EndpointQueryParameter>> analyzeQuery(MethodElement method) =>
       _analyzeQuery(method).toList();

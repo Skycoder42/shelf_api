@@ -18,7 +18,6 @@ import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const MethodBodyBuilder(
   final ApiClass _apiClass,
   final Endpoint _endpoint,
@@ -26,7 +25,6 @@ final class const MethodBodyBuilder(
   final Reference _dioRef,
   final Reference _optionsRef,
   final List<Reference> _extraParamsRefs,
-  // ignore: avoid_positional_boolean_parameters for private param
   final bool _isRaw,
 ) extends CodeBuilder {
   static const _errorRef = Reference(r'$error');

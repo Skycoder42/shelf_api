@@ -12,7 +12,6 @@ import 'query_builder.dart';
 import 'response_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const ApiHandlerBuilder(
   final Endpoint _endpoint,
   final EndpointMethod _method,

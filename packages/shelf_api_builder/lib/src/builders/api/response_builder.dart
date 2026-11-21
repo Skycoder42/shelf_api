@@ -10,7 +10,6 @@ import '../../util/types.dart';
 import '../base/code_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const ResponseBuilder(
   final EndpointResponse _response,
   final Expression _invocation,

@@ -8,7 +8,6 @@ import '../../util/constants.dart';
 import '../../util/types.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const PathBuilder(
   final List<EndpointPathParameter> _pathParameters,
 ) {

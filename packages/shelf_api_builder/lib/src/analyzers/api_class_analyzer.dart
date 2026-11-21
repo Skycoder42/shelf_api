@@ -9,7 +9,6 @@ import '../readers/shelf_api_reader.dart';
 import 'endpoint_analyzer.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class ApiClassAnalyzer(final BuildStep _buildStep) {
   final _endpointAnalyzer = EndpointAnalyzer(_buildStep);
 

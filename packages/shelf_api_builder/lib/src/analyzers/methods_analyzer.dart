@@ -11,7 +11,6 @@ import 'query_analyzer.dart';
 import 'response_analyzer.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class MethodsAnalyzer(BuildStep buildStep) {
   final _bodyAnalyzer = BodyAnalyzer(buildStep);
   final _pathAnalyzer = PathAnalyzer(buildStep);
