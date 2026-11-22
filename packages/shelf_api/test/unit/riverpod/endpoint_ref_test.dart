@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package for ref.exists
+
 import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shelf_api/src/riverpod/endpoint_ref.dart';
