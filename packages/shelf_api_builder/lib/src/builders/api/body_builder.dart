@@ -12,7 +12,6 @@ import '../base/expression_builder.dart';
 import '../common/from_json_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const BodyBuilder(
   final EndpointBody? _methodBody,
   final Reference _requestRef,

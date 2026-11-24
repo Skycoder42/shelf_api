@@ -10,7 +10,6 @@ import '../base/spec_builder.dart';
 import 'api_handler_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class ApiImplementationBuilder(final ApiClass _apiClass)
     extends SpecBuilder<Class> {
   static const _handlerRef = Reference(r'_$handler');

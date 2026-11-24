@@ -9,7 +9,6 @@ import '../base/spec_builder.dart';
 import 'method_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const ClientBuilder(final ApiClass _apiClass)
     extends SpecBuilder<Class> {
   static const _dioRef = Reference('_dio');

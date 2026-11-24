@@ -5,7 +5,6 @@ import 'opaque_constant.dart';
 import 'opaque_type.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class ApiClass({
   required final OpaqueType classType,
   required final String className,

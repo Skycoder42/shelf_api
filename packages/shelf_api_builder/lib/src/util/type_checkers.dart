@@ -6,7 +6,6 @@ import 'package:shelf_api/shelf_api.dart';
 import 'package:source_gen/source_gen.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 abstract base class TypeCheckers() {
   static const list = TypeChecker.typeNamed(List, inSdk: true);
 

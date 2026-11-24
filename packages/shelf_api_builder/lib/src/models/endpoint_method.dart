@@ -6,7 +6,6 @@ import 'endpoint_query_parameter.dart';
 import 'endpoint_response.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class EndpointMethod({
   required final String name,
   required final String httpMethod,

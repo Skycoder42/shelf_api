@@ -9,11 +9,9 @@ import '../base/code_builder.dart';
 import '../common/from_json_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const ResponseBuilder(
   final EndpointResponse _response,
   final Expression _invocation,
-  // ignore: avoid_positional_boolean_parameters for internal class
   final bool _isRaw,
 ) extends CodeBuilder {
   static const _responseRef = Reference(r'$response');

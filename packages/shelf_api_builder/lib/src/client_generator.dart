@@ -10,7 +10,6 @@ import 'builders/client/client_builder.dart';
 import 'readers/shelf_api_reader.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class const ClientGenerator(final BuilderOptions options)
     extends GeneratorForAnnotation<ShelfApi> {
   bool get isEnabled => options.config['generateClient'] as bool? ?? true;

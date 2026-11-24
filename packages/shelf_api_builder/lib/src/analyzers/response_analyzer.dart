@@ -13,7 +13,6 @@ import '../util/type_checkers.dart';
 import 'serializable_analyzer.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class ResponseAnalyzer(final BuildStep _buildStep) {
   final _serializableAnalyzer = SerializableAnalyzer(_buildStep);
 

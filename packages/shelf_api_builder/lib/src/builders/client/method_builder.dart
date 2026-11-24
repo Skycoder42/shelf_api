@@ -13,7 +13,6 @@ import '../base/spec_builder.dart';
 import 'method_body_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const MethodBuilder(
   final ApiClass _apiClass,
   final Endpoint _endpoint,

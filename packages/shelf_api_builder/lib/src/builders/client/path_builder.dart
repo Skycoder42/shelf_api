@@ -11,7 +11,6 @@ import '../../util/constants.dart';
 import '../base/expression_builder.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 final class const PathBuilder(
   final ApiClass _apiClass,
   final Endpoint _endpoint,

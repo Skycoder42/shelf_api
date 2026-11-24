@@ -5,7 +5,6 @@ import 'package:source_gen/source_gen.dart';
 import 'opaque_type.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 sealed class const OpaqueConstant() {
   static Future<OpaqueConstant> revived(
     BuildStep buildStep,

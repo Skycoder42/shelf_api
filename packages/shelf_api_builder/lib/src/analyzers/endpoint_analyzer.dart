@@ -12,7 +12,6 @@ import '../util/type_checkers.dart';
 import 'methods_analyzer.dart';
 
 @internal
-// ignore: public_member_api_docs analyzer bug with primary constructors
 class EndpointAnalyzer(final BuildStep _buildStep) {
   final _methodsAnalyzer = MethodsAnalyzer(_buildStep);
 

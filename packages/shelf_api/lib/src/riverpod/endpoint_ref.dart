@@ -39,6 +39,7 @@ class EndpointRef(
   /// Determines whether a provider is initialized or not.
   ///
   /// See [Ref.exists] for more details.
+  @Deprecated('Use `ref.read/watch/listen(provider.exist)` instead')
   bool exists(ProviderBase<Object?> provider) => container.exists(provider);
 
   /// Reads a provider without listening to it.

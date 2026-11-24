@@ -211,7 +211,6 @@ abstract base class Types._() {
 
 @internal
 extension TypesX on TypeReference {
-  // ignore: avoid_positional_boolean_parameters for single parameter
   TypeReference withNullable(bool isNullable) => TypeReference(
     (b) => b
       ..replace(this)
